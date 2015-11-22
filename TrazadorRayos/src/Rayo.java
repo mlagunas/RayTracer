@@ -1,28 +1,34 @@
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
 
 
 public class Rayo {
-	 public static final float MAX_T = Float.MAX_VALUE;
+	 public static final double MAX_T = Double.MAX_VALUE;
 	    Vector3D origin;
 	    Vector3D direction;
-	    float t;
+	    double t;
 	    Objeto object;
 
 	    public Rayo(Vector3D eye, Vector3D dir) {
 	        origin = new Vector3D(eye);
-	        direction = Vector3D.normalize(dir);
+	        dir.normalize();
+	        direction = dir;
 	    }
 
-	    public boolean trace(Vector objects) {
-	        Enumeration objList = objects.elements();
+	    public boolean trace(ArrayList<Objeto> objects) {
 	        t = MAX_T;
 	        object = null;
-	        while (objList.hasMoreElements()) {
-	            Objeto object = (Objeto) objList.nextElement();
+	        for(Objeto object: objects) {
 	            object.intersect(this);
 	        }
+	        return (object != null);
+	    }
+	    
+	    public boolean trace(Objeto object) {
+	        t = MAX_T;
+	        object.intersect(this);
 	        return (object != null);
 	    }
 
@@ -33,9 +39,6 @@ public class Rayo {
 	    // to
 	    //            ray.object.Shade(ray, ...)
 	    //
-	    public final Color Shade(Vector lights, Vector objects, Color bgnd) {
-	        return object.Shade(this, lights, objects, bgnd);
-	    }
 
 	    public String toString() {
 	        return ("ray origin = "+origin+"  direction = "+direction+"  t = "+t);
