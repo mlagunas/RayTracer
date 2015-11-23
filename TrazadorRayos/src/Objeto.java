@@ -5,7 +5,8 @@ import java.util.ArrayList;
 // be ray traced. Using this interface it is straight forward
 // to add new objects
 abstract interface Objeto {
-    public abstract RayHit intersect(Rayo r);
-    public abstract Color Shade(Rayo r, Vector3D lights, Vector3D objects, Color bgnd);
+    public abstract boolean intersect(Rayo r);
     public String toString();
+	public Color Shade(Rayo r, Point3D eye, ArrayList<Luz> lights, ArrayList<Objeto> objects, Color bgnd);
+	
 }
