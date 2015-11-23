@@ -1,4 +1,5 @@
-import java.util.Vector;
+import java.awt.Color;
+import java.util.ArrayList;
 
 public class Programa {
 
@@ -22,9 +23,9 @@ public class Programa {
 		escena.setAmbientLight(ambientLight);
 		ColorRGB backgroundColor = new ColorRGB();
 		escena.setBackgroundColor(backgroundColor);
-		Vector<Object> objects = new Vector<>();
+		ArrayList<Objeto> objects = new ArrayList<>();
 		escena.setObjects(objects);
-		Luz luz = new Luz(Luz.DIRECTIONAL, new Vector3D(), new ColorRGB());
+		Luz luz = new Luz(Luz.DIRECTIONAL, new Vector3D(), new Color(1,1,1));
 		escena.setLight(0, luz);
 		
 		TrazadorDeRayos rayTracer = new TrazadorDeRayos();

@@ -1,4 +1,4 @@
-import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -10,7 +10,7 @@ public class TrazadorDeRayos {
 	
 	private Viewport pantalla;
 	
-	private int recProfundidad;
+	private int recursionProf;
 	
 	private Camera camara;
 	
@@ -43,8 +43,6 @@ public class TrazadorDeRayos {
 		int pixelColor=0;
 		ColorRGB finalColor=null;
 	    int background = 0;
-
-	
 		
 		// for each pixel of the image
 		for (int j = -((imageHeight/2)); j < (imageHeight/2); ++j) {
@@ -55,7 +53,7 @@ public class TrazadorDeRayos {
 				pixelColor=background;
 				if(primRay!=null){
 					/* Mira  si intersecta y devuelve el punto a pintar*/
-//					finalColor = primRay.trace(objects);
+					//finalColor = primRay.trace(escena.getObjects());
 					if(finalColor!=null){
 						pixelColor = ColorRGB.saturateRGB(finalColor).toInt();
 					}
@@ -93,10 +91,10 @@ public class TrazadorDeRayos {
 				for (int k = 0; k < count; k++) {
 					currentPrimaryRaySuperSample = currentPrimaryRayList.get(k);
 					if (currentPrimaryRaySuperSample != null) {
-						// currentColor = traceRay(currentPrimaryRaySuperSample,null, recursionDeep);
-						rSum += currentColor.getX();
-						gSum += currentColor.getY();
-						bSum += currentColor.getZ();
+						// currentColor = traceRay(currentPrimaryRaySuperSample,null, recursionProf);
+						rSum += currentColor.getR();
+						gSum += currentColor.getG();
+						bSum += currentColor.getB();
 						innerCount++;
 					}
 				}

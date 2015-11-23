@@ -15,9 +15,9 @@ public class ColorRGB {
    public static ColorRGB gray = new ColorRGB(127, 127, 127);
 
    
-   private float x;
-   private float y;
-   private float z;
+   private float r;
+   private float g;
+   private float b;
  
    public ColorRGB() {
    }
@@ -28,23 +28,23 @@ public class ColorRGB {
    }
 
    public int toInt() {
-      int r = (int) x;
-      int g = (int) y;
-      int b = (int) z;
-      return (r << 16) + (g << 8) + b;
+      int ir = (int) r;
+      int ig = (int) g;
+      int ib = (int) b;
+      return (ir << 16) + (ig << 8) + ib;
    }
 
    public ColorRGB mul(float m) {
-      return new ColorRGB(x*m, y*m, z*m);
+      return new ColorRGB(r*m, g*m, b*m);
    }
 
    public ColorRGB add(ColorRGB color) {
-      return new ColorRGB(x + color.x, y + color.y, z + color.z);
+      return new ColorRGB(r + color.r, g + color.g, b + color.b);
    }
 
    public static ColorRGB saturateRGB(ColorRGB color) {
-      return new ColorRGB(Math.min(255, Math.max(color.x, 0)), 
-    		  Math.min(255, Math.max(color.y, 0)), Math.min(255, Math.max(color.z, 0)));
+      return new ColorRGB(Math.min(255, Math.max(color.r, 0)), 
+    		  Math.min(255, Math.max(color.g, 0)), Math.min(255, Math.max(color.b, 0)));
    }
 
    public static ColorRGB getRandomColor() {
@@ -54,33 +54,33 @@ public class ColorRGB {
    }
 
 
-public float getX() {
-	return x;
+public float getR() {
+	return r;
 }
 
 
-public void setX(float x) {
-	this.x = x;
+public void setR(float x) {
+	this.r = x;
 }
 
 
-public float getY() {
-	return y;
+public float getG() {
+	return g;
 }
 
 
-public void setY(float y) {
-	this.y = y;
+public void setG(float y) {
+	this.g = y;
 }
 
 
-public float getZ() {
-	return z;
+public float getB() {
+	return b;
 }
 
 
-public void setZ(float z) {
-	this.z = z;
+public void setB(float z) {
+	this.b = z;
 }
    
    

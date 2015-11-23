@@ -26,10 +26,11 @@ public class ModeloLuz {
 			/*
 			 * CALCULO DE LA LUZ AMBIENTAL
 			 */
-			if (light.lightType == Luz.AMBIENT) {
-				r += ka * light.ir * color.getRed();
-				g += ka * light.ig * color.getGreen();
-				b += ka * light.ib * color.getBlue();
+			if (light.getLightType() == Luz.AMBIENT) {
+				r += ka * light.getIr() * color.getRed();
+				g += ka * light.getIg() * color.getGreen();
+				b += ka * light.getIb() * color.getBlue();
+				
 			}
 
 			/*
@@ -55,9 +56,9 @@ public class ModeloLuz {
 				double lambert = Math.cos(Vector3D.dotProd(N, L));
 				if (lambert > 0) {
 					// Kd*cos(N·L)*I
-					r += kd * lambert * light.ir * color.getRed();
-					g += kd * lambert * light.ig * color.getGreen();
-					b += kd * lambert * light.ib * color.getBlue();
+					r += kd * lambert * light.getIr() * color.getRed();
+					g += kd * lambert * light.getIg() * color.getGreen();
+					b += kd * lambert * light.getIb() * color.getBlue();
 				}
 			}
 
@@ -69,9 +70,9 @@ public class ModeloLuz {
 				double spec = Math.pow(n, Math.cos(V.dotProd(R)));
 				if (spec > 0) {
 					//
-					r += ks * spec * light.ir * color.getRed();
-					g += ks * spec * light.ig * color.getGreen();
-					b += ks * spec * light.ib * color.getBlue();
+					r += ks * spec * light.getIr() * color.getRed();
+					g += ks * spec * light.getIg()* color.getGreen();
+					b += ks * spec * light.getIb() * color.getBlue();
 				}
 			}
 		}
