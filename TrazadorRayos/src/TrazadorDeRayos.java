@@ -1,35 +1,57 @@
+import java.awt.Canvas;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class TrazadorDeRayos {
 	
-	public ArrayList<Objeto> createObjects(){
-		return null;
+	private Scene escena;
+	
+	private BufferedImage canvas;
+	
+	private Viewport pantalla;
+	
+	private int recProfundidad;
+	
+	private Camera camara;
+	
+	
+	public TrazadorDeRayos(){
 	}
+	public Scene getEscena() {
+		return escena;
+	}
+	public void setEscena(Scene escena) {
+		this.escena = escena;
+
+	}
+	public Viewport getPantalla() {
+		return pantalla;
+	}
+	public void setPantalla(Viewport pantalla) {
+		this.pantalla = pantalla;
+		canvas = new BufferedImage(pantalla.getColPixels(), pantalla.getFilPixels(), BufferedImage.TYPE_INT_RGB);
+
+	}
+	public Camera getCamara() {
+		return camara;
+	}
+	public void setCamara(Camera camara) {
+		this.camara = camara;
+	}
+	
 	public void trazadorDeRayos(int imageHeight, int imageWidth){
 		int pixelColor=0;
 		ColorRGB finalColor=null;
 	    int background = 0;
 
-		ArrayList<Objeto>objects=createObjects();
-		Camera cam = new Camera();
-		Viewport viewport=new Viewport(100, 50, new Point3D(9,1,3), 5, 3);
-		cam.setEye(new Point3D(3,1,3));
-		cam.setLookVector(new Vector3D(1,0,0));
-		cam.setUpVector(new Vector3D(0,1,0));
-		cam.setScreenDistance(6);
-		cam.setViewport(viewport);
-		cam.calculateVectors();
-		
-		BufferedImage canvas = new BufferedImage(viewport.getColPixels(), viewport.getFilPixels(), BufferedImage.TYPE_INT_RGB);
-
+	
 		
 		// for each pixel of the image
 		for (int j = -((imageHeight/2)); j < (imageHeight/2); ++j) {
 			for (int i = -((imageWidth/2)); i < (imageHeight/2); ++i) {			
 				/* Construye el rayo que pasa por el pixel i,j*/
 				System.out.println("Pixel "+j+i);
-				Rayo primRay=cam.constructRayThroughPixel(i, j);
+				Rayo primRay=camara.constructRayThroughPixel(i, j);
 				pixelColor=background;
 				if(primRay!=null){
 					/* Mira  si intersecta y devuelve el punto a pintar*/
@@ -56,24 +78,13 @@ public class TrazadorDeRayos {
 		//int background = scene.getBackgroundColor().toInt();
 		int background=0;
 		int pixelColor = -1;
-
-		Viewport viewport=new Viewport(100, 50, new Point3D(9,1,3), 5, 3);
-		Camera cam = new Camera();
-		cam.setEye(new Point3D(3, 1, 3));
-		cam.setLookVector(new Vector3D(1, 0, 0));
-		cam.setUpVector(new Vector3D(1, 0, 0));
-		cam.setScreenDistance(6);
-		cam.setViewport(viewport);
-
-		cam.calculateVectors();
 		
-		BufferedImage canvas = new BufferedImage(viewport.getColPixels(), viewport.getFilPixels(), BufferedImage.TYPE_INT_RGB);
 
 
 		int innerCount = 0;
 		for (int j = -((imageHeight/2)-1); j < (imageHeight/2); ++j) {
 			for (int i = -((imageWidth/2)-1); i < (imageHeight/2); ++i) {
-				currentPrimaryRayList = cam.getPimaryRaySuperSampledList(i, j, radio);
+				currentPrimaryRayList = camara.getPimaryRaySuperSampledList(i, j, radio);
 				pixelColor = background;
 				rSum = 0;
 				gSum = 0;
