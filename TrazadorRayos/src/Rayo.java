@@ -1,5 +1,5 @@
 import java.awt.Color;
-import java.util.Enumeration;
+import java.util.ArrayList;
 import java.util.Vector;
 
 
@@ -10,20 +10,61 @@ public class Rayo {
 	    float t;
 	    Objeto object;
 
-	    public Rayo(Vector3D eye, Vector3D dir) {
+	    public Rayo(Point3D eye, Vector3D dir) {
 	        origin = new Vector3D(eye);
-	        direction = Vector3D.normalize(dir);
+	        dir.normalize();
+	        direction = dir;
 	    }
 
-	    public boolean trace(Vector objects) {
-	        Enumeration objList = objects.elements();
-	        t = MAX_T;
-	        object = null;
-	        while (objList.hasMoreElements()) {
-	            Objeto object = (Objeto) objList.nextElement();
-	            object.intersect(this);
-	        }
-	        return (object != null);
+	    public boolean trace(ArrayList<Objeto> objects) {
+	    			 
+	    	// shoot prim ray in the scene and search for intersection
+			RayHit rayHit;
+			float minDistance = Float.MAX_VALUE;
+			Object object = null;
+			for (int k = 0; k < objects.size(); ++k) {
+				 if ((rayHit=(objects.get(k)).intersect(this))!= null) {
+					float distance = Distance(origin, rayHit.getPunto());
+					if (distance < minDistance) {
+						object = objects.get(k);
+						minDistance = distance; // update min distance
+					}
+					break;
+				 }
+			}
+					 
+			if (object == null)
+				return 0;
+			// if the object material is glass, split the ray into a reflection
+			// and a refraction ray.
+			if (object->isGlass && depth < MAX_RAY_DEPTH) {
+				// compute reflection
+				Ray reflectionRay;
+				reflectionRay = computeReflectionRay(ray.direction, nHit);
+				// recurse
+				color reflectionColor = Trace(reflectionRay, depth + 1);
+				Ray refractioRay;
+				refractionRay = computeRefractionRay(object->indexOfRefraction,ray.direction, nHit);
+				// recurse
+				color refractionColor = Trace(refractionRay, depth + 1);
+				float Kr, Kt;
+				fresnel(object->indexOfRefraction,nHit,ray.direction, &Kr, &Kt);
+				return reflectionColor * Kr + refractionColor * (1-Kr);
+			}
+					 
+			// object is a diffuse opaque object
+			// compute illumination
+			Ray shadowRay;
+			shadowRay.direction = lightPosition - pHit;
+			bool isShadow = false;	
+			for (int k = 0; k < objects.size(); ++k) {
+				if (Intersect(objects[k], shadowRay)) {
+					// hit point is in shadow so just return
+					return 0;
+				}
+			}
+			// point is illuminated
+			return object->color * light.brightness;
 	    }
 
 	    // The following method is not strictly needed, and most likely
