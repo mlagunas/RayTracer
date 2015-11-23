@@ -1,7 +1,4 @@
-import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Vector;
 
 
 public class Rayo {

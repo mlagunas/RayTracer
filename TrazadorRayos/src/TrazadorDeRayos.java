@@ -1,3 +1,4 @@
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class TrazadorDeRayos {
@@ -6,7 +7,10 @@ public class TrazadorDeRayos {
 		return null;
 	}
 	public void trazadorDeRayos(int imageHeight, int imageWidth){
-		
+		int pixelColor=0;
+		ColorRGB finalColor=null;
+	    int background = 0;
+
 		ArrayList<Objeto>objects=createObjects();
 		Camera cam = new Camera();
 		Viewport viewport=new Viewport(100, 50, new Point3D(9,1,3), 5, 3);
@@ -15,7 +19,10 @@ public class TrazadorDeRayos {
 		cam.setUpVector(new Vector3D(0,1,0));
 		cam.setScreenDistance(6);
 		cam.setViewport(viewport);
-		cam.calculateVectors();;
+		cam.calculateVectors();
+		
+		BufferedImage canvas = new BufferedImage(viewport.getColPixels(), viewport.getFilPixels(), BufferedImage.TYPE_INT_RGB);
+
 		
 		// for each pixel of the image
 		for (int j = -((imageHeight/2)); j < (imageHeight/2); ++j) {
@@ -23,9 +30,15 @@ public class TrazadorDeRayos {
 				/* Construye el rayo que pasa por el pixel i,j*/
 				System.out.println("Pixel "+j+i);
 				Rayo primRay=cam.constructRayThroughPixel(i, j);
-				
-				/* Mira  si intersecta y devuelve el punto a pintar*/
-//				pixels[i][j] = primRay.trace(objects);
+				pixelColor=background;
+				if(primRay!=null){
+					/* Mira  si intersecta y devuelve el punto a pintar*/
+//					finalColor = primRay.trace(objects);
+					if(finalColor!=null){
+						pixelColor = ColorRGB.saturateRGB(finalColor).toInt();
+					}
+				}
+				canvas.setRGB(i, j, pixelColor);
 			} 
 		}
 	}
@@ -40,7 +53,8 @@ public class TrazadorDeRayos {
 		float gSum = 0;
 		float bSum = 0;
 
-		// int background = scene.getBackgroundColor().toInt();
+		//int background = scene.getBackgroundColor().toInt();
+		int background=0;
 		int pixelColor = -1;
 
 		Viewport viewport=new Viewport(100, 50, new Point3D(9,1,3), 5, 3);
@@ -52,13 +66,15 @@ public class TrazadorDeRayos {
 		cam.setViewport(viewport);
 
 		cam.calculateVectors();
+		
+		BufferedImage canvas = new BufferedImage(viewport.getColPixels(), viewport.getFilPixels(), BufferedImage.TYPE_INT_RGB);
+
 
 		int innerCount = 0;
 		for (int j = -((imageHeight/2)-1); j < (imageHeight/2); ++j) {
 			for (int i = -((imageWidth/2)-1); i < (imageHeight/2); ++i) {
 				currentPrimaryRayList = cam.getPimaryRaySuperSampledList(i, j, radio);
-
-				// pixelColor = background;
+				pixelColor = background;
 				rSum = 0;
 				gSum = 0;
 				bSum = 0;
@@ -66,8 +82,7 @@ public class TrazadorDeRayos {
 				for (int k = 0; k < count; k++) {
 					currentPrimaryRaySuperSample = currentPrimaryRayList.get(k);
 					if (currentPrimaryRaySuperSample != null) {
-						// currentColor = traceRay(currentPrimaryRaySuperSample,
-						// null, recursionDeep);
+						// currentColor = traceRay(currentPrimaryRaySuperSample,null, recursionDeep);
 						rSum += currentColor.getX();
 						gSum += currentColor.getY();
 						bSum += currentColor.getZ();
@@ -80,7 +95,7 @@ public class TrazadorDeRayos {
 				if (finalColor != null) {
 					pixelColor = ColorRGB.saturateRGB(finalColor).toInt();
 				}
-				// canvas.setRGB(i, j, pixelColor);
+				canvas.setRGB(i, j, pixelColor);
 			}
 
 		}

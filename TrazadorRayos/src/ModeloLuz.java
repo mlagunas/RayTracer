@@ -42,7 +42,7 @@ public class ModeloLuz {
 			/*
 			 * CALCULO SI ES UN PUNTO EN SOMBRA
 			 */
-			Vector3D poffset = new Vector3D(p.x * L.x, p.y * L.y, p.z * L.z);
+			Point3D poffset = new Point3D(p.x * L.x, p.y * L.y, p.z * L.z);
 			Rayo shadowRay = new Rayo(poffset, L);
 			if (shadowRay.trace(objects))
 				break;
@@ -81,7 +81,7 @@ public class ModeloLuz {
 		 */
 
 		// Calculo del Rayo reflejado
-		Rayo reflejado = new Rayo(new Vector3D(p.x, p.y, p.z), Ref);
+		Rayo reflejado = new Rayo(new Point3D(p.x, p.y, p.z), Ref);
 		for (Objeto o : objects) {
 			if (reflejado.trace(o)) {
 				// Reflejado(origen en p pasando por la interseccion con el
