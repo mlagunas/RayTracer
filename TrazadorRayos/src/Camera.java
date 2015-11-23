@@ -90,8 +90,8 @@ public class Camera {
 	            up = new Vector3D(vVector);
 	    		right = new Vector3D(uVector);
 	            
-	            double u = i*(viewport.getColPixels() / (double) viewport.getColPixels()-1) + k * du;
-	            double v = j*(viewport.getFilPixels() / (double) viewport.getFilPixels()-1) + l * dv;
+	            double u = i*(viewport.getWidth() / (double) viewport.getColPixels()-1) + k * du;
+	            double v = j*(viewport.getHeight() / (double) viewport.getFilPixels()-1) + l * dv;
 	            
 	            towards.scale(screenDistance);
 	            right.scale(u);

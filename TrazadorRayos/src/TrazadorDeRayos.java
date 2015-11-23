@@ -17,6 +17,7 @@ public class TrazadorDeRayos {
 	
 	public TrazadorDeRayos(){
 	}
+	
 	public Scene getEscena() {
 		return escena;
 	}
@@ -39,17 +40,18 @@ public class TrazadorDeRayos {
 		this.camara = camara;
 	}
 	
-	public void trazadorDeRayos(int imageHeight, int imageWidth){
+	public void trazadorDeRayos(int imageWidth, int imageHeight){
 		int pixelColor=0;
 		ColorRGB finalColor=null;
 	    int background = 0;
 		
 		// for each pixel of the image
-		for (int j = -((imageHeight/2)); j < (imageHeight/2); ++j) {
-			for (int i = -((imageWidth/2)); i < (imageHeight/2); ++i) {			
+		for (int j = 0; j < imageWidth; ++j) {
+			for (int i = 0; i < imageHeight; ++i) {			
 				/* Construye el rayo que pasa por el pixel i,j*/
-				System.out.println("Pixel "+j+i);
-				Rayo primRay=camara.constructRayThroughPixel(i, j);
+				System.out.println("Pixel "+(i-(imageHeight/2))+(j-(imageWidth/2)));
+
+				Rayo primRay=camara.constructRayThroughPixel(i-(imageHeight/2), j-(imageWidth/2));
 				pixelColor=background;
 				if(primRay!=null){
 					/* Mira  si intersecta y devuelve el punto a pintar*/
@@ -58,7 +60,7 @@ public class TrazadorDeRayos {
 						pixelColor = ColorRGB.saturateRGB(finalColor).toInt();
 					}
 				}
-				canvas.setRGB(i, j, pixelColor);
+				canvas.setRGB(j, i, pixelColor); //Columna,fila
 			} 
 		}
 	}
@@ -76,12 +78,10 @@ public class TrazadorDeRayos {
 		//int background = scene.getBackgroundColor().toInt();
 		int background=0;
 		int pixelColor = -1;
-		
-
 
 		int innerCount = 0;
-		for (int j = -((imageHeight/2)-1); j < (imageHeight/2); ++j) {
-			for (int i = -((imageWidth/2)-1); i < (imageHeight/2); ++i) {
+		for (int j = -((imageHeight/2)); j < (imageHeight/2); ++j) {
+			for (int i = -((imageWidth/2)); i < (imageHeight/2); ++i) {
 				currentPrimaryRayList = camara.getPimaryRaySuperSampledList(i, j, radio);
 				pixelColor = background;
 				rSum = 0;

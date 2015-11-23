@@ -25,7 +25,7 @@ public class Programa {
 		escena.setBackgroundColor(backgroundColor);
 		ArrayList<Objeto> objects = new ArrayList<>();
 		escena.setObjects(objects);
-		Luz luz = new Luz(Luz.DIRECTIONAL, new Vector3D(), new Color(1,1,1));
+		Luz luz = new Luz(Luz.DIRECTIONAL, new Vector3D(1,2,3), new Color(1,4,2));
 		escena.setLight(0, luz);
 		
 		TrazadorDeRayos rayTracer = new TrazadorDeRayos();
@@ -33,6 +33,6 @@ public class Programa {
 		rayTracer.setPantalla(viewport);
 		rayTracer.setEscena(escena);
 		
-		rayTracer.trazadorDeRayos(NUM_FILAS, NUM_COL); //filas,columnas
+		rayTracer.trazadorDeRayos(NUM_COL,NUM_FILAS); 
 	}
 }
