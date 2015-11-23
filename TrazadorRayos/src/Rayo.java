@@ -11,8 +11,8 @@ public class Rayo {
 	    double t;
 	    Objeto object;
 
-	    public Rayo(Vector3D eye, Vector3D dir) {
-	        origin = new Vector3D(eye);
+	    public Rayo(Point3D point3d, Vector3D dir) {
+	        origin = new Vector3D(point3d);
 	        dir.normalize();
 	        direction = dir;
 	    }
