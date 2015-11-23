@@ -72,6 +72,10 @@ public class Camera {
 	}
 	
 	public ArrayList<Point3D> getPixelPositionSuperSampledList(double i, double j, int samplingRadius){
+		if (!initialized) { 
+			calculateVectors();
+		}
+		
 		final int count = getSuperSampledCount(samplingRadius);
 	    final ArrayList<Point3D> pixelPositionList = new ArrayList<>(count);
 	    
