@@ -7,7 +7,7 @@ import java.util.Vector;
 // be ray traced. Using this interface it is straight forward
 // to add new objects
 abstract interface Objeto {
-    public abstract boolean intersect(Rayo r);
+    public abstract RayHit intersect(Rayo r);
     public abstract Color Shade(Rayo r, Vector lights, Vector objects, Color bgnd);
     public String toString();
 }
