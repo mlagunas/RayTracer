@@ -1,3 +1,6 @@
+import java.awt.List;
+import java.util.ArrayList;
+
 public class Camera {
 
 	//instance variables
@@ -9,9 +12,11 @@ public class Camera {
 	private Vector3D vVector = null;
 
 	private double screenDistance;
+	private double realStepU;
+	private double realStepV;
 	
-	private double screenWidth;
-	private double screenHeight;
+	private Viewport viewport;
+	
 
 	private boolean initialized;
 
@@ -32,30 +37,14 @@ public class Camera {
         System.out.println("upVector: "+upVector.toString());
         System.out.println("wVector: "+wVector.toString());
         System.out.println("vVector: "+vVector.toString());
+        
+        realStepU = viewport.getWidth() / (viewport.getColPixels()-1);
+        realStepV = viewport.getHeight() / (viewport.getFilPixels()-1);
 
-
-
-//        // the vector size should be the size of one pixel in the 3 world instead of 1.
-//        // first, normalize the size according to the canvas width.
-//        double pixelSize = 1 / (double) canvasWidth;
-//
-//        // then, increase the pixel size according to the viewport width.
-//        pixelSize *= viewportWidth;
-//
-//        uVector.scale(pixelSize);
-//        upVector.scale(pixelSize);
         initialized=true;
     }
 
-	/**
-	 * Transforms image xy coordinates to view pane xyz coordinates. Returns the
-	 * ray that goes through it.
-	 * 
-	 * @param x
-	 * @param y
-	 * @return
-	 */
-	public Rayo constructRayThroughPixel(double x, double y) {
+	public Rayo constructRayThroughPixel(double i, double j) {
 		
 		if (!initialized) { 
 			calculateVectors();
@@ -67,8 +56,10 @@ public class Camera {
 		Vector3D right = new Vector3D(uVector);
 
         towards.scale(screenDistance);
-		right.scale(x*screenWidth - (double) screenWidth *0.5);
-        up.scale(y*screenHeight - (double) screenHeight *0.5);
+        final double du=i*(viewport.getWidth() / ((double) viewport.getColPixels()-1));
+        final double dv=j*(viewport.getHeight() / ((double) viewport.getFilPixels()-1));
+		right.scale(du);
+        up.scale(dv);
 
 		lookAt.add(towards);
 		lookAt.add(right);
@@ -78,8 +69,97 @@ public class Camera {
         
         Vector3D rayDirection = new Vector3D(lookAt, eye);
 
-		// Note - this is a trivial Orthographic camera
 		return new Rayo(eye, rayDirection);
+	}
+	
+	public ArrayList<Point3D> getPixelPositionSuperSampledList(double i, double j, int samplingRadius){
+		final int count = getSuperSampledCount(samplingRadius);
+	    final ArrayList<Point3D> pixelPositionList = new ArrayList<>(count);
+	    
+	    Point3D lookAt = null;
+		Vector3D towards = null;
+		Vector3D up = null;
+		Vector3D right = null;
+
+	    final double du = realStepU / (3 * samplingRadius + 1);
+	    final double dv = realStepV / (3 * samplingRadius + 1);
+	    
+	    for (int k = -samplingRadius; k <= samplingRadius; k++) {
+	    	for (int l = -samplingRadius; l <= samplingRadius; l++) {
+	            lookAt = new Point3D(eye);
+	            towards= new Vector3D(lookVector);
+	            up = new Vector3D(vVector);
+	    		right = new Vector3D(uVector);
+	            
+	            double u = i*(viewport.getColPixels() / (double) viewport.getColPixels()-1) + k * du;
+	            double v = j*(viewport.getFilPixels() / (double) viewport.getFilPixels()-1) + l * dv;
+	            
+	            towards.scale(screenDistance);
+	            right.scale(u);
+	            up.scale(v);
+	            
+	            lookAt.add(towards);
+	    		lookAt.add(right);
+	    		lookAt.add(up);
+	            
+	            pixelPositionList.add(lookAt);
+	        }
+	    }
+		return pixelPositionList;	
+	}
+	
+	public ArrayList<Rayo> getPimaryRaySuperSampledList(int i, int j, int r) {
+	      final int count = getSuperSampledCount(r);
+	      final ArrayList<Point3D> rayOriginList = getRayOriginSuperSampledList(i, j, r);
+	      final ArrayList<Vector3D> rayDirectionList = getRayDirectionSuperSampledList(i, j, r);
+	      if (rayDirectionList != null) {
+	         final ArrayList<Rayo> primaryRayList = new ArrayList<>(count);
+	         Vector3D currentDirection = null;
+	         for (int k = 0; k < count; k++) {
+	            currentDirection = rayDirectionList.get(k);
+	            if (currentDirection != null) {
+	               primaryRayList.add(new Rayo(rayOriginList.get(k), currentDirection));
+	            } else {
+	               primaryRayList.add(null);
+	            }
+	         }
+	         return primaryRayList;
+	      } else {
+	         return null;
+	      }
+	}
+
+	protected ArrayList<Vector3D> getRayDirectionSuperSampledList(int i, int j, int r) {
+		final int count = getSuperSampledCount(r);
+		final ArrayList<Vector3D> directionList = new ArrayList<>(count);
+		for (int k = 0; k < count; k++) {
+			directionList.add(lookVector);
+		}
+		return directionList;
+	}
+
+	protected ArrayList<Point3D> getRayOriginSuperSampledList(int i, int j, int r) {
+		return getPixelPositionSuperSampledList(i, j, r);
+	}
+
+	public static int getSuperSampledCount(int r) {
+		return (2 * r + 1) * (2 * r + 1);
+	}
+
+//	public float getSuperSampledDU(int r) {
+//		return uVector / (3 * r + 1);
+//	}
+//
+//	public float getSuperSampledDV(int r) {
+//		return vVector / (3 * r + 1);
+//	}
+
+	public Viewport getViewport() {
+		return viewport;
+	}
+
+	public void setViewport(Viewport viewport) {
+		this.viewport = viewport;
 	}
 
 	public Point3D getEye() {
@@ -138,19 +218,4 @@ public class Camera {
 		this.screenDistance = screenDistance;
 	}
 
-	public double getScreenWidth() {
-		return screenWidth;
-	}
-
-	public void setScreenWidth(double screenWidth) {
-		this.screenWidth = screenWidth;
-	}
-
-	public double getScreenHeight() {
-		return screenHeight;
-	}
-
-	public void setScreenHeight(double screenHeight) {
-		this.screenHeight = screenHeight;
-	}
 }
