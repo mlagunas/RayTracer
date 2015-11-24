@@ -40,6 +40,8 @@ public class Plano implements Objeto {
 		if (b == 0)
 			return false;
 		double t = -a / b;
+		r.t=t;
+		r.object= this;
 		// if(t<0)
 		// return false;
 		return true;
