@@ -3,16 +3,18 @@ import java.util.ArrayList;
 public class Scene {
    private ArrayList<Objeto> objects;
 
-   private Luz[] lights;
+   private ArrayList<Luz> lights;
 
    private ColorRGB ambientLight;
 
    private ColorRGB backgroundColor;
+   
+   private ArrayList<Luz> allLights;
 
   
    public Scene() {
       objects = new ArrayList<Objeto>();
-      lights = new Luz[8];
+      lights = new ArrayList<Luz>();
       ambientLight = ColorRGB.black;
       backgroundColor = ColorRGB.black;
    }
@@ -27,14 +29,14 @@ public class Scene {
 
    public Luz getLight(int index) {
       if (index >= 0 && index < 8) {
-         return lights[index];
+         return lights.get(index);
       } else {
          return null;
       }
    }
 
    public void setLight(int index, Luz light) {
-      lights[index] = light;
+      lights.add(light);
    }
 
    public void addObject(Objeto object) {
@@ -56,5 +58,15 @@ public class Scene {
    public void setBackgroundColor(ColorRGB backgroundColor) {
       this.backgroundColor = backgroundColor;
    }
+
+public ArrayList<Luz> getLights() {
+	return lights;
+}
+
+public void setLights(ArrayList<Luz> lights) {
+	this.lights = lights;
+}
+
+   
 
 }

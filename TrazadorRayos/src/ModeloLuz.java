@@ -30,7 +30,7 @@ public class ModeloLuz {
 				r += ka * light.getIr() * color.getRed();
 				g += ka * light.getIg() * color.getGreen();
 				b += ka * light.getIb() * color.getBlue();
-				
+
 			}
 
 			/*
@@ -71,7 +71,7 @@ public class ModeloLuz {
 				if (spec > 0) {
 					//
 					r += ks * spec * light.getIr() * color.getRed();
-					g += ks * spec * light.getIg()* color.getGreen();
+					g += ks * spec * light.getIg() * color.getGreen();
 					b += ks * spec * light.getIb() * color.getBlue();
 				}
 			}
@@ -83,31 +83,34 @@ public class ModeloLuz {
 
 		// Calculo del Rayo reflejado
 		Rayo reflejado = new Rayo(new Point3D(p.x, p.y, p.z), Ref);
-		for (Objeto o : objects) {
-			if (reflejado.trace(o)) {
-				// Reflejado(origen en p pasando por la interseccion con el
-				// objeto)
-				// Calculamos el color del objeto intersectado y lo añadimos
-				Color c = o.Shade(reflejado, p, lightSources, objects, color);
-				r += kr * c.getRed();
-				g += kr * c.getGreen();
-				b += kr * c.getBlue();
-			} else {
-				// En caso contrario chocara con el fondo, añadimos su color
-				r += kr * color.getRed();
-				g += kr * color.getGreen();
-				b += kr * color.getBlue();
+		if (kr > 0) {
+			for (Objeto o : objects) {
+
+				if (reflejado.trace(o)) {
+					// Reflejado(origen en p pasando por la interseccion con el
+					// objeto)
+					// Calculamos el color del objeto intersectado y lo añadimos
+					Color c = o.Shade(reflejado, p, lightSources, objects);
+					r += kr * c.getRed();
+					g += kr * c.getGreen();
+					b += kr * c.getBlue();
+				} else {
+					// En caso contrario chocara con el fondo, añadimos su color
+					r += kr * color.getRed();
+					g += kr * color.getGreen();
+					b += kr * color.getBlue();
+				}
 			}
 		}
-		
+
 		/*
 		 * CALCULO DE LA REFLEXION
 		 */
 		// Si el color es mayor de 1 se devuelve 1
-		r = (r > 1f) ? 1f : r;
-		g = (g > 1f) ? 1f : g;
-		b = (b > 1f) ? 1f : b;
-		return new Color((float) r, (float) g, (float) b);
+		r = (r > 255f) ? 255f : r;
+		g = (g > 255f) ? 255f : g;
+		b = (b > 255f) ? 255f : b;
+		return new Color((float) r/255, (float) g/255, (float) b/255);
 	}
 
 	/*

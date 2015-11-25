@@ -7,6 +7,6 @@ import java.util.ArrayList;
 abstract interface Objeto {
     public abstract boolean intersect(Rayo r);
     public String toString();
-	public Color Shade(Rayo r, Point3D eye, ArrayList<Luz> lights, ArrayList<Objeto> objects, Color bgnd);
+	public Color Shade(Rayo r, Point3D eye, ArrayList<Luz> lights, ArrayList<Objeto> objects);
 	
 }

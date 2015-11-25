@@ -19,6 +19,7 @@ public class Rayo {
 	        object = null;
 	        for(Objeto object: objects) {
 	            object.intersect(this);
+	            break;
 	        }
 	        return (object != null);
 	    }

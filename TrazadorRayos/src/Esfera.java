@@ -7,8 +7,10 @@ public class Esfera implements Objeto {
 	double radius;
 	double radSqr;
 	ModeloLuz m;
+	Color bgnd;
 
-	public Esfera(ModeloLuz m, Vector3D c, double r) {
+	public Esfera(ModeloLuz m, Vector3D c, double r, Color bgnd) {
+		this.bgnd = bgnd;
 		this.m = m;
 		center = c;
 		radius = r;
@@ -43,7 +45,7 @@ public class Esfera implements Objeto {
 	}
 
 	public Color Shade(Rayo r, Point3D eye, ArrayList<Luz> lights,
-			ArrayList<Objeto> objects, Color bgnd) {
+			ArrayList<Objeto> objects) {
 
 		// 0. (r) opuesto de L
 
