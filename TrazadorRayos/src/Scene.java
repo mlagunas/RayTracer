@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.util.ArrayList;
 
 public class Scene {
@@ -5,18 +6,12 @@ public class Scene {
 
    private ArrayList<Luz> lights;
 
-   private ColorRGB ambientLight;
-
-   private ColorRGB backgroundColor;
+   private Color backgroundColor;
    
-   private ArrayList<Luz> allLights;
-
-  
    public Scene() {
       objects = new ArrayList<Objeto>();
       lights = new ArrayList<Luz>();
-      ambientLight = ColorRGB.black;
-      backgroundColor = ColorRGB.black;
+      backgroundColor = Color.black;
    }
 
    public ArrayList<Objeto> getObjects() {
@@ -35,7 +30,7 @@ public class Scene {
       }
    }
 
-   public void setLight(int index, Luz light) {
+   public void setLight(Luz light) {
       lights.add(light);
    }
 
@@ -43,30 +38,20 @@ public class Scene {
       objects.add(object);
    }
 
-   public ColorRGB getAmbientLight() {
-      return ambientLight;
-   }
-
-   public void setAmbientLight(ColorRGB ambientLight) {
-      this.ambientLight = ambientLight;
-   }
-
-   public ColorRGB getBackgroundColor() {
+   public Color getBackgroundColor() {
       return backgroundColor;
    }
 
-   public void setBackgroundColor(ColorRGB backgroundColor) {
+   public void setBackgroundColor(Color backgroundColor) {
       this.backgroundColor = backgroundColor;
    }
 
-public ArrayList<Luz> getLights() {
-	return lights;
-}
-
-public void setLights(ArrayList<Luz> lights) {
-	this.lights = lights;
-}
-
-   
+	public ArrayList<Luz> getLights() {
+		return lights;
+	}
+	
+	public void setLights(ArrayList<Luz> lights) {
+		this.lights = lights;
+	}
 
 }
