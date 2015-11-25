@@ -11,8 +11,10 @@ public class Plano implements Objeto {
 	Vector3D n;
 	ModeloLuz m;
 	double d;
+	private Color bgnd;
 
-	public Plano(ModeloLuz m, double d, float x, float y, float z) {
+	public Plano(ModeloLuz m, double d, float x, float y, float z, Color bgnd) {
+		this.bgnd= bgnd;
 		this.m = m;
 		this.n = new Vector3D(x, y, z);
 		this.d = d;
@@ -50,7 +52,7 @@ public class Plano implements Objeto {
 
 	@Override
 	public Color Shade(Rayo r, Point3D eye, ArrayList<Luz> lights,
-			ArrayList<Objeto> objects, Color bgnd) {
+			ArrayList<Objeto> objects) {
 		// 0. (r) opuesto de L
 
 		// 1. (p) Punto de intersección rayo-objeto

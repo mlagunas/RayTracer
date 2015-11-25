@@ -60,9 +60,6 @@ public class TrazadorDeRayos {
 		for (int j = 0; j < imageWidth; ++j) {
 			for (int i = 0; i < imageHeight; ++i) {
 				/* Construye el rayo que pasa por el pixel i,j */
-				System.out.println("Pixel " + (i - (imageHeight / 2))
-						+ (j - (imageWidth / 2)));
-
 				Rayo primRay = camara.constructRayThroughPixel(i
 						- (imageHeight / 2), j - (imageWidth / 2));
 				pixelColor = background;
