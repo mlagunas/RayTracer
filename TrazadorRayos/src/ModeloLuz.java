@@ -82,8 +82,8 @@ public class ModeloLuz {
 		 */
 
 		// Calculo del Rayo reflejado
-		Rayo reflejado = new Rayo(new Point3D(p.x, p.y, p.z), Ref);
 		if (kr > 0) {
+			Rayo reflejado = new Rayo(new Point3D(p.x, p.y, p.z), Ref);
 			for (Objeto o : objects) {
 
 				if (reflejado.trace(o)) {
