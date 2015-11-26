@@ -20,9 +20,7 @@ public class Programa {
 		cam.calculateVectors();
 
 		Scene escena = new Scene();
-		ColorRGB ambientLight = new ColorRGB();
-		escena.setAmbientLight(ambientLight);
-		ColorRGB backgroundColor = new ColorRGB();
+		Color backgroundColor = Color.black;
 		escena.setBackgroundColor(backgroundColor);
 		ArrayList<Objeto> objects = new ArrayList<>();
 		//Plano e = new Plano(new ModeloLuz(0.5, 0.5, 0.5, 0, 100), 5, 5, 2, 1,
