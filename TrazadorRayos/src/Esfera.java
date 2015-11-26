@@ -7,10 +7,10 @@ public class Esfera implements Objeto {
 	double radius;
 	double radSqr;
 	ModeloLuz m;
-	Color bgnd;
+	Color color;
 
-	public Esfera(ModeloLuz m, Vector3D c, double r, Color bgnd) {
-		this.bgnd = bgnd;
+	public Esfera(ModeloLuz m, Vector3D c, double r, Color color) {
+		this.color = color;
 		this.m = m;
 		center = c;
 		radius = r;
@@ -44,8 +44,8 @@ public class Esfera implements Objeto {
 		return true;
 	}
 
-	public Color Shade(Rayo r, Point3D eye, ArrayList<Luz> lights,
-			ArrayList<Objeto> objects) {
+	public Color Shade(Rayo r, ArrayList<Luz> lights,
+			ArrayList<Objeto> objects, Color bgnd) {
 
 		// 0. (r) opuesto de L
 
@@ -65,7 +65,8 @@ public class Esfera implements Objeto {
 				-r.direction.z);
 
 		// 4. (v) Rayo al ojo
-		Vector3D v = new Vector3D(px - eye.x, py - eye.y, pz - eye.z);
+		Vector3D v = new Vector3D(px - r.origin.x, py - r.origin.y, pz
+				- r.origin.z);
 
 		// 5. (ref) Rayo reflejado
 		double twice = 2 * Vector3D.dotProd(v, n);
@@ -75,7 +76,8 @@ public class Esfera implements Objeto {
 		Vector3D frac = null;
 
 		// Hacemos el calculo del color en ese pixel
-		return m.calculo(bgnd, lights, objects, l, p, n, v, r.origin, ref,frac);
+		return m.calculo(color, bgnd, lights, objects, l, p, n, v, r.origin,
+				ref, frac);
 	}
 
 	public String toString() {

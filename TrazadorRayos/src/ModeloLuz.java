@@ -16,7 +16,7 @@ public class ModeloLuz {
 		this.n = n;
 	}
 
-	public Color calculo(Color color, ArrayList<Luz> lightSources,
+	public Color calculo(Color color, Color bgnd, ArrayList<Luz> lightSources,
 			ArrayList<Objeto> objects, Vector3D L, Point3D p, Vector3D N,
 			Vector3D V, Vector3D R, Vector3D Ref, Vector3D frac) {
 		double r = 0;
@@ -45,7 +45,7 @@ public class ModeloLuz {
 				Point3D poffset = new Point3D(p.x * L.x, p.y * L.y, p.z * L.z);
 				Rayo shadowRay = new Rayo(poffset, L);
 				if (shadowRay.trace(objects))
-					return null;
+					break;
 
 				/*
 				 * CALCULO LUZ DIFUSA Kd*Id Id = I*cos(N·L)
@@ -96,15 +96,15 @@ public class ModeloLuz {
 					// Reflejado(origen en p pasando por la interseccion con el
 					// objeto)
 					// Calculamos el color del objeto intersectado y lo añadimos
-					Color c = o.Shade(reflejado, p, lightSources, objects);
+					Color c = o.Shade(reflejado, lightSources, objects, bgnd);
 					r += kr * c.getRed();
 					g += kr * c.getGreen();
 					b += kr * c.getBlue();
 				} else {
 					// En caso contrario chocara con el fondo, añadimos su color
-					r += kr * color.getRed();
-					g += kr * color.getGreen();
-					b += kr * color.getBlue();
+					r += kr * bgnd.getRed();
+					g += kr * bgnd.getGreen();
+					b += kr * bgnd.getBlue();
 				}
 			}
 		}
