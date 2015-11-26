@@ -43,5 +43,7 @@ public class Programa {
 		rayTracer.setEscena(escena);
 
 		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
+
+//		rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,1);
 	}
 }

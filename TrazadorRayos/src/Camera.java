@@ -63,7 +63,7 @@ public class Camera {
 		lookAt.add(towards);
 		lookAt.add(right);
 		lookAt.add(up);
-		
+		System.out.println(j+","+i);
 		System.out.println(lookAt.toString());
         
         Vector3D rayDirection = new Vector3D(lookAt, eye);
@@ -71,13 +71,13 @@ public class Camera {
 		return new Rayo(eye, rayDirection);
 	}
 	
-	public ArrayList<Point3D> getPixelPositionSuperSampledList(double i, double j, int samplingRadius){
+	public ArrayList<Rayo> getPixelPositionSuperSampledList(double i, double j, int samplingRadius){
 		if (!initialized) { 
 			calculateVectors();
 		}
 		
 		final int count = getSuperSampledCount(samplingRadius);
-	    final ArrayList<Point3D> pixelPositionList = new ArrayList<>(count);
+	    final ArrayList<Rayo> pixelRayList = new ArrayList<>(count);
 	    
 	    Point3D lookAt = null;
 		Vector3D towards = null;
@@ -85,7 +85,9 @@ public class Camera {
 		Vector3D right = null;
 
 	    final double du = realStepU / (3 * samplingRadius + 1);
+	    System.out.println(du);
 	    final double dv = realStepV / (3 * samplingRadius + 1);
+	    System.out.println(dv);
 	    
 	    for (int k = -samplingRadius; k <= samplingRadius; k++) {
 	    	for (int l = -samplingRadius; l <= samplingRadius; l++) {
@@ -104,46 +106,47 @@ public class Camera {
 	            lookAt.add(towards);
 	    		lookAt.add(right);
 	    		lookAt.add(up);
-	            
-	            pixelPositionList.add(lookAt);
+	    		System.out.println(j+","+i);
+	            System.out.println(lookAt.toString());
+	            pixelRayList.add(new Rayo(eye, new Vector3D(lookAt, eye)));
 	        }
 	    }
-		return pixelPositionList;	
+		return pixelRayList;	
 	}
 	
-	public ArrayList<Rayo> getPimaryRaySuperSampledList(int i, int j, int r) {
-	      final int count = getSuperSampledCount(r);
-	      final ArrayList<Point3D> rayOriginList = getRayOriginSuperSampledList(i, j, r);
-	      final ArrayList<Vector3D> rayDirectionList = getRayDirectionSuperSampledList(i, j, r);
-	      if (rayDirectionList != null) {
-	         final ArrayList<Rayo> primaryRayList = new ArrayList<>(count);
-	         Vector3D currentDirection = null;
-	         for (int k = 0; k < count; k++) {
-	            currentDirection = rayDirectionList.get(k);
-	            if (currentDirection != null) {
-	               primaryRayList.add(new Rayo(rayOriginList.get(k), currentDirection));
-	            } else {
-	               primaryRayList.add(null);
-	            }
-	         }
-	         return primaryRayList;
-	      } else {
-	         return null;
-	      }
-	}
-
-	protected ArrayList<Vector3D> getRayDirectionSuperSampledList(int i, int j, int r) {
-		final int count = getSuperSampledCount(r);
-		final ArrayList<Vector3D> directionList = new ArrayList<>(count);
-		for (int k = 0; k < count; k++) {
-			directionList.add(lookVector);
-		}
-		return directionList;
-	}
-
-	protected ArrayList<Point3D> getRayOriginSuperSampledList(int i, int j, int r) {
-		return getPixelPositionSuperSampledList(i, j, r);
-	}
+//	public ArrayList<Rayo> getPimaryRaySuperSampledList(int i, int j, int r) {
+//	      final int count = getSuperSampledCount(r);
+//	      final ArrayList<Point3D> rayOriginList = getRayOriginSuperSampledList(i, j, r);
+//	      final ArrayList<Vector3D> rayDirectionList = getRayDirectionSuperSampledList(i, j, r);
+//	      if (rayDirectionList != null) {
+//	         final ArrayList<Rayo> primaryRayList = new ArrayList<>(count);
+//	         Vector3D currentDirection = null;
+//	         for (int k = 0; k < count; k++) {
+//	            currentDirection = rayDirectionList.get(k);
+//	            if (currentDirection != null) {
+//	               primaryRayList.add(new Rayo(rayOriginList.get(k), currentDirection));
+//	            } else {
+//	               primaryRayList.add(null);
+//	            }
+//	         }
+//	         return primaryRayList;
+//	      } else {
+//	         return null;
+//	      }
+//	}
+//
+//	protected ArrayList<Vector3D> getRayDirectionSuperSampledList(int i, int j, int r) {
+//		final int count = getSuperSampledCount(r);
+//		final ArrayList<Vector3D> directionList = new ArrayList<>(count);
+//		for (int k = 0; k < count; k++) {
+//			directionList.add(lookVector);
+//		}
+//		return directionList;
+//	}
+//
+//	protected ArrayList<Point3D> getRayOriginSuperSampledList(int i, int j, int r) {
+//		return getPixelPositionSuperSampledList(i, j, r);
+//	}
 
 	public static int getSuperSampledCount(int r) {
 		return (2 * r + 1) * (2 * r + 1);
