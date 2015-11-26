@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.util.ArrayList;
 
 
@@ -17,11 +18,21 @@ public class Rayo {
 	    public boolean trace(ArrayList<Objeto> objects) {
 	        t = MAX_T;
 	        object = null;
-	        for(Objeto object: objects) {
+	        for(Objeto object:objects) {
 	            object.intersect(this);
-	            break;
 	        }
 	        return (object != null);
+	    }
+
+	    // The following method is not strictly needed, and most likely
+	    // adds unnecessary overhead, but I prefered the syntax
+	    //
+	    //            ray.Shade(...)
+	    // to
+	    //            ray.object.Shade(ray, ...)
+	    //
+	    public final Color Shade(ArrayList<Luz> lights, ArrayList<Objeto> objects, Color bgnd) {
+	        return object.Shade(this, lights, objects, bgnd);
 	    }
 	    
 	    public boolean trace(Objeto object) {

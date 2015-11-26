@@ -11,10 +11,10 @@ public class Plano implements Objeto {
 	Vector3D n;
 	ModeloLuz m;
 	double d;
-	private Color bgnd;
+	private Color color;
 
-	public Plano(ModeloLuz m, double d, float x, float y, float z, Color bgnd) {
-		this.bgnd= bgnd;
+	public Plano(ModeloLuz m, double d, float x, float y, float z, Color color) {
+		this.color= color;
 		this.m = m;
 		this.n = new Vector3D(x, y, z);
 		this.d = d;
@@ -49,8 +49,8 @@ public class Plano implements Objeto {
 	}
 
 	@Override
-	public Color Shade(Rayo r, Point3D eye, ArrayList<Luz> lights,
-			ArrayList<Objeto> objects) {
+	public Color Shade(Rayo r, ArrayList<Luz> lights,
+			ArrayList<Objeto> objects, Color bgnd) {
 		// 0. (r) opuesto de L
 
 		// 1. (p) Punto de intersección rayo-objeto
@@ -67,7 +67,7 @@ public class Plano implements Objeto {
 				-r.direction.z);
 
 		// 4. (v) Rayo al ojo
-		Vector3D v = new Vector3D(px - eye.x, py - eye.y, pz - eye.z);
+		Vector3D v = new Vector3D(px - r.origin.x, py - r.origin.y, pz - r.origin.z);
 
 		// 5. (ref) Rayo reflejado
 		Vector3D ref = r.origin.reflect(n);
@@ -77,7 +77,7 @@ public class Plano implements Objeto {
 		
 		// The illumination model is applied
 		// by the surface's Shade() method
-		return m.calculo(bgnd, lights, objects, l, p, n, v, r.origin, ref, frac);
+		return m.calculo(color,bgnd, lights, objects, l, p, n, v, r.origin, ref, frac);
 	}
 
 }
