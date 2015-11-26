@@ -27,52 +27,58 @@ public class ModeloLuz {
 			 * CALCULO DE LA LUZ AMBIENTAL
 			 */
 			if (light.getLightType() == Luz.AMBIENT) {
-				r += ka * light.getIr() * color.getRed();
-				g += ka * light.getIg() * color.getGreen();
-				b += ka * light.getIb() * color.getBlue();
+				r += ka * light.getIr() / 255 * color.getRed() / 255;
+				g += ka * light.getIg() / 255 * color.getGreen() / 255;
+				b += ka * light.getIb() / 255 * color.getBlue() / 255;
 
-			}
+			} else {
+				/*
+				 * else { if (light.lightType == Light.POINT) { l = new
+				 * Vector3dd(light.lvec.x - p.x, light.lvec.y - p.y,
+				 * light.lvec.z - p.z); l.normalize(); } else { l = new
+				 * Vector3dd(-light.lvec.x, -light.lvec.y, -light.lvec.z); }
+				 */
 
-			/*
-			 * else { if (light.lightType == Light.POINT) { l = new
-			 * Vector3dd(light.lvec.x - p.x, light.lvec.y - p.y, light.lvec.z -
-			 * p.z); l.normalize(); } else { l = new Vector3dd(-light.lvec.x,
-			 * -light.lvec.y, -light.lvec.z); }
-			 */
+				/*
+				 * CALCULO SI ES UN PUNTO EN SOMBRA
+				 */
+				Point3D poffset = new Point3D(p.x * L.x, p.y * L.y, p.z * L.z);
+				Rayo shadowRay = new Rayo(poffset, L);
+				if (shadowRay.trace(objects))
+					return null;
 
-			/*
-			 * CALCULO SI ES UN PUNTO EN SOMBRA
-			 */
-			Point3D poffset = new Point3D(p.x * L.x, p.y * L.y, p.z * L.z);
-			Rayo shadowRay = new Rayo(poffset, L);
-			if (shadowRay.trace(objects))
-				break;
-
-			/*
-			 * CALCULO LUZ DIFUSA Kd*Id Id = I*cos(N·L)
-			 */
-			if (kd > 0) {
-				// cos(N·L)
-				double lambert = Math.cos(Vector3D.dotProd(N, L));
-				if (lambert > 0) {
-					// Kd*cos(N·L)*I
-					r += kd * lambert * light.getIr() * color.getRed();
-					g += kd * lambert * light.getIg() * color.getGreen();
-					b += kd * lambert * light.getIb() * color.getBlue();
+				/*
+				 * CALCULO LUZ DIFUSA Kd*Id Id = I*cos(N·L)
+				 */
+				if (kd > 0) {
+					// cos(N·L)
+					double lambert = Math.cos(Vector3D.dotProd(N, L));
+					if (lambert > 0) {
+						// Kd*cos(N·L)*I
+						r += kd * lambert * light.getIr() / 255
+								* color.getRed() / 255;
+						g += kd * lambert * light.getIg() / 255
+								* color.getGreen() / 255;
+						b += kd * lambert * light.getIb() / 255
+								* color.getBlue() / 255;
+					}
 				}
-			}
 
-			/*
-			 * CALCULO LUZ ESPECULAR Ks*Is Is = I*cos(R·V)^n
-			 */
-			if (ks > 0) {
-				// cos(R·V)^n
-				double spec = Math.pow(n, Math.cos(V.dotProd(R)));
-				if (spec > 0) {
-					//
-					r += ks * spec * light.getIr() * color.getRed();
-					g += ks * spec * light.getIg() * color.getGreen();
-					b += ks * spec * light.getIb() * color.getBlue();
+				/*
+				 * CALCULO LUZ ESPECULAR Ks*Is Is = I*cos(R·V)^n
+				 */
+				if (ks > 0) {
+					// cos(R·V)^n
+					double spec = Math.pow(n, Math.cos(Vector3D.dotProd(V,R)));
+					if (spec > 0) {
+						//
+						r += ks * spec * light.getIr() / 255 * color.getRed()
+								/ 255;
+						g += ks * spec * light.getIg() / 255 * color.getGreen()
+								/ 255;
+						b += ks * spec * light.getIb() / 255 * color.getBlue()
+								/ 255;
+					}
 				}
 			}
 		}
@@ -107,10 +113,10 @@ public class ModeloLuz {
 		 * CALCULO DE LA REFLEXION
 		 */
 		// Si el color es mayor de 1 se devuelve 1
-		r = (r > 255f) ? 255f : r;
-		g = (g > 255f) ? 255f : g;
-		b = (b > 255f) ? 255f : b;
-		return new Color((float) r/255, (float) g/255, (float) b/255);
+		r = (r > 1f) ? 1f : r;
+		g = (g > 1f) ? 1f : g;
+		b = (b > 1f) ? 1f : b;
+		return new Color((float) r, (float) g, (float) b);
 	}
 
 	/*
