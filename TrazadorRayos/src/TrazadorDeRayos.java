@@ -61,8 +61,7 @@ public class TrazadorDeRayos {
 		for (int j = 0; j < imageWidth; ++j) {
 			for (int i = 0; i < imageHeight; ++i) {
 				/* Construye el rayo que pasa por el pixel i,j */
-				Rayo primRay = camara.constructRayThroughPixel(i
-						- (imageHeight / 2), j - (imageWidth / 2));
+				Rayo primRay = camara.constructRayThroughPixel(i- (imageHeight / 2), j - (imageWidth / 2));
 				pixelColor = background;
 				if (primRay != null) {
 					/* Mira si intersecta y devuelve el punto a pintar */
@@ -72,8 +71,7 @@ public class TrazadorDeRayos {
 									primRay.origin), escena.getLights(), escena
 									.getObjects());
 						}
-						else{
-						}
+
 					}
 					if (finalColor == null) {
 						nohit++;
@@ -108,8 +106,7 @@ public class TrazadorDeRayos {
 		int innerCount = 0;
 		for (int j = 0; j < imageWidth; ++j) {
 			for (int i = 0; i < imageHeight; ++i) {
-				currentPrimaryRayList = camara.getPixelPositionSuperSampledList(i
-						- (imageHeight / 2), j - (imageWidth / 2),radio);
+				currentPrimaryRayList = camara.getPixelPositionSuperSampledList(i-(imageHeight / 2), j - (imageWidth / 2),radio);
 				rSum = 0;
 				gSum = 0;
 				bSum = 0;
@@ -121,16 +118,16 @@ public class TrazadorDeRayos {
 							if (currentPrimaryRaySuperSample.trace(o)) {
 								currentColor = o.Shade(currentPrimaryRaySuperSample, new Point3D(
 										currentPrimaryRaySuperSample.origin), escena.getLights(), escena.getObjects());
-								if (currentColor!=null){
-									System.out.println();
-									rSum += currentColor.getRed();
-									gSum += currentColor.getGreen();
-									bSum += currentColor.getBlue();
-									innerCount++;	
-								}
 							}					
 						}
-					}
+						if (currentColor!=null){
+							System.out.println();
+							rSum += currentColor.getRed();
+							gSum += currentColor.getGreen();
+							bSum += currentColor.getBlue();
+							innerCount++;	
+						}
+					}		
 				}
 				if (innerCount==0) {
 					finalColor = new Color(background);
