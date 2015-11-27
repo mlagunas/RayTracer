@@ -50,8 +50,8 @@ public class Programa {
 		rayTracer.setPantalla(viewport);
 		rayTracer.setEscena(escena);
 
-		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
+		//rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
 
-		// rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,1);
+		rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,1);
 	}
 }
