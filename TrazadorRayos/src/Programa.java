@@ -28,21 +28,28 @@ public class Programa {
 		ArrayList<Objeto> objects = new ArrayList<>();
 		// Plano e = new Plano(new ModeloLuz(0.5, 0.5, 0.5, 0, 100), 5, 5, 2, 1,
 		// Color.white);
-		Esfera e = new Esfera(new ModeloLuz(0.3, 0.2, 0.2, 0, 50), new Vector3D(10,
-				0, 0), 5, Color.green);
+		// Plano p = new Plano(new ModeloLuz(0.3, 0.2, 0.2, 0, 50), new
+		// Vector3D(1,0,0),0);
+		// objects.add(p);
+		Esfera e = new Esfera(new ModeloLuz(0.1, 0.5, 0.2, 0, 200), new Vector3D(
+				10, 0, 0), 5, new Color((float) 1, (float)1, (float) 1));
 		objects.add(e);
-		/*e = new Esfera(new ModeloLuz(0.2, 0.2, 0.2, 0, 5),
-				new Vector3D(7, 0, 0), 3, Color.red);
-		objects.add(e);*/
+		/*
+		 * e = new Esfera(new ModeloLuz(0.2, 0.2, 0.2, 0, 5), new Vector3D(7, 0,
+		 * 0), 3, Color.red); objects.add(e);
+		 */
 
 		escena.setObjects(objects);
 		ArrayList<Luz> lights = new ArrayList<Luz>();
-		Luz luzA = new Luz(Luz.AMBIENT, new Vector3D(0, 0, 0), new Color(255,
-				255, 255));
+
+		Luz luzA = new Luz(Luz.AMBIENT, new Vector3D(0, 0, 0), 1, 1, 1);
 		lights.add(luzA);
-		Luz luz = new Luz(Luz.DIRECTIONAL, new Vector3D(1, 2, 3), new Color(1,
-				4, 2));
-		lights.add(luz);
+		Luz luzD = new Luz(Luz.DIRECTIONAL, new Vector3D(5, 5, 0),(float) 0.5,(float) 0.5,(float) 0.5);
+		lights.add(luzD);
+
+		Luz luzP = new Luz(Luz.POINT, new Vector3D(10, 10, 10), (float) 0.5,
+				(float) 0.5, (float) 0.5);
+		lights.add(luzP);
 		escena.setLights(lights);
 
 		TrazadorDeRayos rayTracer = new TrazadorDeRayos();

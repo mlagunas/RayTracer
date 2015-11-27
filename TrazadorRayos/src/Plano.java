@@ -8,7 +8,7 @@ import java.util.Vector;
 // nx * x + ny * y + nz * z + d = 0
 public class Plano implements Objeto {
 
-	Vector3D n;
+	Vector3D N;
 	ModeloLuz m;
 	double d;
 	private Color color;
@@ -16,13 +16,13 @@ public class Plano implements Objeto {
 	public Plano(ModeloLuz m, double d, float x, float y, float z, Color color) {
 		this.color= color;
 		this.m = m;
-		this.n = new Vector3D(x, y, z);
+		this.N = new Vector3D(x, y, z);
 		this.d = d;
 	}
 
 	public Plano(ModeloLuz m, Vector3D v, double d) {
 		this.m = m;
-		this.n = v;
+		this.N = v;
 		this.d = d;
 	}
 
@@ -32,7 +32,7 @@ public class Plano implements Objeto {
 	// d = 0
 	// nx * dx + ny * dy + nz * dz = N · D
 	// t = - (nx * ox + ny * oy + nz * oz + d) / (nx * dx + ny * dy + nz * dz)
-	@Override
+	/*@Override
 	public boolean intersect(Rayo r) {
 		Vector3D o = r.origin;
 		Vector3D d = r.direction;
@@ -46,7 +46,41 @@ public class Plano implements Objeto {
 		// return false;
 		return true;
 
-	}
+	}*/
+	
+	  /**
+	    * Find the intersection of the plane and a given ray.
+	    *
+	    * The return value is positive is the intersection is found and
+	    * this value gives the distance along the ray. Negative values
+	    * imply that the intersection was either not successful or the
+	    * intersection point was before the origin. This value can be used
+	    * with the pointAt method of the Ray class (@see Ray#pointAt)
+	    *
+	    * @param ray the ray to intersect with 
+	    * @return a <code>double</code> value that gives the distance
+	    * along the ray. 
+	    */
+	  public boolean intersect(Rayo ray) {
+	    Vector3D tmp; 
+	    double d1,d2,t;
+
+	    tmp = new Vector3D (ray.origin.x, ray.origin.y, ray.origin.z);
+
+	    /* Find angle between plane and direction of ray*/
+	    d2 = Vector3D.dotProd(ray.direction, N);
+		
+	    /* Is ray parallel to plane */
+	    if (Math.abs(d2) < 0.00000001) {
+	      return false;
+	    }
+		
+	    d1 = Vector3D.dotProd(tmp,N);
+	    t = (d - d1)/d2;
+		ray.t = t;
+		ray.object = this;
+	    return true;
+	  }
 
 	@Override
 	public Color Shade(Rayo r, ArrayList<Luz> lights,
@@ -70,14 +104,14 @@ public class Plano implements Objeto {
 		Vector3D v = new Vector3D(px - r.origin.x, py - r.origin.y, pz - r.origin.z);
 
 		// 5. (ref) Rayo reflejado
-		Vector3D ref = r.origin.reflect(n);
+		Vector3D ref = r.origin.reflect(N);
 		
 		// 6. (frac) Rayo refractado
 		Vector3D frac = null;
 		
 		// The illumination model is applied
 		// by the surface's Shade() method
-		return m.calculo(color,bgnd, lights, objects, l, p, n, v, r.origin, ref, frac);
+		return m.calculo(color,bgnd, lights, objects, l, p, N, v, r.origin, ref, frac);
 	}
 
 }
