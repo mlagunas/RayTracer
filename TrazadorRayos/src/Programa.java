@@ -1,6 +1,9 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
+import java.awt.Color;
+import java.util.ArrayList;
+
 public class Programa {
 
 	public static void main(String[] args) {
