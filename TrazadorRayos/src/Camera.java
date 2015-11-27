@@ -30,12 +30,12 @@ public class Camera {
       vVector = Vector3D.crossProd(wVector, uVector);
     	
 
-        System.out.println("Eye: "+eye.toString());
+       /* System.out.println("Eye: "+eye.toString());
         System.out.println("LookVector: "+lookVector.toString());
         System.out.println("uVector: "+uVector.toString());
         System.out.println("upVector: "+upVector.toString());
         System.out.println("wVector: "+wVector.toString());
-        System.out.println("vVector: "+vVector.toString());
+        System.out.println("vVector: "+vVector.toString());*/
         
         realStepU = viewport.getWidth() / (viewport.getColPixels()-1);
         realStepV = viewport.getHeight() / (viewport.getFilPixels()-1);
@@ -63,8 +63,8 @@ public class Camera {
 		lookAt.add(towards);
 		lookAt.add(right);
 		lookAt.add(up);
-		System.out.println(j+","+i);
-		System.out.println(lookAt.toString());
+		/*System.out.println(j+","+i);
+		System.out.println(lookAt.toString());*/
         
         Vector3D rayDirection = new Vector3D(lookAt, eye);
 
@@ -85,9 +85,9 @@ public class Camera {
 		Vector3D right = null;
 
 	    final double du = realStepU / (3 * samplingRadius + 1);
-	    System.out.println(du);
+	    /*System.out.println(du);*/
 	    final double dv = realStepV / (3 * samplingRadius + 1);
-	    System.out.println(dv);
+	    /*System.out.println(dv);*/
 	    
 	    for (int k = -samplingRadius; k <= samplingRadius; k++) {
 	    	for (int l = -samplingRadius; l <= samplingRadius; l++) {
@@ -106,8 +106,8 @@ public class Camera {
 	            lookAt.add(towards);
 	    		lookAt.add(right);
 	    		lookAt.add(up);
-	    		System.out.println(j+","+i);
-	            System.out.println(lookAt.toString());
+	    		/*System.out.println(j+","+i);
+	            System.out.println(lookAt.toString());*/
 	            pixelRayList.add(new Rayo(eye, new Vector3D(lookAt, eye)));
 	        }
 	    }

@@ -19,25 +19,31 @@ public class ModeloLuz {
 	public Color calculo(Color color, Color bgnd, ArrayList<Luz> lightSources,
 			ArrayList<Objeto> objects, Vector3D L, Point3D p, Vector3D N,
 			Vector3D V, Vector3D R, Vector3D Ref, Vector3D frac) {
-		double r = 0;
-		double g = 0;
-		double b = 0;
+		float r = 0;
+		float g = 0;
+		float b = 0;
+		float sr = color.getRed() / 255;
+		float sg = color.getGreen() / 255;
+		float sb = color.getBlue() / 255;
 		for (Luz light : lightSources) {
 			/*
 			 * CALCULO DE LA LUZ AMBIENTAL
 			 */
 			if (light.getLightType() == Luz.AMBIENT) {
-				r += ka * light.getIr() / 255 * color.getRed() / 255;
-				g += ka * light.getIg() / 255 * color.getGreen() / 255;
-				b += ka * light.getIb() / 255 * color.getBlue() / 255;
+				r += ka * light.r * sr;
+				g += ka * light.g * sg;
+				b += ka * light.b * sb;
 
 			} else {
-				/*
-				 * else { if (light.lightType == Light.POINT) { l = new
-				 * Vector3dd(light.lvec.x - p.x, light.lvec.y - p.y,
-				 * light.lvec.z - p.z); l.normalize(); } else { l = new
-				 * Vector3dd(-light.lvec.x, -light.lvec.y, -light.lvec.z); }
-				 */
+
+				if (light.lightType == Luz.POINT) {
+					L = new Vector3D(light.lvec.x - p.x, light.lvec.y - p.y,
+							light.lvec.z - p.z);
+					L.normalize();
+				} else {
+					L = new Vector3D(-light.lvec.x, -light.lvec.y,
+							-light.lvec.z);
+				}
 
 				/*
 				 * CALCULO SI ES UN PUNTO EN SOMBRA
@@ -50,17 +56,20 @@ public class ModeloLuz {
 				/*
 				 * CALCULO LUZ DIFUSA Kd*Id Id = I*cos(N·L)
 				 */
+				float lambert = 0;
 				if (kd > 0) {
 					// cos(N·L)
-					double lambert = Math.cos(Vector3D.dotProd(N, L));
+
+					lambert = (float) Vector3D.dotProd(N, L);
+					// Al aplicar el coseno los resultados que vemos son peores
+					// y no se nota apenas ningun gradiente
+					
+					// lambert = (float) Math.cos(lambert);
 					if (lambert > 0) {
 						// Kd*cos(N·L)*I
-						r += kd * lambert * light.getIr() / 255
-								* color.getRed() / 255;
-						g += kd * lambert * light.getIg() / 255
-								* color.getGreen() / 255;
-						b += kd * lambert * light.getIb() / 255
-								* color.getBlue() / 255;
+						r += kd * lambert * light.r * sr;
+						g += kd * lambert * light.g * sg;
+						b += kd * lambert * light.b * sb;
 					}
 				}
 
@@ -69,15 +78,14 @@ public class ModeloLuz {
 				 */
 				if (ks > 0) {
 					// cos(R·V)^n
-					double spec = Math.pow(n, Math.cos(Vector3D.dotProd(V,R)));
+					lambert *= 2;
+					float spec = (float) V.dotProd(new Vector3D(lambert * N.x- L.x, lambert * N.y - L.y, lambert * N.z - L.z));
+					//double spec = Math.pow(n, Math.cos(Vector3D.dotProd(V, R)));
 					if (spec > 0) {
 						//
-						r += ks * spec * light.getIr() / 255 * color.getRed()
-								/ 255;
-						g += ks * spec * light.getIg() / 255 * color.getGreen()
-								/ 255;
-						b += ks * spec * light.getIb() / 255 * color.getBlue()
-								/ 255;
+						r += ks * spec * light.r * sr;
+						g += ks * spec * light.g * sg;
+						b += ks * spec * light.b * sb;
 					}
 				}
 			}
@@ -97,9 +105,9 @@ public class ModeloLuz {
 					// objeto)
 					// Calculamos el color del objeto intersectado y lo añadimos
 					Color c = o.Shade(reflejado, lightSources, objects, bgnd);
-					r += kr * c.getRed();
-					g += kr * c.getGreen();
-					b += kr * c.getBlue();
+					r += kr * sr;
+					g += kr * sg;
+					b += kr * sb;
 				} else {
 					// En caso contrario chocara con el fondo, añadimos su color
 					r += kr * bgnd.getRed();
@@ -116,7 +124,7 @@ public class ModeloLuz {
 		r = (r > 1f) ? 1f : r;
 		g = (g > 1f) ? 1f : g;
 		b = (b > 1f) ? 1f : b;
-		return new Color((float) r, (float) g, (float) b);
+		return new Color(r, g, b);
 	}
 
 	/*
