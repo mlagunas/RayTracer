@@ -17,7 +17,7 @@ public class Programa {
 
 	public static void main(String[] args) {
 
-		final String PATH = "spheres.txt";
+		final String PATH = "spheres2.txt";
 
 		final int NUM_FILAS = 516;
 		final int NUM_COL = 516;
