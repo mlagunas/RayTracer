@@ -46,7 +46,6 @@ public class TrazadorDeRayos {
 	}
 
 	public void trazadorDeRayos(int imageWidth, int imageHeight) {
-		int pixelColor = 0;
 		Color finalColor = null;
 		int background = 0;
 		int hitpixels = 0;
@@ -57,7 +56,6 @@ public class TrazadorDeRayos {
 				/* Construye el rayo que pasa por el pixel i,j */
 				Rayo primRay = camara.constructRayThroughPixel(i
 						- (imageHeight / 2), j - (imageWidth / 2));
-				pixelColor = background;
 				if (primRay != null) {
 					/* Mira si intersecta y devuelve el punto a pintar */
 
@@ -111,7 +109,7 @@ public class TrazadorDeRayos {
 								currentColor = o
 										.Shade(currentPrimaryRaySuperSample,
 												escena.getLights(),
-												escena.getObjects(), new Color(background));
+												escena.getObjects(), new Color(background),0);
 								if (currentColor != null) {
 									System.out.println();
 									rSum += currentColor.getRed();

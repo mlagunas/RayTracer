@@ -32,7 +32,11 @@ public class Rayo {
 	    //            ray.object.Shade(ray, ...)
 	    //
 	    public final Color Shade(ArrayList<Luz> lights, ArrayList<Objeto> objects, Color bgnd) {
-	        return object.Shade(this, lights, objects, bgnd);
+	        return object.Shade(this, lights, objects, bgnd, 0);
+	    }
+	    
+	    public final Color Shade(ArrayList<Luz> lights, ArrayList<Objeto> objects, Color bgnd, int nRayos) {
+	        return object.Shade(this, lights, objects, bgnd, nRayos);
 	    }
 	    
 	    public boolean trace(Objeto object) {
