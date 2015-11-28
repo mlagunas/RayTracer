@@ -26,7 +26,7 @@ public class Camera {
     public void calculateVectors() {
     	
       wVector=Vector3D.scale(1/lookVector.length(), Vector3D.scale(-1, lookVector));
-      uVector = Vector3D.scale(Vector3D.crossProd(upVector, wVector).length(),Vector3D.crossProd(upVector, wVector));
+      uVector = Vector3D.scale(1/(Vector3D.crossProd(upVector, wVector).length()),Vector3D.crossProd(upVector, wVector));
       vVector = Vector3D.crossProd(wVector, uVector);
     	
 

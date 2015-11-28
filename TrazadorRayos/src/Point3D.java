@@ -64,6 +64,11 @@ public class Point3D {
 	        this.z -= point.z;        
 	    }
 	    
+	    public Vector3D to(Point3D point) {
+	        return new Vector3D(point.x-this.x,point.y-this.y,point.z-this.z);
+	    }
+	    
+	    
 	    public void scale(double s) {
 	        this.x *= s;
 	        this.y *= s;
