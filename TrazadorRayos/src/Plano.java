@@ -117,7 +117,7 @@ public class Plano implements Objeto {
 		if(isTransparent){ //Snell: sin(i)/sin(r) = nr/ni
 			// 6. (frac) Rayo refractado
 			
-			double NiNr=currentRefr/m.kt; 
+			double NiNr=currentRefr/m.index; 
 			double cosI=-Vector3D.dotProd(N, r.direction);
 			double cosR=Math.sqrt(1.0-((1.0-(cosI*cosI))*(NiNr*NiNr)));
 			

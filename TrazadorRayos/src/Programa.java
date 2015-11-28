@@ -17,7 +17,7 @@ public class Programa {
 
 	public static void main(String[] args) {
 
-		final String PATH = "spheres.txt";
+		final String PATH = "spheres2.txt";
 
 		final int NUM_FILAS = 516;
 		final int NUM_COL = 516;
@@ -62,7 +62,7 @@ public class Programa {
 			/*
 			 * OBJETOS
 			 */
-			ModeloLuz m = new ModeloLuz(0.5, 0.4, 0.2, 0, 10, 0);
+			ModeloLuz m = new ModeloLuz(0.5, 0.4, 0.2, 0, 10, 0,0.7);
 			Esfera e = new Esfera(m, new Vector3D(-2, -3, -2), 1.5, new Color(
 					(float) 0.7, (float) 0.2, (float) 0.8),true,true);
 			objects.add(e);
@@ -166,7 +166,7 @@ public class Programa {
 				float kt = (float) getNumber(st);
 				float index = (float) getNumber(st);
 				// index==??????
-				currentSurface = new ModeloLuz(ka, kd, ks, ns, kr, kt);
+				currentSurface = new ModeloLuz(ka, kd, ks, ns, kr, kt,index);
 			}
 		}
 		System.out.println("FIN");

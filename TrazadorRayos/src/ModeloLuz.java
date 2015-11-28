@@ -2,22 +2,26 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 public class ModeloLuz {
-	private final int MAX_RAYOS = 2;
+	//Maximo de rayos reflejados lanzados
+	private final int MAX_RAYOS = 10;
 	private final float MAX_COLOR = 255;
+	
 	double ka;
 	double kd;
 	double ks;
 	double kr;
 	double kt;
 	double n;
-
-	public ModeloLuz(double ka, double kd, double ks, double kr, double n, double kt) {
+	double index;
+	
+	public ModeloLuz(double ka, double kd, double ks, double kr, double n, double kt, double index) {
 		this.ka = ka; // Coeficiente ambiental
 		this.kd = kd; // Coeficiente difusa
 		this.ks = ks; // Coeficiente especular
 		this.kr = kr; // Coeficiente reflexion
 		this.kt = kt; // Coeficiente refraccion
 		this.n = n;
+		this.index=index;
 	}
 
 	public Color calculo(Color color, Color bgnd, ArrayList<Luz> lightSources,
