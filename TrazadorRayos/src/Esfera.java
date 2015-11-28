@@ -45,7 +45,7 @@ public class Esfera implements Objeto {
 	}
 
 	public Color Shade(Rayo r, ArrayList<Luz> lights,
-			ArrayList<Objeto> objects, Color bgnd) {
+			ArrayList<Objeto> objects, Color bgnd, int nRayos) {
 
 		// 0. (r) opuesto de L
 
@@ -77,7 +77,7 @@ public class Esfera implements Objeto {
 
 		// Hacemos el calculo del color en ese pixel
 		return m.calculo(color, bgnd, lights, objects, l, p, n, v, r.origin,
-				ref, frac);
+				ref, frac, nRayos);
 	}
 
 	public String toString() {

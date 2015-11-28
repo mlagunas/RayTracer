@@ -84,7 +84,7 @@ public class Plano implements Objeto {
 
 	@Override
 	public Color Shade(Rayo r, ArrayList<Luz> lights,
-			ArrayList<Objeto> objects, Color bgnd) {
+			ArrayList<Objeto> objects, Color bgnd, int nRayos) {
 		// 0. (r) opuesto de L
 
 		// 1. (p) Punto de intersección rayo-objeto
@@ -111,7 +111,7 @@ public class Plano implements Objeto {
 		
 		// The illumination model is applied
 		// by the surface's Shade() method
-		return m.calculo(color,bgnd, lights, objects, l, p, N, v, r.origin, ref, frac);
+		return m.calculo(color,bgnd, lights, objects, l, p, N, v, r.origin, ref, frac, nRayos);
 	}
 
 }

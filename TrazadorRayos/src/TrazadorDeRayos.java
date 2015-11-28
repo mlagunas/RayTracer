@@ -46,7 +46,6 @@ public class TrazadorDeRayos {
 	}
 
 	public void trazadorDeRayos(int imageWidth, int imageHeight) {
-		int pixelColor = 0;
 		Color finalColor = null;
 		int background = 0;
 		int hitpixels = 0;
@@ -57,7 +56,6 @@ public class TrazadorDeRayos {
 				/* Construye el rayo que pasa por el pixel i,j */
 				Rayo primRay = camara.constructRayThroughPixel(i
 						- (imageHeight / 2), j - (imageWidth / 2));
-				pixelColor = background;
 				if (primRay != null) {
 					/* Mira si intersecta y devuelve el punto a pintar */
 
@@ -106,32 +104,29 @@ public class TrazadorDeRayos {
 				for (int k = 0; k < count; k++) {
 					currentPrimaryRaySuperSample = currentPrimaryRayList.get(k);
 					if (currentPrimaryRaySuperSample != null) {
-						if (currentPrimaryRaySuperSample.trace(escena.getObjects())) {
-							currentColor = currentPrimaryRaySuperSample
-									.Shade(escena.getLights(),
-											escena.getObjects(), new Color(background));
-							rSum += currentColor.getRed();
-							gSum += currentColor.getGreen();
-							bSum += currentColor.getBlue();
-							innerCount++;
-							
-						}	
-						else{
-							currentColor=new Color(background);
-							rSum += currentColor.getRed();
-							gSum += currentColor.getGreen();
-							bSum += currentColor.getBlue();
-							innerCount++;
+						for (Objeto o : escena.getObjects()) {
+							if (currentPrimaryRaySuperSample.trace(o)) {
+								currentColor = o
+										.Shade(currentPrimaryRaySuperSample,
+												escena.getLights(),
+												escena.getObjects(), new Color(background),0);
+								if (currentColor != null) {
+									rSum += currentColor.getRed();
+									gSum += currentColor.getGreen();
+									bSum += currentColor.getBlue();
+									innerCount++;
+								}
+							}
 						}
 					}
 				}
-				if (innerCount != 0) {
+				if (innerCount == 0) {
+					finalColor = new Color(background);
+					nohit++;
+				} else {
 					hitpixels++;
 					finalColor = new Color((int) rSum / innerCount, (int) gSum
 							/ innerCount, (int) bSum / innerCount);
-				}
-				else{
-					nohit++;
 				}
 
 				canvas.setRGB(j, i, finalColor.getRGB());

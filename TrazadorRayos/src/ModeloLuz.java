@@ -2,29 +2,33 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 public class ModeloLuz {
+	private final int MAX_RAYOS = 2;
+	private final float MAX_COLOR = 255;
 	double ka;
 	double kd;
 	double ks;
 	double kr;
+	double kt;
 	double n;
 
-	public ModeloLuz(double ka, double kd, double ks, double kr, double n) {
+	public ModeloLuz(double ka, double kd, double ks, double kr, double n, double kt) {
 		this.ka = ka; // Coeficiente ambiental
 		this.kd = kd; // Coeficiente difusa
 		this.ks = ks; // Coeficiente especular
 		this.kr = kr; // Coeficiente reflexion
+		this.kt = kt; // Coeficiente refraccion
 		this.n = n;
 	}
 
 	public Color calculo(Color color, Color bgnd, ArrayList<Luz> lightSources,
 			ArrayList<Objeto> objects, Vector3D L, Point3D p, Vector3D N,
-			Vector3D V, Vector3D R, Vector3D Ref, Vector3D frac) {
+			Vector3D V, Vector3D R, Vector3D Ref, Vector3D frac, int nRayos) {
 		float r = 0;
 		float g = 0;
 		float b = 0;
-		float sr = color.getRed() / 255;
-		float sg = color.getGreen() / 255;
-		float sb = color.getBlue() / 255;
+		float sr = color.getRed() / (float)MAX_COLOR;
+		float sg = color.getGreen() / (float)MAX_COLOR;
+		float sb = color.getBlue() / (float)MAX_COLOR;
 		for (Luz light : lightSources) {
 			/*
 			 * CALCULO DE LA LUZ AMBIENTAL
@@ -63,7 +67,7 @@ public class ModeloLuz {
 					lambert = (float) Vector3D.dotProd(N, L);
 					// Al aplicar el coseno los resultados que vemos son peores
 					// y no se nota apenas ningun gradiente
-					
+
 					// lambert = (float) Math.cos(lambert);
 					if (lambert > 0) {
 						// Kd*cos(N·L)*I
@@ -79,8 +83,10 @@ public class ModeloLuz {
 				if (ks > 0) {
 					// cos(R·V)^n
 					lambert *= 2;
-					float spec = (float) V.dotProd(new Vector3D(lambert * N.x- L.x, lambert * N.y - L.y, lambert * N.z - L.z));
-					//double spec = Math.pow(n, Math.cos(Vector3D.dotProd(V, R)));
+					float spec = (float) V.dotProd(new Vector3D(lambert * N.x
+							- L.x, lambert * N.y - L.y, lambert * N.z - L.z));
+					// double spec = Math.pow(n, Math.cos(Vector3D.dotProd(V,
+					// R)));
 					if (spec > 0) {
 						//
 						r += ks * spec * light.r * sr;
@@ -96,25 +102,24 @@ public class ModeloLuz {
 		 */
 
 		// Calculo del Rayo reflejado
-		if (kr > 0) {
+		if (kr > 0  && nRayos < MAX_RAYOS) {
 			Rayo reflejado = new Rayo(new Point3D(p.x, p.y, p.z), Ref);
-			for (Objeto o : objects) {
-
-				if (reflejado.trace(o)) {
-					// Reflejado(origen en p pasando por la interseccion con el
-					// objeto)
-					// Calculamos el color del objeto intersectado y lo añadimos
-					Color c = o.Shade(reflejado, lightSources, objects, bgnd);
-					r += kr * sr;
-					g += kr * sg;
-					b += kr * sb;
-				} else {
-					// En caso contrario chocara con el fondo, añadimos su color
-					r += kr * bgnd.getRed();
-					g += kr * bgnd.getGreen();
-					b += kr * bgnd.getBlue();
-				}
+			
+			if (reflejado.trace(objects)) {
+				// Reflejado(origen en p pasando por la interseccion con el
+				// objeto)
+				// Calculamos el color del objeto intersectado y lo añadimos
+				Color c = reflejado.Shade(lightSources, objects, bgnd, nRayos+1);
+				r += kr * sr * c.getRed()/MAX_COLOR;
+				g += kr * sg * c.getGreen()/MAX_COLOR;
+				b += kr * sb * c.getBlue()/MAX_COLOR;
+			} else {
+				// En caso contrario chocara con el fondo, añadimos su color
+				r += kr * bgnd.getRed();
+				g += kr * bgnd.getGreen();
+				b += kr * bgnd.getBlue();
 			}
+
 		}
 
 		/*
