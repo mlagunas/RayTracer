@@ -50,11 +50,11 @@ public class Camera {
 		}
 		
 		Point3D lookAt = new Point3D(eye);
-		Vector3D towards = new Vector3D(lookVector);
+		Vector3D towards = new Vector3D(wVector);
 		Vector3D up = new Vector3D(vVector);
 		Vector3D right = new Vector3D(uVector);
 
-        towards.scale(screenDistance);
+        towards.scale(-screenDistance);
         final double du=i*(viewport.getWidth() / ((double) viewport.getColPixels()-1));
         final double dv=j*(viewport.getHeight() / ((double) viewport.getFilPixels()-1));
 		right.scale(du);
