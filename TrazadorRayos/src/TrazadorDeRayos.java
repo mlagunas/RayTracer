@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class TrazadorDeRayos {
 
+	private final double kref=1;
 	private Scene escena;
 
 	private BufferedImage canvas;
@@ -62,7 +63,7 @@ public class TrazadorDeRayos {
 					if (primRay.trace(escena.getObjects())) {
 						hitpixels++;
 						finalColor = primRay.Shade(escena.getLights(),
-								escena.getObjects(), new Color(background));
+								escena.getObjects(), new Color(background),kref);
 						System.out.println(finalColor + "Color final");
 					} else {
 						nohit++;
@@ -106,10 +107,8 @@ public class TrazadorDeRayos {
 					if (currentPrimaryRaySuperSample != null) {
 						for (Objeto o : escena.getObjects()) {
 							if (currentPrimaryRaySuperSample.trace(o)) {
-								currentColor = o
-										.Shade(currentPrimaryRaySuperSample,
-												escena.getLights(),
-												escena.getObjects(), new Color(background),0);
+								currentColor = currentPrimaryRaySuperSample.Shade(escena.getLights(),
+										escena.getObjects(), new Color(background),kref);
 								if (currentColor != null) {
 									rSum += currentColor.getRed();
 									gSum += currentColor.getGreen();

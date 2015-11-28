@@ -5,15 +5,16 @@ import java.util.ArrayList;
 
 public class Triangulo implements Objeto {
 
-	final float epsilon=0.00000001f;
 	protected Point3D vert[];
 	protected Vector3D normal;
 	protected ModeloLuz model;
 	private Vector3D p1p0, p2p1, p0p2; // vectores de los lados
+	private Color color;
+	boolean isMirror;
+	boolean isTransparent;
 	
 	
-	
-	public Triangulo(Point3D vert1, Point3D vert2, Point3D vert3, ModeloLuz modeloLuz) {
+	public Triangulo(Point3D vert1, Point3D vert2, Point3D vert3, ModeloLuz modeloLuz, Color color,boolean m,boolean t) {
 		super();
 		vert = new Point3D[3];
 	    vert[0] = vert1;
@@ -26,6 +27,9 @@ public class Triangulo implements Objeto {
 	    normal = Vector3D.crossProd(p1p0, p2p1);
 	    normal.normalize();
 		this.model = modeloLuz;
+		this.color=color;
+		this.isMirror=m;
+		this.isTransparent=t;
 	}
 
 	@Override
@@ -54,8 +58,8 @@ public class Triangulo implements Objeto {
 		
 		// Determinar si el punto de intersección pertenece al triángulo
 		if (pointBelongs(pointOfIntersection.toPoint())) {
-//			Intersection i = new Intersection(pointOfIntersection, normal, t);
-//			return i;
+			r.object=this;
+			
 			return true;
 		}		
 		return false;
@@ -93,12 +97,36 @@ public class Triangulo implements Objeto {
 		return true;
 	}
 		
-		
-
 	@Override
-	public Color Shade(Rayo r, ArrayList<Luz> lights, ArrayList<Objeto> objects, Color bgnd) {
-		// TODO Auto-generated method stub
-		return null;
+	public Color Shade(Rayo r, ArrayList<Luz> lights,
+			ArrayList<Objeto> objects, Color bgnd, int nRayos, double kref) {
+				// 0. (r) opuesto de L
+
+				// 1. (p) Punto de intersección rayo-objeto
+				double px = (r.origin.x + r.t * r.direction.x);
+				double py = (r.origin.y + r.t * r.direction.y);
+				double pz = (r.origin.z + r.t * r.direction.z);
+
+				Point3D p = new Point3D(px, py, pz);
+
+				// 2. (n) Normal a la superficie igual a n
+
+				// 3. (l) Rayo con dirección y sentido al foco de luz
+				Vector3D l = new Vector3D(-r.direction.x, -r.direction.y,
+						-r.direction.z);
+
+				// 4. (v) Rayo al ojo
+				Vector3D v = new Vector3D(px - r.origin.x, py - r.origin.y, pz - r.origin.z);
+
+				// 5. (ref) Rayo reflejado
+				Vector3D ref = r.origin.reflect(normal);
+				
+				// 6. (frac) Rayo refractado
+				Vector3D frac = null;
+				
+				// The illumination model is applied
+				// by the surface's Shade() method
+				return model.calculo(color,bgnd, lights, objects, l, p, normal, v, r.origin, isMirror,ref, isTransparent,frac, nRayos);
 	}
 
 }

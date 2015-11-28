@@ -31,12 +31,12 @@ public class Rayo {
 	    // to
 	    //            ray.object.Shade(ray, ...)
 	    //
-	    public final Color Shade(ArrayList<Luz> lights, ArrayList<Objeto> objects, Color bgnd) {
-	        return object.Shade(this, lights, objects, bgnd, 0);
+	    public final Color Shade(ArrayList<Luz> lights, ArrayList<Objeto> objects, Color bgnd,double kref) {
+	        return object.Shade(this, lights, objects, bgnd, 0,kref);
 	    }
 	    
-	    public final Color Shade(ArrayList<Luz> lights, ArrayList<Objeto> objects, Color bgnd, int nRayos) {
-	        return object.Shade(this, lights, objects, bgnd, nRayos);
+	    public final Color Shade(ArrayList<Luz> lights, ArrayList<Objeto> objects, Color bgnd, int nRayos,double kref) {
+	        return object.Shade(this, lights, objects, bgnd, nRayos,kref);
 	    }
 	    
 	    public boolean trace(Objeto object) {

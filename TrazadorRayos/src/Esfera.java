@@ -8,13 +8,17 @@ public class Esfera implements Objeto {
 	double radSqr;
 	ModeloLuz m;
 	Color color;
+	boolean isMirror;
+	boolean isTransparent;
 
-	public Esfera(ModeloLuz m, Vector3D c, double r, Color color) {
+	public Esfera(ModeloLuz m, Vector3D c, double r, Color color, boolean mirror, boolean transp) {
 		this.color = color;
 		this.m = m;
 		center = c;
 		radius = r;
 		radSqr = r * r;
+		this.isMirror=mirror;
+		this.isTransparent=transp;
 	}
 
 	public boolean intersect(Rayo ray) {
@@ -45,7 +49,7 @@ public class Esfera implements Objeto {
 	}
 
 	public Color Shade(Rayo r, ArrayList<Luz> lights,
-			ArrayList<Objeto> objects, Color bgnd, int nRayos) {
+			ArrayList<Objeto> objects, Color bgnd, int nRayos, double currentRef) {
 
 		// 0. (r) opuesto de L
 
@@ -67,17 +71,23 @@ public class Esfera implements Objeto {
 		// 4. (v) Rayo al ojo
 		Vector3D v = new Vector3D(px - r.origin.x, py - r.origin.y, pz
 				- r.origin.z);
-
-		// 5. (ref) Rayo reflejado
-		double twice = 2 * Vector3D.dotProd(v, n);
-		Vector3D ref = Vector3D.sub(v, Vector3D.scale(twice, n));
+		Vector3D ref =null;
+		if (isMirror){
+			// 5. (ref) Rayo reflejado
+			double twice = 2 * Vector3D.dotProd(v, n);
+			ref= Vector3D.sub(v, Vector3D.scale(twice, n));
+		}
+		
 
 		// 6. (frac) Rayo refractado
 		Vector3D frac = null;
+		if(isTransparent){
+			
+		}
 
 		// Hacemos el calculo del color en ese pixel
 		return m.calculo(color, bgnd, lights, objects, l, p, n, v, r.origin,
-				ref, frac, nRayos);
+				isMirror,ref,isTransparent, frac, nRayos);
 	}
 
 	public String toString() {

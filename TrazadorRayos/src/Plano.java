@@ -12,12 +12,16 @@ public class Plano implements Objeto {
 	ModeloLuz m;
 	double d;
 	private Color color;
+	boolean isMirror;
+	boolean isTransparent;
 
-	public Plano(ModeloLuz m, double d, float x, float y, float z, Color color) {
+	public Plano(ModeloLuz m, double d, float x, float y, float z, Color color, boolean mirror, boolean transparent) {
 		this.color= color;
 		this.m = m;
 		this.N = new Vector3D(x, y, z);
 		this.d = d;
+		this.isMirror=mirror;
+		this.isTransparent=transparent;
 	}
 
 	public Plano(ModeloLuz m, Vector3D v, double d) {
@@ -84,7 +88,7 @@ public class Plano implements Objeto {
 
 	@Override
 	public Color Shade(Rayo r, ArrayList<Luz> lights,
-			ArrayList<Objeto> objects, Color bgnd, int nRayos) {
+			ArrayList<Objeto> objects, Color bgnd, int nRayos,double currentRefr) {
 		// 0. (r) opuesto de L
 
 		// 1. (p) Punto de intersección rayo-objeto
@@ -103,15 +107,32 @@ public class Plano implements Objeto {
 		// 4. (v) Rayo al ojo
 		Vector3D v = new Vector3D(px - r.origin.x, py - r.origin.y, pz - r.origin.z);
 
-		// 5. (ref) Rayo reflejado
-		Vector3D ref = r.origin.reflect(N);
+		Vector3D ref =null;
+		if (isMirror){
+			// 5. (ref) Rayo reflejado
+			ref = r.origin.reflect(N);
+		}
 		
-		// 6. (frac) Rayo refractado
 		Vector3D frac = null;
+		if(isTransparent){ //Snell: sin(i)/sin(r) = nr/ni
+			// 6. (frac) Rayo refractado
+			
+			double NiNr=currentRefr/m.kt; 
+			double cosI=-Vector3D.dotProd(N, r.direction);
+			double cosR=Math.sqrt(1.0-((1.0-(cosI*cosI))*(NiNr*NiNr)));
+			
+			if (cosR>0.0){
+				 frac = Vector3D.add(Vector3D.scale(NiNr,r.direction),Vector3D.scale((NiNr*cosI)-cosR, N));
+			}
+			else{
+				frac=null;
+			}
+		}
+		
 		
 		// The illumination model is applied
 		// by the surface's Shade() method
-		return m.calculo(color,bgnd, lights, objects, l, p, N, v, r.origin, ref, frac, nRayos);
+		return m.calculo(color,bgnd, lights, objects, l, p, N, v, r.origin, isMirror,ref, isTransparent,frac, nRayos);
 	}
 
 }
