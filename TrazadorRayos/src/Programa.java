@@ -15,7 +15,7 @@ public class Programa {
 				NUM_FILAS);
 
 		Camera cam = new Camera();
-		cam.setEye(new Point3D(0, 0, 0));
+		cam.setEye(new Point3D(02, 0, 0));
 		cam.setLookVector(new Vector3D(1, 0, 0));
 		cam.setUpVector(new Vector3D(0, 1, 0));
 		cam.setScreenDistance(6);
@@ -57,8 +57,8 @@ public class Programa {
 		rayTracer.setPantalla(viewport);
 		rayTracer.setEscena(escena);
 
-		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
+//		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
 
-//		rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,1);
+		rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,1);
 	}
 }

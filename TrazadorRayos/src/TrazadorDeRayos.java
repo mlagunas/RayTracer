@@ -106,30 +106,32 @@ public class TrazadorDeRayos {
 				for (int k = 0; k < count; k++) {
 					currentPrimaryRaySuperSample = currentPrimaryRayList.get(k);
 					if (currentPrimaryRaySuperSample != null) {
-						for (Objeto o : escena.getObjects()) {
-							if (currentPrimaryRaySuperSample.trace(o)) {
-								currentColor = o
-										.Shade(currentPrimaryRaySuperSample,
-												escena.getLights(),
-												escena.getObjects(), new Color(background));
-								if (currentColor != null) {
-									System.out.println();
-									rSum += currentColor.getRed();
-									gSum += currentColor.getGreen();
-									bSum += currentColor.getBlue();
-									innerCount++;
-								}
-							}
+						if (currentPrimaryRaySuperSample.trace(escena.getObjects())) {
+							currentColor = currentPrimaryRaySuperSample
+									.Shade(escena.getLights(),
+											escena.getObjects(), new Color(background));
+							rSum += currentColor.getRed();
+							gSum += currentColor.getGreen();
+							bSum += currentColor.getBlue();
+							innerCount++;
+							
+						}	
+						else{
+							currentColor=new Color(background);
+							rSum += currentColor.getRed();
+							gSum += currentColor.getGreen();
+							bSum += currentColor.getBlue();
+							innerCount++;
 						}
 					}
 				}
-				if (innerCount == 0) {
-					finalColor = new Color(background);
-					nohit++;
-				} else {
+				if (innerCount != 0) {
 					hitpixels++;
 					finalColor = new Color((int) rSum / innerCount, (int) gSum
 							/ innerCount, (int) bSum / innerCount);
+				}
+				else{
+					nohit++;
 				}
 
 				canvas.setRGB(j, i, finalColor.getRGB());
