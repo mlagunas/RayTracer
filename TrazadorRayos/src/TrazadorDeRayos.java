@@ -110,7 +110,6 @@ public class TrazadorDeRayos {
 												escena.getLights(),
 												escena.getObjects(), new Color(background),0);
 								if (currentColor != null) {
-									System.out.println();
 									rSum += currentColor.getRed();
 									gSum += currentColor.getGreen();
 									bSum += currentColor.getBlue();

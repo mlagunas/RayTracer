@@ -26,6 +26,10 @@ public class Programa {
 		objects = new ArrayList<Objeto>();
 		Scene escena = new Scene();
 		Camera cam = new Camera();
+		cam.setEye(new Point3D(02, 0, 0));
+		cam.setLookVector(new Vector3D(1, 0, 0));
+		cam.setUpVector(new Vector3D(0, 1, 0));
+		cam.setScreenDistance(6);
 
 		try {
 			File f = new File(PATH);
@@ -100,7 +104,6 @@ public class Programa {
 		rayTracer.setEscena(escena);
 
 		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
-
 		// rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,1);
 	}
 
