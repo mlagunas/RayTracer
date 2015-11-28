@@ -64,7 +64,6 @@ public class TrazadorDeRayos {
 						hitpixels++;
 						finalColor = primRay.Shade(escena.getLights(),
 								escena.getObjects(), new Color(background),kref);
-						System.out.println(finalColor + "Color final");
 					} else {
 						nohit++;
 						finalColor = new Color(background);

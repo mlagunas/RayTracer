@@ -81,8 +81,19 @@ public class Esfera implements Objeto {
 
 		// 6. (frac) Rayo refractado
 		Vector3D frac = null;
-		if(isTransparent){
+		if(isTransparent){ //Snell: sin(i)/sin(r) = nr/ni
+			// 6. (frac) Rayo refractado
 			
+			double NiNr=currentRef/m.index; 
+			double cosI=-Vector3D.dotProd(n, r.direction);
+			double cosR=Math.sqrt(1.0-((1.0-(cosI*cosI))*(NiNr*NiNr)));
+			
+			if (cosR>0.0){
+				 frac = Vector3D.add(Vector3D.scale(NiNr,r.direction),Vector3D.scale((NiNr*cosI)-cosR, n));
+			}
+			else{
+				frac=null;
+			}
 		}
 
 		// Hacemos el calculo del color en ese pixel

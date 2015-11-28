@@ -62,7 +62,7 @@ public class Programa {
 			/*
 			 * OBJETOS
 			 */
-			ModeloLuz m = new ModeloLuz(0.5, 0.4, 0.2, 0, 10, 0,0.7);
+			ModeloLuz m = new ModeloLuz(0.5, 0.4, 0.2, 0.3, 10, 0.6 ,1.68);
 			Esfera e = new Esfera(m, new Vector3D(-2, -3, -2), 1.5, new Color(
 					(float) 0.7, (float) 0.2, (float) 0.8),true,true);
 			objects.add(e);

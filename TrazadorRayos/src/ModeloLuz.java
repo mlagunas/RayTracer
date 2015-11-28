@@ -132,22 +132,21 @@ public class ModeloLuz {
 		 */
 		
 		if(transp){
-			if (kt > 0  && nRayos < MAX_RAYOS) {
+			if (kt > 0  && nRayos < MAX_RAYOS && frac!=null) {
 				Rayo refractado = new Rayo(new Point3D(p.x, p.y, p.z), frac);
-				
 				if (refractado.trace(objects)) {
 					// Reflejado(origen en p pasando por la interseccion con el
 					// objeto)
 					// Calculamos el color del objeto intersectado y lo añadimos
 					Color c = refractado.Shade(lightSources, objects, bgnd, nRayos+1);
-					r += kr * sr * c.getRed()/MAX_COLOR;
-					g += kr * sg * c.getGreen()/MAX_COLOR;
-					b += kr * sb * c.getBlue()/MAX_COLOR;
+					r += kt * sr * c.getRed()/MAX_COLOR;
+					g += kt * sg * c.getGreen()/MAX_COLOR;
+					b += kt * sb * c.getBlue()/MAX_COLOR;
 				} else {
 					// En caso contrario chocara con el fondo, añadimos su color
-					r += kr * bgnd.getRed();
-					g += kr * bgnd.getGreen();
-					b += kr * bgnd.getBlue();
+					r += kt * bgnd.getRed();
+					g += kt * bgnd.getGreen();
+					b += kt * bgnd.getBlue();
 				}
 			}	
 		}
