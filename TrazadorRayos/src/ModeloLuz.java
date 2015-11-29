@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class ModeloLuz {
 	//Maximo de rayos reflejados lanzados
-	private final int MAX_RAYOS = 10;
+	private final int MAX_RAYOS = 1;
 	private final float MAX_COLOR = 255;
 	
 	double ka;
@@ -26,7 +26,7 @@ public class ModeloLuz {
 
 	public Color calculo(Color color, Color bgnd, ArrayList<Luz> lightSources,
 			ArrayList<Objeto> objects, Vector3D L, Point3D p, Vector3D N,
-			Vector3D V, Vector3D R, Boolean mirror, Vector3D Ref, Boolean transp, Vector3D frac, int nRayos) {
+			Vector3D V, Vector3D R, Boolean mirror, Vector3D Ref, Boolean transp, Vector3D frac, int nRayos,double kref) {
 		float r = 0;
 		float g = 0;
 		float b = 0;
@@ -107,14 +107,14 @@ public class ModeloLuz {
 
 		// Calculo del Rayo reflejado
 		if (mirror){
-			if (kr > 0  && nRayos < MAX_RAYOS) {
+			if (kr > 0  && nRayos < MAX_RAYOS ) {
 				Rayo reflejado = new Rayo(new Point3D(p.x, p.y, p.z), Ref);
 				
 				if (reflejado.trace(objects)) {
 					// Reflejado(origen en p pasando por la interseccion con el
 					// objeto)
 					// Calculamos el color del objeto intersectado y lo añadimos
-					Color c = reflejado.Shade(lightSources, objects, bgnd, nRayos+1,index);
+					Color c = reflejado.Shade(lightSources, objects, bgnd, nRayos+1,kref);
 					r += kr * sr * c.getRed()/MAX_COLOR;
 					g += kr * sg * c.getGreen()/MAX_COLOR;
 					b += kr * sb * c.getBlue()/MAX_COLOR;
@@ -138,7 +138,7 @@ public class ModeloLuz {
 					// Reflejado(origen en p pasando por la interseccion con el
 					// objeto)
 					// Calculamos el color del objeto intersectado y lo añadimos
-					Color c = refractado.Shade(lightSources, objects, bgnd, nRayos+1,index);
+					Color c = refractado.Shade(lightSources, objects, bgnd, nRayos+1,kref);
 					r += kt * sr * c.getRed()/MAX_COLOR;
 					g += kt * sg * c.getGreen()/MAX_COLOR;
 					b += kt * sb * c.getBlue()/MAX_COLOR;

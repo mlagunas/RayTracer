@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class TrazadorDeRayos {
 
-	private final double kref=1;
+	private final double kref=1.00029;
 	private Scene escena;
 
 	private BufferedImage canvas;

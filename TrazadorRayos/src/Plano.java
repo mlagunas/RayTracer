@@ -134,7 +134,7 @@ public class Plano implements Objeto {
 		
 		// The illumination model is applied
 		// by the surface's Shade() method
-		return m.calculo(color,bgnd, lights, objects, l, p, N, v, r.origin, isMirror,ref, isTransparent,frac, nRayos);
+		return m.calculo(color,bgnd, lights, objects, l, p, N, v, r.origin, isMirror,ref, isTransparent,frac, nRayos,currentRefr);
 	}
 
 }

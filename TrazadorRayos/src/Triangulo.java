@@ -144,7 +144,8 @@ public class Triangulo implements Objeto {
 				
 				// The illumination model is applied
 				// by the surface's Shade() method
-				return model.calculo(color,bgnd, lights, objects, l, p, normal, v, r.origin, isMirror,ref, isTransparent,frac, nRayos);
+				return model.calculo(color,bgnd, lights, objects, l, p, normal, v, 
+						r.origin, isMirror,ref, isTransparent,frac, nRayos,kref);
 	}
 
 }

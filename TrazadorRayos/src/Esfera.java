@@ -71,6 +71,7 @@ public class Esfera implements Objeto {
 		// 4. (v) Rayo al ojo
 		Vector3D v = new Vector3D(px - r.origin.x, py - r.origin.y, pz
 				- r.origin.z);
+		
 		Vector3D ref =null;
 		if (isMirror){
 			// 5. (ref) Rayo reflejado
@@ -85,22 +86,40 @@ public class Esfera implements Objeto {
 			// 6. (frac) Rayo refractado
 			
 			double NiNr=currentRef/m.index; 
-			double cosI=-Vector3D.dotProd(n, r.direction);
+			double cosI=Vector3D.dotProd(n, r.direction);
 			double cosR=Math.sqrt(1.0-((1.0-(cosI*cosI))*(NiNr*NiNr)));
 			
 			if (cosR>0.0){
 //				 frac = Vector3D.add(Vector3D.scale(NiNr,r.direction),Vector3D.scale((NiNr*cosI)-cosR, n));
-				frac=Vector3D.sub(Vector3D.scale((NiNr*cosI-Math.sqrt(1-NiNr*NiNr*(1-(cosI*cosI)))),n),Vector3D.scale(NiNr,r.direction)); 
-				frac.normalize();
-			}
-			else{
-				frac=null;
+				//frac=Vector3D.sub(Vector3D.scale((NiNr*cosI-Math.sqrt(1-NiNr*NiNr*(1-(cosI*cosI)))),n),Vector3D.scale(NiNr,r.direction)); 
+				Vector3D frac1=Vector3D.sub(Vector3D.scale((NiNr*cosI)-cosR,n),Vector3D.scale(NiNr,r.direction)); 
+				frac1.normalize();
+				
+				Rayo rayo = new Rayo(p, frac1);
+				if(this.intersect(rayo)){
+					px = (rayo.origin.x + rayo.t * rayo.direction.x);
+					py = (rayo.origin.y + rayo.t * rayo.direction.y);
+					pz = (rayo.origin.z + rayo.t * rayo.direction.z);
+
+					p = new Point3D(px, py, pz);
+
+					//Normal a la superficie
+					n = new Vector3D(px - center.x, py - center.y, pz - center.z);
+					n.normalize();
+					NiNr=m.index/currentRef; 
+					cosI=Vector3D.dotProd(n, rayo.direction);
+					cosR=Math.sqrt(1.0-((1.0-(cosI*cosI))*(NiNr*NiNr)));
+					if (cosR>0.0){
+						frac=Vector3D.sub(Vector3D.scale((NiNr*cosI)-cosR,n),Vector3D.scale(NiNr,rayo.direction)); 
+						frac.normalize();
+					}
+				}
 			}
 		}
 
 		// Hacemos el calculo del color en ese pixel
 		return m.calculo(color, bgnd, lights, objects, l, p, n, v, r.origin,
-				isMirror,ref,isTransparent, frac, nRayos);
+				isMirror,ref,isTransparent, frac, nRayos,currentRef);
 	}
 
 	public String toString() {
