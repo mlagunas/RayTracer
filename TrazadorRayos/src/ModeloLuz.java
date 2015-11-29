@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class ModeloLuz {
 	//Maximo de rayos reflejados lanzados
-	private final int MAX_RAYOS = 1;
+	private final int MAX_RAYOS = 2;
 	private final float MAX_COLOR = 255;
 	
 	double ka;
@@ -25,7 +25,7 @@ public class ModeloLuz {
 	}
 
 	public Color calculo(Color color, Color bgnd, ArrayList<Luz> lightSources,
-			ArrayList<Objeto> objects, Vector3D L, Point3D p, Vector3D N,
+			ArrayList<Objeto> objects, Vector3D L, Point3D p,Point3D p1, Vector3D N,
 			Vector3D V, Vector3D R, Boolean mirror, Vector3D Ref, Boolean transp, Vector3D frac, int nRayos,double kref) {
 		float r = 0;
 		float g = 0;
@@ -133,7 +133,7 @@ public class ModeloLuz {
 		
 		if(transp){
 			if (kt > 0  && nRayos < MAX_RAYOS && frac!=null) {
-				Rayo refractado = new Rayo(new Point3D(p.x, p.y, p.z), frac);
+				Rayo refractado = new Rayo(new Point3D(p1.x, p1.y, p1.z), frac);
 				if (refractado.trace(objects)) {
 					// Reflejado(origen en p pasando por la interseccion con el
 					// objeto)
