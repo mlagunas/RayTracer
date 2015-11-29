@@ -122,7 +122,22 @@ public class Triangulo implements Objeto {
 				Vector3D ref = r.origin.reflect(normal);
 				
 				// 6. (frac) Rayo refractado
-				Vector3D frac = null;
+				Vector3D frac=null;
+				if(isTransparent){ //Snell: sin(i)/sin(r) = nr/ni
+					
+					double NiNr=kref/model.index; 
+					double cosI=-Vector3D.dotProd(normal, r.direction);
+					double cosR=Math.sqrt(1.0-((1.0-(cosI*cosI))*(NiNr*NiNr)));
+					
+					if (cosR>0.0){
+//						 frac = Vector3D.add(Vector3D.scale(NiNr,r.direction),Vector3D.scale((NiNr*cosI)-cosR, n));
+						frac=Vector3D.sub(Vector3D.scale((NiNr*cosI-Math.sqrt(1-NiNr*NiNr*(1-(cosI*cosI)))),normal),Vector3D.scale(NiNr,r.direction)); 
+						frac.normalize();
+					}
+					else{
+						frac=null;
+					}
+				}
 				
 				// The illumination model is applied
 				// by the surface's Shade() method
