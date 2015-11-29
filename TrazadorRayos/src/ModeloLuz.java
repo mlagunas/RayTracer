@@ -138,6 +138,7 @@ public class ModeloLuz {
 					// Reflejado(origen en p pasando por la interseccion con el
 					// objeto)
 					// Calculamos el color del objeto intersectado y lo añadimos
+					System.out.println(kref);
 					Color c = refractado.Shade(lightSources, objects, bgnd, nRayos+1,kref);
 					r += kt * sr * c.getRed()/MAX_COLOR;
 					g += kt * sg * c.getGreen()/MAX_COLOR;
