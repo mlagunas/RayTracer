@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class ModeloLuz {
 	//Maximo de rayos reflejados lanzados
-	private final int MAX_RAYOS = 1;
+	private final int MAX_RAYOS = 10;
 	private final float MAX_COLOR = 255;
 	
 	double ka;
@@ -114,7 +114,7 @@ public class ModeloLuz {
 					// Reflejado(origen en p pasando por la interseccion con el
 					// objeto)
 					// Calculamos el color del objeto intersectado y lo añadimos
-					Color c = reflejado.Shade(lightSources, objects, bgnd, nRayos+1);
+					Color c = reflejado.Shade(lightSources, objects, bgnd, nRayos+1,index);
 					r += kr * sr * c.getRed()/MAX_COLOR;
 					g += kr * sg * c.getGreen()/MAX_COLOR;
 					b += kr * sb * c.getBlue()/MAX_COLOR;
