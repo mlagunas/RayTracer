@@ -118,11 +118,8 @@ public class Triangulo implements Objeto {
 				// 4. (v) Rayo al ojo
 				Vector3D v = new Vector3D(px - r.origin.x, py - r.origin.y, pz - r.origin.z);
 
-				Vector3D ref =null;
-				if (isMirror){
-					// 5. (ref) Rayo reflejado
-					ref = r.origin.reflect(normal);
-				}
+				// 5. (ref) Rayo reflejado
+				Vector3D ref = r.origin.reflect(normal);
 				
 				// 6. (frac) Rayo refractado
 				Vector3D frac=null;
