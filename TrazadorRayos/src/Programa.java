@@ -17,7 +17,7 @@ public class Programa {
 
 	public static void main(String[] args) {
 
-		final String PATH = "spheres2.txt";
+		final String PATH = "spheres.txt";
 
 		final int NUM_FILAS = 516;
 		final int NUM_COL = 516;
@@ -103,8 +103,8 @@ public class Programa {
 		rayTracer.setPantalla(viewport);
 		rayTracer.setEscena(escena);
 
-		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
-//		 rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,1);
+		//rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
+		 rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,3);
 	}
 
 	private static double getNumber(Scanner st) throws IOException {

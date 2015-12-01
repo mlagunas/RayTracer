@@ -1,4 +1,6 @@
 import java.awt.Color;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -22,6 +24,47 @@ public class Esfera implements Objeto {
 		this.isTransparent = transp;
 	}
 
+	public boolean intersectRefraction(Rayo ray) {
+		double dx = (center.x - ray.origin.x);
+		double dy = center.y - ray.origin.y;
+		double dz = center.z - ray.origin.z;
+		double v = ray.direction.dotProd(new Vector3D(dx, dy, dz));
+
+		// Do the following quick check to see if there is even a chance
+		// that an intersection here might be closer than a previous one
+		if (v - radius > ray.t)
+			return false;
+
+		// Test if the ray actually intersects the sphere
+		double res = radSqr + v * v - dx * dx - dy * dy - dz * dz;
+		if (res < 0)
+			return false;
+
+		// Test if the intersection is in the positive
+		// ray direction and it is the closest so far
+		double t = v - (Math.sqrt(res));
+		double t1 = v - (-Math.sqrt(res));
+		if (t <= 0 && t1 <= 0)
+			return false;
+
+		if (t <= 0) {
+			ray.t = t1;
+			ray.t1 = t;
+		}
+		if (t1 <= 0) {
+			ray.t = t;
+			ray.t1 = t1;
+		}
+		if (t > 0 && t1 > 0) {
+			ray.t1 = (t < t1) ? t : t1;
+			ray.t = (t >= t1) ? t : t1;
+		}
+
+		ray.object = this;
+
+		return true;
+	}
+
 	public boolean intersect(Rayo ray) {
 		double dx = (center.x - ray.origin.x);
 		double dy = center.y - ray.origin.y;
@@ -34,17 +77,19 @@ public class Esfera implements Objeto {
 			return false;
 
 		// Test if the ray actually intersects the sphere
-		double t = radSqr + v * v - dx * dx - dy * dy - dz * dz;
-		if (t < 0)
+		double res = radSqr + v * v - dx * dx - dy * dy - dz * dz;
+		if (res < 0)
 			return false;
 
 		// Test if the intersection is in the positive
 		// ray direction and it is the closest so far
-		t = v - (Math.sqrt(t));
+		double t = v - (Math.sqrt(res));
+		double t1 = v - (-Math.sqrt(res));
 		if ((t > ray.t) || (t < 0))
 			return false;
 
 		ray.t = t;
+		ray.t1 = t;
 		ray.object = this;
 		return true;
 	}
@@ -81,6 +126,13 @@ public class Esfera implements Objeto {
 			// 5. (ref) Rayo reflejado
 			double twice = 2 * Vector3D.dotProd(v, n);
 			ref = Vector3D.sub(v, Vector3D.scale(twice, n));
+			double x = round(ref.x, 6);
+			double y = round(ref.y, 6);
+			double z = round(ref.z, 6);
+			if (x == 0 && y == 0 && z == 0) {
+				ref = null;
+			}
+
 		}
 
 		// 6. (frac) Rayo refractado
@@ -103,27 +155,30 @@ public class Esfera implements Objeto {
 				frac1.normalize();
 
 				Rayo rayo = new Rayo(p, frac1);
-				if (this.intersect(rayo)) {
-					px = (rayo.origin.x + rayo.t * rayo.direction.x);
-					py = (rayo.origin.y + rayo.t * rayo.direction.y);
-					pz = (rayo.origin.z + rayo.t * rayo.direction.z);
+				if (this.intersectRefraction(rayo)) {
+					if (rayo.t != 0) {
+						px = (rayo.origin.x + rayo.t * rayo.direction.x);
+						py = (rayo.origin.y + rayo.t * rayo.direction.y);
+						pz = (rayo.origin.z + rayo.t * rayo.direction.z);
 
-					p1 = new Point3D(px, py, pz);
+						p1 = new Point3D(px, py, pz);
 
-					// Normal a la superficie
-					n = new Vector3D(px - center.x, py - center.y, pz
-							- center.z);
-					n.normalize();
-					NiNr = m.index / currentRef;
-					cosI = Vector3D.dotProd(n, rayo.direction);
-					cosR = Math
-							.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
-					if (cosR > 0.0) {
-						frac = Vector3D.sub(
-								Vector3D.scale((NiNr * cosI) - cosR, n),
-								Vector3D.scale(NiNr, rayo.direction));
-						frac.normalize();
-					}
+						// Normal a la superficie
+						Vector3D n1 = new Vector3D(px - center.x,
+								py - center.y, pz - center.z);
+						n1.normalize();
+						NiNr = m.index / currentRef;
+						cosI = Vector3D.dotProd(n, rayo.direction);
+						cosR = Math
+								.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
+						if (cosR > 0.0) {
+							frac = Vector3D.sub(
+									Vector3D.scale((NiNr * cosI) - cosR, n),
+									Vector3D.scale(NiNr, rayo.direction));
+							frac.normalize();
+						}
+					} else
+						frac = null;
 				}
 			}
 		}
@@ -136,5 +191,15 @@ public class Esfera implements Objeto {
 
 	public String toString() {
 		return ("sphere " + center + " " + radius);
+	}
+
+	private static double round(double value, int places) {
+		if (places < 0)
+			throw new IllegalArgumentException();
+
+		long factor = (long) Math.pow(10, places);
+		value = value * factor;
+		long tmp = Math.round(value);
+		return (double) tmp / factor;
 	}
 }

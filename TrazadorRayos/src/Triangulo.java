@@ -100,6 +100,7 @@ public class Triangulo implements Objeto {
 	@Override
 	public Color Shade(Rayo r, ArrayList<Luz> lights,
 			ArrayList<Objeto> objects, Color bgnd, int nRayos, double kref) {
+				Point3D p1=null;
 				// 0. (r) opuesto de L
 
 				// 1. (p) Punto de intersección rayo-objeto
@@ -124,27 +125,49 @@ public class Triangulo implements Objeto {
 					ref = r.origin.reflect(normal);
 				}
 				
-				// 6. (frac) Rayo refractado
-				Vector3D frac=null;
-				if(isTransparent){ //Snell: sin(i)/sin(r) = nr/ni
-					
-					double NiNr=kref/model.index; 
-					double cosI=-Vector3D.dotProd(normal, r.direction);
-					double cosR=Math.sqrt(1.0-((1.0-(cosI*cosI))*(NiNr*NiNr)));
-					
-					if (cosR>0.0){
-//						 frac = Vector3D.add(Vector3D.scale(NiNr,r.direction),Vector3D.scale((NiNr*cosI)-cosR, n));
-						frac=Vector3D.sub(Vector3D.scale((NiNr*cosI-Math.sqrt(1-NiNr*NiNr*(1-(cosI*cosI)))),normal),Vector3D.scale(NiNr,r.direction)); 
-						frac.normalize();
-					}
-					else{
-						frac=null;
+				Vector3D frac = null;
+				if (isTransparent) {
+					// Snell: sin(i)/sin(r) = nr/ni
+					double NiNr = kref / model.index;
+					double cosI = Vector3D.dotProd(normal, r.direction);
+					double cosR = Math
+							.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
+
+					if (cosR > 0.0) {
+						// frac =
+						// Vector3D.add(Vector3D.scale(NiNr,r.direction),Vector3D.scale((NiNr*cosI)-cosR,
+						// n));
+						// frac=Vector3D.sub(Vector3D.scale((NiNr*cosI-Math.sqrt(1-NiNr*NiNr*(1-(cosI*cosI)))),n),Vector3D.scale(NiNr,r.direction));
+						Vector3D frac1 = Vector3D.sub(
+								Vector3D.scale((NiNr * cosI) - cosR, normal),
+								Vector3D.scale(NiNr, r.direction));
+						frac1.normalize();
+
+						Rayo rayo = new Rayo(p, frac1);
+						if (this.intersect(rayo)) {
+							px = (rayo.origin.x + rayo.t * rayo.direction.x);
+							py = (rayo.origin.y + rayo.t * rayo.direction.y);
+							pz = (rayo.origin.z + rayo.t * rayo.direction.z);
+
+							p1 = new Point3D(px, py, pz);
+
+							NiNr = model.index / kref;
+							cosI = Vector3D.dotProd(normal, rayo.direction);
+							cosR = Math
+									.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
+							if (cosR > 0.0) {
+								frac = Vector3D.sub(
+										Vector3D.scale((NiNr * cosI) - cosR, normal),
+										Vector3D.scale(NiNr, rayo.direction));
+								frac.normalize();
+							}
+						}
 					}
 				}
 				
 				// The illumination model is applied
 				// by the surface's Shade() method
-				return model.calculo(color,bgnd, lights, objects, l, p, normal, v, 
+				return model.calculo(color,bgnd, lights, objects, l, p,p1, normal, v, 
 						r.origin, isMirror,ref, isTransparent,frac, nRayos,kref);
 	}
 

@@ -2,10 +2,10 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 public class ModeloLuz {
-	//Maximo de rayos reflejados lanzados
-	private final int MAX_RAYOS = 2;
+	// Maximo de rayos reflejados lanzados
+	private final int MAX_RAYOS = 5;
 	private final float MAX_COLOR = 255;
-	
+
 	double ka;
 	double kd;
 	double ks;
@@ -13,26 +13,28 @@ public class ModeloLuz {
 	double kt;
 	double n;
 	double index;
-	
-	public ModeloLuz(double ka, double kd, double ks, double kr, double n, double kt, double index) {
+
+	public ModeloLuz(double ka, double kd, double ks, double kr, double n,
+			double kt, double index) {
 		this.ka = ka; // Coeficiente ambiental
 		this.kd = kd; // Coeficiente difusa
 		this.ks = ks; // Coeficiente especular
 		this.kr = kr; // Coeficiente reflexion
 		this.kt = kt; // Coeficiente refraccion
 		this.n = n;
-		this.index=index;
+		this.index = index;
 	}
 
 	public Color calculo(Color color, Color bgnd, ArrayList<Luz> lightSources,
-			ArrayList<Objeto> objects, Vector3D L, Point3D p,Point3D p1, Vector3D N,
-			Vector3D V, Vector3D R, Boolean mirror, Vector3D Ref, Boolean transp, Vector3D frac, int nRayos,double kref) {
+			ArrayList<Objeto> objects, Vector3D L, Point3D p, Point3D p1,
+			Vector3D N, Vector3D V, Vector3D R, Boolean mirror, Vector3D Ref,
+			Boolean transp, Vector3D frac, int nRayos, double kref) {
 		float r = 0;
 		float g = 0;
 		float b = 0;
-		float sr = color.getRed() / (float)MAX_COLOR;
-		float sg = color.getGreen() / (float)MAX_COLOR;
-		float sb = color.getBlue() / (float)MAX_COLOR;
+		float sr = color.getRed() / (float) MAX_COLOR;
+		float sg = color.getGreen() / (float) MAX_COLOR;
+		float sb = color.getBlue() / (float) MAX_COLOR;
 		for (Luz light : lightSources) {
 			/*
 			 * CALCULO DE LA LUZ AMBIENTAL
@@ -106,53 +108,59 @@ public class ModeloLuz {
 		 */
 
 		// Calculo del Rayo reflejado
-		if (mirror){
-			if (kr > 0  && nRayos < MAX_RAYOS ) {
+		if (mirror) {
+			if (kr > 0 && Ref!=null && nRayos < MAX_RAYOS) {
+				if (nRayos == 1) {
+					System.out.println("IEPA");
+				}
 				Rayo reflejado = new Rayo(new Point3D(p.x, p.y, p.z), Ref);
-				
+
 				if (reflejado.trace(objects)) {
-					// Reflejado(origen en p pasando por la interseccion con el
+					// Reflejado(origen en p pasando por la interseccion con
+					// el
 					// objeto)
-					// Calculamos el color del objeto intersectado y lo añadimos
-					Color c = reflejado.Shade(lightSources, objects, bgnd, nRayos+1,kref);
-					r += kr * sr * c.getRed()/MAX_COLOR;
-					g += kr * sg * c.getGreen()/MAX_COLOR;
-					b += kr * sb * c.getBlue()/MAX_COLOR;
+					// Calculamos el color del objeto intersectado y lo
+					// añadimos
+					Color c = reflejado.Shade(lightSources, objects, bgnd,
+							nRayos + 1, kref);
+					r += kr * sr * c.getRed() / MAX_COLOR;
+					g += kr * sg * c.getGreen() / MAX_COLOR;
+					b += kr * sb * c.getBlue() / MAX_COLOR;
 				} else {
-					// En caso contrario chocara con el fondo, añadimos su color
+					// En caso contrario chocara con el fondo, añadimos su
+					// color
 					r += kr * bgnd.getRed();
 					g += kr * bgnd.getGreen();
 					b += kr * bgnd.getBlue();
 				}
-			}		
+			}
 		}
-		
+
 		/*
 		 * CALCULO DE LA REFRACCION
 		 */
-		
-		if(transp){
-			if (kt > 0  && nRayos < MAX_RAYOS && frac!=null) {
+
+		if (transp) {
+			if (kt > 0 && nRayos < MAX_RAYOS && frac != null) {
 				Rayo refractado = new Rayo(new Point3D(p1.x, p1.y, p1.z), frac);
 				if (refractado.trace(objects)) {
-					// Reflejado(origen en p pasando por la interseccion con el
-					// objeto)
-					// Calculamos el color del objeto intersectado y lo añadimos
-					System.out.println(kref);
-					Color c = refractado.Shade(lightSources, objects, bgnd, nRayos+1,kref);
-					r += kt * sr * c.getRed()/MAX_COLOR;
-					g += kt * sg * c.getGreen()/MAX_COLOR;
-					b += kt * sb * c.getBlue()/MAX_COLOR;
+					// Calculamos el color del objeto intersectado y lo
+					// añadimos
+					Color c = refractado.Shade(lightSources, objects, bgnd,
+							nRayos + 1, kref);
+					r += kt * sr * c.getRed() / MAX_COLOR;
+					g += kt * sg * c.getGreen() / MAX_COLOR;
+					b += kt * sb * c.getBlue() / MAX_COLOR;
 				} else {
-					// En caso contrario chocara con el fondo, añadimos su color
+					// En caso contrario chocara con el fondo, añadimos su
+					// color
 					r += kt * bgnd.getRed();
 					g += kt * bgnd.getGreen();
 					b += kt * bgnd.getBlue();
 				}
-			}	
+			}
 		}
-		
-		
+
 		// Si el color es mayor de 1 se devuelve 1
 		r = (r > 1f) ? 1f : r;
 		g = (g > 1f) ? 1f : g;
