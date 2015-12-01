@@ -25,12 +25,6 @@ public class Plano implements Objeto {
 		this.isTransparent = transparent;
 	}
 
-	public Plano(ModeloLuz m, Vector3D v, double d) {
-		this.m = m;
-		this.N = v;
-		this.d = d;
-	}
-
 	// Rayo = R(t) = O + D * t, con su origen O = (ox, oy, oz) y vector
 	// dirección normalizado D = (dx, dy, dz)
 	// Verificará nx * (ox + dx * t) + ny * (oy + dy * t) + nz * (oz + dz * t) +
@@ -63,24 +57,33 @@ public class Plano implements Objeto {
 	 *         ray.
 	 */
 	public boolean intersect(Rayo ray) {
-		Vector3D tmp;
-		double d1, d2, t;
+		double d1, dn, t;
 
-		tmp = new Vector3D(ray.origin.x, ray.origin.y, ray.origin.z);
+		/* Calculo de D·N */
+		dn = Vector3D.dotProd(ray.direction, N);
 
-		/* Find angle between plane and direction of ray */
-		d2 = Vector3D.dotProd(ray.direction, N);
-
-		/* Is ray parallel to plane */
-		if (Math.abs(d2) < 0.00000001) {
+		/* Rayo paralelo al plano o no intersecta detrás de la pantalla */
+		if (dn == 0) {
 			return false;
 		}
 
-		d1 = Vector3D.dotProd(tmp, N);
-		t = (d - d1) / d2;
+		d1 = Vector3D.dotProd(new Vector3D(ray.origin.x, ray.origin.y,
+				ray.origin.z), N);
+		t = (d - d1) / dn;
+		if (t > ray.t)
+			return false;
 		ray.t = t;
 		ray.object = this;
 		return true;
+	}
+
+	public double distancia(Rayo ray) {
+		// Distancia Punto-Plano
+		Vector3D punto = ray.origin;
+		double a = Math.abs(punto.x * N.x + punto.y * N.y + punto.z * N.z + d);
+		double b = Math.sqrt(N.x * N.x + N.y * N.y + N.z * N.z);
+
+		return a / b;
 	}
 
 	@Override

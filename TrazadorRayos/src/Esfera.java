@@ -84,12 +84,11 @@ public class Esfera implements Objeto {
 		// Test if the intersection is in the positive
 		// ray direction and it is the closest so far
 		double t = v - (Math.sqrt(res));
-		double t1 = v - (-Math.sqrt(res));
 		if ((t > ray.t) || (t < 0))
 			return false;
 
 		ray.t = t;
-		ray.t1 = t;
+		
 		ray.object = this;
 		return true;
 	}
@@ -126,9 +125,9 @@ public class Esfera implements Objeto {
 			// 5. (ref) Rayo reflejado
 			double twice = 2 * Vector3D.dotProd(v, n);
 			ref = Vector3D.sub(v, Vector3D.scale(twice, n));
-			double x = round(ref.x, 6);
-			double y = round(ref.y, 6);
-			double z = round(ref.z, 6);
+			double x = round(ref.x, 10);
+			double y = round(ref.y, 10);
+			double z = round(ref.z, 10);
 			if (x == 0 && y == 0 && z == 0) {
 				ref = null;
 			}
