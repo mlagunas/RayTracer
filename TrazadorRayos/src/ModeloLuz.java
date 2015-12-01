@@ -140,9 +140,6 @@ public class ModeloLuz {
 			if (kt > 0 && nRayos < MAX_RAYOS && frac != null) {
 				Rayo refractado = new Rayo(new Point3D(p1.x, p1.y, p1.z), frac);
 				if (refractado.trace(objects)) {
-					// Reflejado(origen en p pasando por la interseccion con
-					// el
-					// objeto)
 					// Calculamos el color del objeto intersectado y lo
 					// añadimos
 					Color c = refractado.Shade(lightSources, objects, bgnd,
