@@ -24,13 +24,6 @@ public class Rayo {
 		return (object != null);
 	}
 
-	// The following method is not strictly needed, and most likely
-	// adds unnecessary overhead, but I prefered the syntax
-	//
-	// ray.Shade(...)
-	// to
-	// ray.object.Shade(ray, ...)
-	//
 	public final Color Shade(ArrayList<Luz> lights, ArrayList<Objeto> objects,
 			Color bgnd, double kref) {
 		return object.Shade(this, lights, objects, bgnd, 0, kref);
@@ -46,14 +39,6 @@ public class Rayo {
 		object.intersect(this);
 		return (object != null);
 	}
-
-	// The following method is not strictly needed, and most likely
-	// adds unnecessary overhead, but I prefered the syntax
-	//
-	// ray.Shade(...)
-	// to
-	// ray.object.Shade(ray, ...)
-	//
 
 	public String toString() {
 		return ("ray origin = " + origin + "  direction = " + direction

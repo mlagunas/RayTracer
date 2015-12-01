@@ -31,12 +31,15 @@ public class Programa {
 		cam.setUpVector(new Vector3D(0, 1, 0));
 		cam.setScreenDistance(6);
 
-		/*
-		 * try { File f = new File(PATH); Scanner s = new Scanner(f);
-		 * ReadInput(s); } catch (FileNotFoundException e1) {
-		 * e1.printStackTrace(); } catch (IOException e1) {
-		 * e1.printStackTrace(); }
-		 */
+		try {
+			File f = new File(PATH);
+			Scanner s = new Scanner(f);
+			ReadInput(s);
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 
 		if (eye == null) {
 			eye = new Point3D(20, 20, 20);
@@ -48,15 +51,16 @@ public class Programa {
 			 * LUCES
 			 */
 			Luz luzA = new Luz(Luz.AMBIENT, null, 1, 1, 1);
-			
-			  Luz luzD = new Luz(Luz.DIRECTIONAL, new Vector3D(0, 10, 0), 1,
-			  1, 1);
-			 
-			/*Luz luzP = new Luz(Luz.POINT, new Vector3D(0, 10, 0), (float) 0.5,
-					(float) 0.5, (float) 0.5);*/
+
+			Luz luzD = new Luz(Luz.DIRECTIONAL, new Vector3D(0, 10, 0), 1, 1, 1);
+
+			/*
+			 * Luz luzP = new Luz(Luz.POINT, new Vector3D(0, 10, 0), (float)
+			 * 0.5, (float) 0.5, (float) 0.5);
+			 */
 			luzList.add(luzA);
-			 luzList.add(luzD);
-			//luzList.add(luzP);
+			luzList.add(luzD);
+			// luzList.add(luzP);
 
 			/*
 			 * OBJETOS
@@ -68,7 +72,7 @@ public class Programa {
 			objects.add(p);
 			p = new Plano(m, 0, 1, 0, 0, Color.green, true, true);
 			objects.add(p);
-			
+
 			ModeloLuz m1 = new ModeloLuz(0.7, 0.2, 0.7, 0.3, 10, 0.6, 1.68);
 			Esfera e = new Esfera(m1, new Vector3D(2, 2, 2), 1.5, new Color(
 					(float) 0.7, (float) 0.2, (float) 0.8), true, true);
@@ -146,6 +150,13 @@ public class Programa {
 			} else if (instr.equals("background")) {
 				background = new Color((float) getNumber(st),
 						(float) getNumber(st), (float) getNumber(st));
+			} else if (instr.equals("plane")) {
+				Plano p = new Plano(currentSurface, getNumber(st),
+						(float) getNumber(st), (float) getNumber(st),
+						(float) getNumber(st), new Color((float) getNumber(st),
+								(float) getNumber(st), (float) getNumber(st)),
+						true, true);
+				objects.add(p);
 			} else if (instr.equals("light")) {
 				float r = (float) getNumber(st);
 				float g = (float) getNumber(st);

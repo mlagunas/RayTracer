@@ -31,31 +31,6 @@ public class Plano implements Objeto {
 	// d = 0
 	// nx * dx + ny * dy + nz * dz = N · D
 	// t = - (nx * ox + ny * oy + nz * oz + d) / (nx * dx + ny * dy + nz * dz)
-	/*
-	 * @Override public boolean intersect(Rayo r) { Vector3D o = r.origin;
-	 * Vector3D d = r.direction; double a = (n.x * o.x + n.y * o.y + n.z * o.z)
-	 * + this.d; double b = (n.x * d.x + n.y * d.y + n.z * d.z);
-	 * 
-	 * if (b == 0) return false; double t = -a / b; // if(t<0) // return false;
-	 * return true;
-	 * 
-	 * }
-	 */
-
-	/**
-	 * Find the intersection of the plane and a given ray.
-	 *
-	 * The return value is positive is the intersection is found and this value
-	 * gives the distance along the ray. Negative values imply that the
-	 * intersection was either not successful or the intersection point was
-	 * before the origin. This value can be used with the pointAt method of the
-	 * Ray class (@see Ray#pointAt)
-	 *
-	 * @param ray
-	 *            the ray to intersect with
-	 * @return a <code>double</code> value that gives the distance along the
-	 *         ray.
-	 */
 	public boolean intersect(Rayo ray) {
 		double d1, dn, t;
 
@@ -70,27 +45,17 @@ public class Plano implements Objeto {
 		d1 = Vector3D.dotProd(new Vector3D(ray.origin.x, ray.origin.y,
 				ray.origin.z), N);
 		t = (d - d1) / dn;
-		if (t > ray.t)
+		if (t > ray.t || t < 0)
 			return false;
 		ray.t = t;
 		ray.object = this;
 		return true;
 	}
 
-	public double distancia(Rayo ray) {
-		// Distancia Punto-Plano
-		Vector3D punto = ray.origin;
-		double a = Math.abs(punto.x * N.x + punto.y * N.y + punto.z * N.z + d);
-		double b = Math.sqrt(N.x * N.x + N.y * N.y + N.z * N.z);
-
-		return a / b;
-	}
-
 	@Override
 	public Color Shade(Rayo r, ArrayList<Luz> lights,
 			ArrayList<Objeto> objects, Color bgnd, int nRayos,
 			double currentRefr) {
-		// 0. (r) opuesto de L
 
 		// 1. (p) Punto de intersección rayo-objeto
 		double px = (r.origin.x + r.t * r.direction.x);
@@ -116,7 +81,7 @@ public class Plano implements Objeto {
 		}
 
 		Vector3D frac = null;
-		if (isTransparent) { // Snell: sin(i)/sin(r) = nr/ni
+		/*if (isTransparent) { // Snell: sin(i)/sin(r) = nr/ni
 			// 6. (frac) Rayo refractado
 
 			double NiNr = currentRefr / m.index;
@@ -137,10 +102,8 @@ public class Plano implements Objeto {
 			} else {
 				frac = null;
 			}
-		}
+	}*/
 
-		// The illumination model is applied
-		// by the surface's Shade() method
 		return m.calculo(color, bgnd, lights, objects, l, p, null, N, v,
 				r.origin, isMirror, ref, isTransparent, frac, nRayos,
 				currentRefr);

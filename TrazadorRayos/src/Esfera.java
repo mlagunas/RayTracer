@@ -99,8 +99,6 @@ public class Esfera implements Objeto {
 		// de la esfera)
 		Point3D p1 = null;
 
-		// 0. (r) opuesto de L
-
 		// 1. (p) Punto de intersección rayo-objeto
 		double px = (r.origin.x + r.t * r.direction.x);
 		double py = (r.origin.y + r.t * r.direction.y);
