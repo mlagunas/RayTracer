@@ -58,7 +58,7 @@ public class ModeloLuz {
 				/*
 				 * CALCULO SI ES UN PUNTO EN SOMBRA
 				 */
-				Point3D poffset = new Point3D(p.x * L.x, p.y * L.y, p.z * L.z);
+				Point3D poffset = new Point3D(p.x +L.x, p.y + L.y, p.z + L.z);
 				Rayo shadowRay = new Rayo(poffset, L);
 				if (shadowRay.trace(objects))
 					break;
@@ -71,10 +71,6 @@ public class ModeloLuz {
 					// cos(N·L)
 
 					lambert = (float) Vector3D.dotProd(N, L);
-					// Al aplicar el coseno los resultados que vemos son peores
-					// y no se nota apenas ningun gradiente
-
-					// lambert = (float) Math.cos(lambert);
 					if (lambert > 0) {
 						// Kd*cos(N·L)*I
 						r += kd * lambert * light.r * sr;
@@ -89,10 +85,10 @@ public class ModeloLuz {
 				if (ks > 0) {
 					// cos(R·V)^n
 					lambert *= 2;
-					float spec = (float) V.dotProd(new Vector3D(lambert * N.x
-							- L.x, lambert * N.y - L.y, lambert * N.z - L.z));
-					// double spec = Math.pow(n, Math.cos(Vector3D.dotProd(V,
-					// R)));
+					//float spec = (float) V.dotProd(new Vector3D(lambert * N.x
+					//		- L.x, lambert * N.y - L.y, lambert * N.z - L.z));
+					 double spec = Math.pow(n, Math.cos(Vector3D.dotProd(V,
+					 R)));
 					if (spec > 0) {
 						//
 						r += ks * spec * light.r * sr;
@@ -113,7 +109,11 @@ public class ModeloLuz {
 				if (nRayos == 1) {
 					System.out.println("IEPA");
 				}
-				Rayo reflejado = new Rayo(new Point3D(p.x, p.y, p.z), Ref);
+				
+				Vector3D aux = Vector3D.scale(2*Vector3D.dotProd(V, N),N);;
+				Vector3D reflect=Vector3D.sub(V, aux);
+				
+				Rayo reflejado = new Rayo(new Point3D(p.x, p.y, p.z), reflect);
 
 				if (reflejado.trace(objects)) {
 					// Reflejado(origen en p pasando por la interseccion con

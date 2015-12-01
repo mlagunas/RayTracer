@@ -99,8 +99,6 @@ public class Esfera implements Objeto {
 		// de la esfera)
 		Point3D p1 = null;
 
-		// 0. (r) opuesto de L
-
 		// 1. (p) Punto de intersección rayo-objeto
 		double px = (r.origin.x + r.t * r.direction.x);
 		double py = (r.origin.y + r.t * r.direction.y);
@@ -167,12 +165,12 @@ public class Esfera implements Objeto {
 								py - center.y, pz - center.z);
 						n1.normalize();
 						NiNr = m.index / currentRef;
-						cosI = Vector3D.dotProd(n, rayo.direction);
+						cosI = Vector3D.dotProd(n1, rayo.direction);
 						cosR = Math
 								.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
 						if (cosR > 0.0) {
 							frac = Vector3D.sub(
-									Vector3D.scale((NiNr * cosI) - cosR, n),
+									Vector3D.scale((NiNr * cosI) - cosR, n1),
 									Vector3D.scale(NiNr, rayo.direction));
 							frac.normalize();
 						}
