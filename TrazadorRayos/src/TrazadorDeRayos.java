@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Currency;
 
 public class TrazadorDeRayos {
 
@@ -103,35 +104,33 @@ public class TrazadorDeRayos {
 				innerCount = 0;
 				for (int k = 0; k < count; k++) {
 					currentPrimaryRaySuperSample = currentPrimaryRayList.get(k);
-					if (currentPrimaryRaySuperSample != null) {
-						for (Objeto o : escena.getObjects()) {
-							if (currentPrimaryRaySuperSample.trace(o)) {
-								currentColor = currentPrimaryRaySuperSample.Shade(escena.getLights(),
-										escena.getObjects(), new Color(background),kref);
-								if (currentColor != null) {
-									rSum += currentColor.getRed();
-									gSum += currentColor.getGreen();
-									bSum += currentColor.getBlue();
-									innerCount++;
-								}
-							}
+					if(currentPrimaryRaySuperSample!=null){
+						if (currentPrimaryRaySuperSample.trace(escena.getObjects())) {
+							currentColor = currentPrimaryRaySuperSample.Shade(escena.getLights(),
+									escena.getObjects(), new Color(background),kref);
+							
+								rSum += currentColor.getRed()/255;
+								gSum += currentColor.getGreen()/255;
+								bSum += currentColor.getBlue()/255;
+								innerCount++;
+							
 						}
-					}
+						else{
+							currentColor= new Color(background);
+							rSum += currentColor.getRed()/255;
+							gSum += currentColor.getGreen()/255;
+							bSum += currentColor.getBlue()/255;
+							innerCount++;
+						}
+					}		
 				}
-				if (innerCount == 0) {
-					finalColor = new Color(background);
-					nohit++;
-				} else {
-					hitpixels++;
-					finalColor = new Color((int) rSum / innerCount, (int) gSum
+			
+				finalColor = new Color( rSum / innerCount, (int) gSum
 							/ innerCount, (int) bSum / innerCount);
-				}
-
+				
 				canvas.setRGB(j, i, finalColor.getRGB());
 			}
 		}
-		System.out.println("HIT " + hitpixels);
-		System.out.println("NO HIT " + nohit);
 		new Render(canvas);
 
 	}

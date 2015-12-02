@@ -117,7 +117,6 @@ public class Esfera implements Objeto {
 		// 4. (v) Rayo al ojo
 		Vector3D v = new Vector3D(px - r.origin.x, py - r.origin.y, pz
 				- r.origin.z);
-
 		Vector3D ref = null;
 		if (isMirror) {
 			// 5. (ref) Rayo reflejado
@@ -179,7 +178,6 @@ public class Esfera implements Objeto {
 				}
 			}
 		}
-
 		// Hacemos el calculo del color en ese pixel
 		return m.calculo(color, bgnd, lights, objects, l, p, p1, n, v,
 				r.origin, isMirror, ref, isTransparent, frac, nRayos,

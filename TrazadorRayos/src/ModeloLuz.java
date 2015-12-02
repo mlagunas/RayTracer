@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class ModeloLuz {
 	// Maximo de rayos reflejados lanzados
-	private final int MAX_RAYOS = 1;
+	private final int MAX_RAYOS = 20;
 	private final float MAX_COLOR = 255;
 
 	double ka;
@@ -107,14 +107,12 @@ public class ModeloLuz {
 		if (mirror) {
 			if (kr > 0 && Ref!=null && nRayos < MAX_RAYOS) {
 				if (nRayos == 1) {
-					System.out.println("IEPA");
 				}
 				
-				Vector3D aux = Vector3D.scale(2*Vector3D.dotProd(V, N),N);;
+				Vector3D aux = Vector3D.scale(2*Vector3D.dotProd(V, N),N);
 				Vector3D reflect=Vector3D.sub(V, aux);
 				
 				Rayo reflejado = new Rayo(new Point3D(p.x, p.y, p.z), reflect);
-
 				if (reflejado.trace(objects)) {
 					// Reflejado(origen en p pasando por la interseccion con
 					// el

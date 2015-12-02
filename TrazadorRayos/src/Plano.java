@@ -45,7 +45,7 @@ public class Plano implements Objeto {
 		d1 = Vector3D.dotProd(new Vector3D(ray.origin.x, ray.origin.y,
 				ray.origin.z), N);
 		t = (d - d1) / dn;
-		if (t > ray.t || t < 0)
+		if (t > ray.t || t <= 0)
 			return false;
 		ray.t = t;
 		ray.object = this;
@@ -74,6 +74,7 @@ public class Plano implements Objeto {
 		// 4. (v) Rayo al ojo
 		Vector3D v = new Vector3D(px - r.origin.x, py - r.origin.y, pz
 				- r.origin.z);
+
 
 		Vector3D ref = null;
 		if (isMirror) {

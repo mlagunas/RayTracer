@@ -65,15 +65,15 @@ public class Programa {
 			/*
 			 * OBJETOS
 			 */
-			ModeloLuz m = new ModeloLuz(0.8, 0.2, 0.2, 0.3, 10, 0, 1.68);
-			Plano p = new Plano(m, 1, 0, 0, 1, Color.white, true, true);
+			ModeloLuz m = new ModeloLuz(0.5, 0.5, 0.5, 0.4, 50, 0, 0);
+			Plano p = new Plano(m, 1, 0, 0, 1, Color.white, true, false);
 			objects.add(p);
-			p = new Plano(m, 0, 0, 1, 0, Color.red, true, true);
+			p = new Plano(m, 0, 0, 1, 0, Color.red, true, false);
 			objects.add(p);
-			p = new Plano(m, 0, 1, 0, 0, Color.green, true, true);
+			p = new Plano(m, 0, 1, 0, 0, Color.green, true, false);
 			objects.add(p);
 
-			ModeloLuz m1 = new ModeloLuz(0.7, 0.2, 0.7, 0.3, 10, 0.6, 1.68);
+			ModeloLuz m1 = new ModeloLuz(0.5, 0.5, 0.4, 0.4, 50, 0.1, 1.5);
 			Esfera e = new Esfera(m1, new Vector3D(2, 2, 2), 1.5, new Color(
 					(float) 0.7, (float) 0.2, (float) 0.8), true, true);
 			objects.add(e);
@@ -114,8 +114,8 @@ public class Programa {
 		rayTracer.setPantalla(viewport);
 		rayTracer.setEscena(escena);
 		// rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,3);
-		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
-		// rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,1);
+		//rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
+		rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,0);
 	}
 
 	private static double getNumber(Scanner st) throws IOException {

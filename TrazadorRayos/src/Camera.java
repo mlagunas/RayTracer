@@ -99,7 +99,7 @@ public class Camera {
 	            double u = i*(viewport.getWidth() / (double) viewport.getColPixels()-1) + k * du;
 	            double v = j*(viewport.getHeight() / (double) viewport.getFilPixels()-1) + l * dv;
 	            
-	            towards.scale(screenDistance);
+	            towards.scale(-screenDistance);
 	            right.scale(u);
 	            up.scale(v);
 	            
