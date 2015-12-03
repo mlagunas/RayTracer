@@ -44,21 +44,12 @@ public class Esfera implements Objeto {
 		// ray direction and it is the closest so far
 		double t = v - (Math.sqrt(res));
 		double t1 = v - (-Math.sqrt(res));
-		if (t <=1 && t1 <= 1)
+		if (round(t, 7) == 0 && round(t1, 7) == 0)
 			return false;
-
-		if (t <= 0) {
+		if (round(t, 7) == 0)
 			ray.t = t1;
-			ray.t1 = t;
-		}
-		if (t1 <= 0) {
+		else
 			ray.t = t;
-			ray.t1 = t1;
-		}
-		if (t > 0 && t1 > 0) {
-			ray.t1 = (t < t1) ? t : t1;
-			ray.t = (t >= t1) ? t : t1;
-		}
 
 		ray.object = this;
 
@@ -84,11 +75,14 @@ public class Esfera implements Objeto {
 		// Test if the intersection is in the positive
 		// ray direction and it is the closest so far
 		double t = v - (Math.sqrt(res));
+		double t1 = v - (-Math.sqrt(res));
 		if ((t > ray.t) || (t < 0))
 			return false;
+		if (round(t, 7) == 0)
+			ray.t = t1;
+		else
+			ray.t = t;
 
-		ray.t = t;
-		
 		ray.object = this;
 		return true;
 	}
@@ -109,24 +103,35 @@ public class Esfera implements Objeto {
 		// 2. (n) Normal a la superficie
 		Vector3D n = new Vector3D(px - center.x, py - center.y, pz - center.z);
 		n.normalize();
-
-		// 3. (l) Rayo con dirección y sentido al foco de luz
-		Vector3D l = new Vector3D(-r.direction.x, -r.direction.y,
-				-r.direction.z);
+//
+//		// 3. (l) Rayo con dirección y sentido al foco de luz
+//		Vector3D l = new Vector3D(-r.direction.x, -r.direction.y,
+//				-r.direction.z);
+//		l.normalize();
 
 		// 4. (v) Rayo al ojo
-		Vector3D v = new Vector3D(px - r.origin.x, py - r.origin.y, pz
-				- r.origin.z);
+		Vector3D v = new Vector3D(r.origin.x-px, r.origin.y-py, 
+				r.origin.z-pz);
+		v.normalize();
 		Vector3D ref = null;
+		
 		if (isMirror) {
 			// 5. (ref) Rayo reflejado
 			double twice = 2 * Vector3D.dotProd(v, n);
 			ref = Vector3D.sub(v, Vector3D.scale(twice, n));
+			ref.normalize();
+			double x = round(ref.x, 10);
+			double y = round(ref.y, 10);
+			double z = round(ref.z, 10);
+			if (x == 0 && y == 0 && z == 0) {
+				ref = null;
+			}
+
 		}
+	
 
 		// 6. (frac) Rayo refractado
 		Vector3D frac = null;
-		Vector3D frac1=null;
 		if (isTransparent) {
 			// Snell: sin(i)/sin(r) = nr/ni
 			double NiNr = currentRef / m.index;
@@ -139,11 +144,10 @@ public class Esfera implements Objeto {
 				// Vector3D.add(Vector3D.scale(NiNr,r.direction),Vector3D.scale((NiNr*cosI)-cosR,
 				// n));
 				// frac=Vector3D.sub(Vector3D.scale((NiNr*cosI-Math.sqrt(1-NiNr*NiNr*(1-(cosI*cosI)))),n),Vector3D.scale(NiNr,r.direction));
-				frac1 = Vector3D.sub(
+				Vector3D frac1 = Vector3D.sub(
 						Vector3D.scale((NiNr * cosI) - cosR, n),
 						Vector3D.scale(NiNr, r.direction));
 				frac1.normalize();
-				p1=null;
 
 				Rayo rayo = new Rayo(p, frac1);
 				if (this.intersect(rayo)) {
@@ -151,7 +155,7 @@ public class Esfera implements Objeto {
 						px = (rayo.origin.x + rayo.t * rayo.direction.x);
 						py = (rayo.origin.y + rayo.t * rayo.direction.y);
 						pz = (rayo.origin.z + rayo.t * rayo.direction.z);
-						
+
 						p1 = new Point3D(px, py, pz);
 
 						// Normal a la superficie
@@ -174,7 +178,7 @@ public class Esfera implements Objeto {
 			}
 		}
 		// Hacemos el calculo del color en ese pixel
-		return m.calculo(color, bgnd, lights, objects, l, p, p1, n, v,
+		return m.calculo(color, bgnd, lights, objects, null, p, p1, n, v,
 				r.origin, isMirror, ref, isTransparent, frac, nRayos,
 				currentRef);
 	}
