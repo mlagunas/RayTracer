@@ -44,21 +44,12 @@ public class Esfera implements Objeto {
 		// ray direction and it is the closest so far
 		double t = v - (Math.sqrt(res));
 		double t1 = v - (-Math.sqrt(res));
-		if (t <= 0 && t1 <= 0)
+		if (round(t, 7) == 0 && round(t1, 7) == 0)
 			return false;
-
-		if (t <= 0) {
+		if (round(t, 7) == 0)
 			ray.t = t1;
-			ray.t1 = t;
-		}
-		if (t1 <= 0) {
+		else
 			ray.t = t;
-			ray.t1 = t1;
-		}
-		if (t > 0 && t1 > 0) {
-			ray.t1 = (t < t1) ? t : t1;
-			ray.t = (t >= t1) ? t : t1;
-		}
 
 		ray.object = this;
 
@@ -84,11 +75,14 @@ public class Esfera implements Objeto {
 		// Test if the intersection is in the positive
 		// ray direction and it is the closest so far
 		double t = v - (Math.sqrt(res));
+		double t1 = v - (-Math.sqrt(res));
 		if ((t > ray.t) || (t < 0))
 			return false;
+		if (round(t, 7) == 0)
+			ray.t = t1;
+		else
+			ray.t = t;
 
-		ray.t = t;
-		
 		ray.object = this;
 		return true;
 	}
@@ -151,7 +145,7 @@ public class Esfera implements Objeto {
 				frac1.normalize();
 
 				Rayo rayo = new Rayo(p, frac1);
-				if (this.intersectRefraction(rayo)) {
+				if (this.intersect(rayo)) {
 					if (rayo.t != 0) {
 						px = (rayo.origin.x + rayo.t * rayo.direction.x);
 						py = (rayo.origin.y + rayo.t * rayo.direction.y);

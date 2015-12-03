@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class ModeloLuz {
 	// Maximo de rayos reflejados lanzados
-	private final int MAX_RAYOS = 20;
+	private final int MAX_RAYOS = 5;
 	private final float MAX_COLOR = 255;
 
 	double ka;
@@ -58,7 +58,7 @@ public class ModeloLuz {
 				/*
 				 * CALCULO SI ES UN PUNTO EN SOMBRA
 				 */
-				Point3D poffset = new Point3D(p.x +L.x, p.y + L.y, p.z + L.z);
+				Point3D poffset = new Point3D(p.x + L.x, p.y + L.y, p.z + L.z);
 				Rayo shadowRay = new Rayo(poffset, L);
 				if (shadowRay.trace(objects))
 					break;
@@ -84,11 +84,10 @@ public class ModeloLuz {
 				 */
 				if (ks > 0) {
 					// cos(R·V)^n
-					lambert *= 2;
-					//float spec = (float) V.dotProd(new Vector3D(lambert * N.x
-					//		- L.x, lambert * N.y - L.y, lambert * N.z - L.z));
-					 double spec = Math.pow(n, Math.cos(Vector3D.dotProd(V,
-					 R)));
+					// lambert *= 2;
+					// float spec = (float) V.dotProd(new Vector3D(lambert * N.x
+					// - L.x, lambert * N.y - L.y, lambert * N.z - L.z));
+					double spec = Math.pow(n, Vector3D.dotProd(V, R));
 					if (spec > 0) {
 						//
 						r += ks * spec * light.r * sr;
@@ -105,13 +104,13 @@ public class ModeloLuz {
 
 		// Calculo del Rayo reflejado
 		if (mirror) {
-			if (kr > 0 && Ref!=null && nRayos < MAX_RAYOS) {
+			if (kr > 0 && Ref != null && nRayos < MAX_RAYOS) {
 				if (nRayos == 1) {
 				}
-				
-				Vector3D aux = Vector3D.scale(2*Vector3D.dotProd(V, N),N);
-				Vector3D reflect=Vector3D.sub(V, aux);
-				
+
+				Vector3D aux = Vector3D.scale(2 * Vector3D.dotProd(V, N), N);
+				Vector3D reflect = Vector3D.sub(V, aux);
+
 				Rayo reflejado = new Rayo(new Point3D(p.x, p.y, p.z), reflect);
 				if (reflejado.trace(objects)) {
 					// Reflejado(origen en p pasando por la interseccion con
@@ -152,9 +151,9 @@ public class ModeloLuz {
 				} else {
 					// En caso contrario chocara con el fondo, añadimos su
 					// color
-					r += kt * bgnd.getRed();
-					g += kt * bgnd.getGreen();
-					b += kt * bgnd.getBlue();
+					r += kt * bgnd.getRed() / MAX_COLOR;
+					g += kt * bgnd.getGreen() / MAX_COLOR;
+					b += kt * bgnd.getBlue() / MAX_COLOR;
 				}
 			}
 		}
