@@ -45,7 +45,7 @@ public class Plano implements Objeto {
 		d1 = Vector3D.dotProd(new Vector3D(ray.origin.x, ray.origin.y,
 				ray.origin.z), N);
 		t = (d - d1) / dn;
-		if (t > ray.t || t <= 0)
+		if (t > ray.t || t <= 0.0006)
 			return false;
 		ray.t = t;
 		ray.object = this;
@@ -74,12 +74,15 @@ public class Plano implements Objeto {
 		// 4. (v) Rayo al ojo
 		Vector3D v = new Vector3D(px - r.origin.x, py - r.origin.y, pz
 				- r.origin.z);
-
+		
 
 		Vector3D ref = null;
 		if (isMirror) {
 			// 5. (ref) Rayo reflejado
-			ref = r.origin.reflect(N);
+			double twice = 2 * Vector3D.dotProd(v, N);
+			ref = Vector3D.sub(v, Vector3D.scale(twice, N));
+			
+
 		}
 
 		Vector3D frac = null;
@@ -128,9 +131,18 @@ public class Plano implements Objeto {
 				}
 			}
 		}
-		return m.calculo(color, bgnd, lights, objects, l, p, null, N, v,
+		return m.calculo(color, bgnd, lights, objects, l, p, p1, N, v,
 				r.origin, isMirror, ref, isTransparent, frac, nRayos,
 				currentRefr);
+	}
+	private static double round(double value, int places) {
+		if (places < 0)
+			throw new IllegalArgumentException();
+
+		long factor = (long) Math.pow(10, places);
+		value = value * factor;
+		long tmp = Math.round(value);
+		return (double) tmp / factor;
 	}
 
 }

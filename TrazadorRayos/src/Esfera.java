@@ -44,7 +44,7 @@ public class Esfera implements Objeto {
 		// ray direction and it is the closest so far
 		double t = v - (Math.sqrt(res));
 		double t1 = v - (-Math.sqrt(res));
-		if (t <= 0 && t1 <= 0)
+		if (t <=1 && t1 <= 1)
 			return false;
 
 		if (t <= 0) {
@@ -122,17 +122,11 @@ public class Esfera implements Objeto {
 			// 5. (ref) Rayo reflejado
 			double twice = 2 * Vector3D.dotProd(v, n);
 			ref = Vector3D.sub(v, Vector3D.scale(twice, n));
-			double x = round(ref.x, 10);
-			double y = round(ref.y, 10);
-			double z = round(ref.z, 10);
-			if (x == 0 && y == 0 && z == 0) {
-				ref = null;
-			}
-
 		}
 
 		// 6. (frac) Rayo refractado
 		Vector3D frac = null;
+		Vector3D frac1=null;
 		if (isTransparent) {
 			// Snell: sin(i)/sin(r) = nr/ni
 			double NiNr = currentRef / m.index;
@@ -145,18 +139,19 @@ public class Esfera implements Objeto {
 				// Vector3D.add(Vector3D.scale(NiNr,r.direction),Vector3D.scale((NiNr*cosI)-cosR,
 				// n));
 				// frac=Vector3D.sub(Vector3D.scale((NiNr*cosI-Math.sqrt(1-NiNr*NiNr*(1-(cosI*cosI)))),n),Vector3D.scale(NiNr,r.direction));
-				Vector3D frac1 = Vector3D.sub(
+				frac1 = Vector3D.sub(
 						Vector3D.scale((NiNr * cosI) - cosR, n),
 						Vector3D.scale(NiNr, r.direction));
 				frac1.normalize();
+				p1=null;
 
 				Rayo rayo = new Rayo(p, frac1);
-				if (this.intersectRefraction(rayo)) {
+				if (this.intersect(rayo)) {
 					if (rayo.t != 0) {
 						px = (rayo.origin.x + rayo.t * rayo.direction.x);
 						py = (rayo.origin.y + rayo.t * rayo.direction.y);
 						pz = (rayo.origin.z + rayo.t * rayo.direction.z);
-
+						
 						p1 = new Point3D(px, py, pz);
 
 						// Normal a la superficie
