@@ -12,17 +12,13 @@ public class Plano implements Objeto {
 	ModeloLuz m;
 	double d;
 	private Color color;
-	boolean isMirror;
-	boolean isTransparent;
 
-	public Plano(ModeloLuz m, double d, float x, float y, float z, Color color,
-			boolean mirror, boolean transparent) {
+	public Plano(ModeloLuz m, double d, float x, float y, float z, Color color) {
 		this.color = color;
 		this.m = m;
 		this.N = new Vector3D(x, y, z);
 		this.d = d;
-		this.isMirror = mirror;
-		this.isTransparent = transparent;
+		;
 	}
 
 	// Rayo = R(t) = O + D * t, con su origen O = (ox, oy, oz) y vector
@@ -72,69 +68,58 @@ public class Plano implements Objeto {
 				-r.direction.z);
 
 		// 4. (v) Rayo al ojo
-		Vector3D v = new Vector3D(r.origin.x-px, r.origin.y-py, r.origin.z-pz);
+		Vector3D v = new Vector3D(r.origin.x - px, r.origin.y - py, r.origin.z
+				- pz);
 		v.normalize();
-		
-
-		Vector3D ref = null;
-		if (isMirror) {
-			// 5. (ref) Rayo reflejado
-			double twice = 2 * Vector3D.dotProd(v, N);
-			ref = Vector3D.sub(v, Vector3D.scale(twice, N));
-			
-
-		}
 
 		Vector3D frac = null;
-		if (isTransparent) { // Snell: sin(i)/sin(r) = nr/ni
-			// 6. (frac) Rayo refractado
+		if (m.kt > 0) {
+			// Snell: sin(i)/sin(r) = nr/ni
 
-			if (isTransparent) {
-				// Snell: sin(i)/sin(r) = nr/ni
+			double NiNr = currentRefr / m.index;
+			double cosI = Vector3D.dotProd(N, r.direction);
+			double cosR = Math
+					.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
 
-				double NiNr = currentRefr / m.index;
-				double cosI = Vector3D.dotProd(N, r.direction);
-				double cosR = Math
-						.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
+			if (cosR > 0.0) {
+				// frac =
+				// Vector3D.add(Vector3D.scale(NiNr,r.direction),Vector3D.scale((NiNr*cosI)-cosR,
+				// n));
+				// frac=Vector3D.sub(Vector3D.scale((NiNr*cosI-Math.sqrt(1-NiNr*NiNr*(1-(cosI*cosI)))),n),Vector3D.scale(NiNr,r.direction));
+				Vector3D frac1 = Vector3D.sub(
+						Vector3D.scale((NiNr * cosI) - cosR, N),
+						Vector3D.scale(NiNr, r.direction));
+				frac1.normalize();
 
-				if (cosR > 0.0) {
-					// frac =
-					// Vector3D.add(Vector3D.scale(NiNr,r.direction),Vector3D.scale((NiNr*cosI)-cosR,
-					// n));
-					// frac=Vector3D.sub(Vector3D.scale((NiNr*cosI-Math.sqrt(1-NiNr*NiNr*(1-(cosI*cosI)))),n),Vector3D.scale(NiNr,r.direction));
-					Vector3D frac1 = Vector3D.sub(
-							Vector3D.scale((NiNr * cosI) - cosR, N),
-							Vector3D.scale(NiNr, r.direction));
-					frac1.normalize();
+				Rayo rayo = new Rayo(p, frac1);
+				if (this.intersect(rayo)) {
+					px = (rayo.origin.x + rayo.t * rayo.direction.x);
+					py = (rayo.origin.y + rayo.t * rayo.direction.y);
+					pz = (rayo.origin.z + rayo.t * rayo.direction.z);
 
-					Rayo rayo = new Rayo(p, frac1);
-					if (this.intersect(rayo)) {
-						px = (rayo.origin.x + rayo.t * rayo.direction.x);
-						py = (rayo.origin.y + rayo.t * rayo.direction.y);
-						pz = (rayo.origin.z + rayo.t * rayo.direction.z);
+					p1 = new Point3D(px, py, pz);
 
-						p1 = new Point3D(px, py, pz);
-
-						// Normal a la superficie
-						N.normalize();
-						NiNr = m.index / currentRefr;
-						cosI = Vector3D.dotProd(N, rayo.direction);
-						cosR = Math
-								.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
-						if (cosR > 0.0) {
-							frac = Vector3D.sub(
-									Vector3D.scale((NiNr * cosI) - cosR, N),
-									Vector3D.scale(NiNr, rayo.direction));
-							frac.normalize();
-						}
+					// Normal a la superficie
+					N.normalize();
+					NiNr = m.index / currentRefr;
+					cosI = Vector3D.dotProd(N, rayo.direction);
+					cosR = Math
+							.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
+					if (cosR > 0.0) {
+						frac = Vector3D.sub(
+								Vector3D.scale((NiNr * cosI) - cosR, N),
+								Vector3D.scale(NiNr, rayo.direction));
+						frac.normalize();
 					}
 				}
 			}
+
 		}
 		return m.calculo(color, bgnd, lights, objects, l, p, p1, N, v,
-				r.origin, isMirror, ref, isTransparent, frac, nRayos,
+				r.origin, frac, nRayos,
 				currentRefr);
 	}
+
 	private static double round(double value, int places) {
 		if (places < 0)
 			throw new IllegalArgumentException();
