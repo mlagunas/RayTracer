@@ -17,7 +17,7 @@ public class Programa {
 
 	public static void main(String[] args) {
 
-		final String PATH = "spheres2.txt";
+		final String PATH = "spheres.txt";
 
 		final int NUM_FILAS = 516;
 		final int NUM_COL = 516;
@@ -26,10 +26,6 @@ public class Programa {
 		objects = new ArrayList<Objeto>();
 		Scene escena = new Scene();
 		Camera cam = new Camera();
-		cam.setEye(new Point3D(02, 0, 0));
-		cam.setLookVector(new Vector3D(1, 0, 0));
-		cam.setUpVector(new Vector3D(0, 1, 0));
-		cam.setScreenDistance(6);
 
 		/*
 		 * try { File f = new File(PATH); Scanner s = new Scanner(f);
@@ -62,7 +58,7 @@ public class Programa {
 			/*
 			 * OBJETOS
 			 */
-			ModeloLuz m = new ModeloLuz(0.2, 0.4, 0, 0.3, 50, 0, 0);
+			ModeloLuz m = new ModeloLuz(0.2, 0.6, 0, 0, 50, 0, 0);
 			Plano p = new Plano(m, 1, 0, 0, 1, Color.green);
 			objects.add(p);
 			p = new Plano(m, 0, 0, 1, 0, Color.red);
@@ -71,17 +67,19 @@ public class Programa {
 			objects.add(p);
 			// ModeloLuz (Coeficiente ambiental, difusa, especular, reflejo, ns,
 			// refraccion, indice)
-			/*
-			 * ModeloLuz m1 = new ModeloLuz(0.2, 0.4, 0.8, 1, 125, 0, 0); Esfera
-			 * e = new Esfera(m1, new Vector3D(5, 2, 2), 1.5, Color.white, true,
-			 * true); objects.add(e); m1 = new ModeloLuz(0.5, 0, 0, 0, 0, 0, 0);
-			 * e = new Esfera(m1, new Vector3D(1, 2, 2), 1.5, Color.white, true,
-			 * true); objects.add(e); m1 = new ModeloLuz(0.2, 0.5, 0, 0, 50, 0,
-			 * 0); e = new Esfera(m1, new Vector3D(5, 5, 2), 1.5, Color.white,
-			 * true, true); objects.add(e);
-			 */
-			ModeloLuz m1 = new ModeloLuz(0.2, 0.5, 0.9, 0.7, 10, 0, 0);
-			Esfera e = new Esfera(m1, new Vector3D(1, 5, 2), 1.5, Color.white);
+
+			ModeloLuz m1 = new ModeloLuz(0.2, 0.4, 0.8, 1, 125, 0, 0);
+			Esfera e = new Esfera(m1, new Vector3D(5, 2, 2), 1.5, Color.white);
+			objects.add(e);
+			m1 = new ModeloLuz(0.5, 0, 0, 0, 0, 0, 0);
+			e = new Esfera(m1, new Vector3D(1, 2, 2), 1.5, Color.white);
+			objects.add(e);
+			m1 = new ModeloLuz(0.2, 0.5, 0, 0, 50, 0, 0);
+			e = new Esfera(m1, new Vector3D(5, 5, 2), 1.5, Color.white);
+			objects.add(e);
+
+			m1 = new ModeloLuz(0.2, 0.5, 0.9, 0, 50, 0, 0);
+			e = new Esfera(m1, new Vector3D(1, 5, 2), 1.5, Color.white);
 			objects.add(e);
 			/*
 			 * e = new Esfera(m, new Vector3D(0, -3, -2), 1.5, new Color(
@@ -120,7 +118,6 @@ public class Programa {
 		rayTracer.setPantalla(viewport);
 		rayTracer.setEscena(escena);
 		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
-		// rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,0);
 	}
 
 	private static double getNumber(Scanner st) throws IOException {
