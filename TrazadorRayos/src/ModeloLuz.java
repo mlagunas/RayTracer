@@ -35,6 +35,7 @@ public class ModeloLuz {
 		float sr = color.getRed() / (float) MAX_COLOR;
 		float sg = color.getGreen() / (float) MAX_COLOR;
 		float sb = color.getBlue() / (float) MAX_COLOR;
+		
 		for (Luz light : lightSources) {
 			/*
 			 * CALCULO DE LA LUZ AMBIENTAL
@@ -61,105 +62,104 @@ public class ModeloLuz {
 				 */
 				//Point3D poffset = new Point3D(p.x + L.x, p.y + L.y, p.z + L.z);
 				Rayo shadowRay = new Rayo(p, L);
-				if (shadowRay.trace(objects))
-					break;
+				if (!shadowRay.trace(objects)){
+					/*
+					 * CALCULO LUZ DIFUSA Kd*Id Id = I*cos(N·L)
+					 */
+					float lambert = 0;
+					if (kd > 0) {
+						// cos(N·L)
 
+						lambert = (float) Vector3D.dotProd(N, L);
+						if (lambert > 0) {
+							// Kd*cos(N·L)*I
+							r += kd * lambert * light.r * sr;
+							g += kd * lambert * light.g * sg;
+							b += kd * lambert * light.b * sb;
+						}
+					}
+
+					/*
+					 * CALCULO LUZ ESPECULAR Ks*Is Is = I*cos(R·V)^n
+					 */
+					if (ks > 0) {
+						// cos(R·V)^n
+						// lambert *= 2;
+						// float spec = (float) V.dotProd(new Vector3D(lambert * N.x
+						// - L.x, lambert * N.y - L.y, lambert * N.z - L.z));
+						
+						double twice = 2 * Vector3D.dotProd(L, N);
+						Vector3D LR = Vector3D.sub(Vector3D.scale(twice, N),L);
+						
+						double dot = Vector3D.dotProd(V, LR);
+						if (dot > 0) {
+							//
+							double spec = Math.pow(dot, n);
+							r += spec * light.r*ks*sr;
+							g += spec * light.g*ks*sg;
+							b += spec * light.b*ks*sb;
+						}
+					}
+				}
+				
+				
 				/*
-				 * CALCULO LUZ DIFUSA Kd*Id Id = I*cos(N·L)
+				 * CALCULO DE LA REFLEXION
 				 */
-				float lambert = 0;
-				if (kd > 0) {
-					// cos(N·L)
 
-					lambert = (float) Vector3D.dotProd(N, L);
-					if (lambert > 0) {
-						// Kd*cos(N·L)*I
-						r += kd * lambert * light.r * sr;
-						g += kd * lambert * light.g * sg;
-						b += kd * lambert * light.b * sb;
+				// Calculo del Rayo reflejado
+				if (mirror) {
+					if (kr > 0  && nRayos < MAX_RAYOS) {
+
+						
+						double twice = 2 * Vector3D.dotProd(L, N);
+						Vector3D LR = Vector3D.sub(Vector3D.scale(twice, N),L);
+
+						Rayo reflejado = new Rayo(new Point3D(p.x, p.y, p.z), LR);
+						if (reflejado.trace(objects)) {
+							// Reflejado(origen en p pasando por la interseccion con
+							// el
+							// objeto)
+							// Calculamos el color del objeto intersectado y lo
+							// añadimos
+							Color c = reflejado.Shade(lightSources, objects, bgnd,
+									nRayos + 1, kref);
+							r += kr * sr * c.getRed() / MAX_COLOR;
+							g += kr * sg * c.getGreen() / MAX_COLOR;
+							b += kr * sb * c.getBlue() / MAX_COLOR;
+						} else {
+							// En caso contrario chocara con el fondo, añadimos su
+							// color
+							r += kr * bgnd.getRed()/ MAX_COLOR;
+							g += kr * bgnd.getGreen()/ MAX_COLOR;
+							b += kr * bgnd.getBlue()/ MAX_COLOR;
+						}
 					}
 				}
 
 				/*
-				 * CALCULO LUZ ESPECULAR Ks*Is Is = I*cos(R·V)^n
+				 * CALCULO DE LA REFRACCION
 				 */
-				if (ks > 0) {
-					// cos(R·V)^n
-					// lambert *= 2;
-					// float spec = (float) V.dotProd(new Vector3D(lambert * N.x
-					// - L.x, lambert * N.y - L.y, lambert * N.z - L.z));
-					
-					double twice = 2 * Vector3D.dotProd(L, N);
-					Vector3D LR = Vector3D.sub(Vector3D.scale(twice, N),L);
-					
-					double dot = Vector3D.dotProd(V, LR);
-					if (dot > 0) {
-						//
-						double spec = Math.pow(dot, n);
-						r += spec * light.r*ks*sr;
-						g += spec * light.g*ks*sg;
-						b += spec * light.b*ks*sb;
+
+				if (transp) {
+					if (kt > 0 && nRayos < MAX_RAYOS && frac != null) {
+						Rayo refractado = new Rayo(new Point3D(p1.x, p1.y, p1.z), frac);
+						if (refractado.trace(objects)) {
+							// Calculamos el color del objeto intersectado y lo
+							// añadimos
+							Color c = refractado.Shade(lightSources, objects, bgnd,
+									nRayos + 1, kref);
+							r += kt * sr * c.getRed() / MAX_COLOR;
+							g += kt * sg * c.getGreen() / MAX_COLOR;
+							b += kt * sb * c.getBlue() / MAX_COLOR;
+						} else {
+							// En caso contrario chocara con el fondo, añadimos su
+							// color
+							r += kt * bgnd.getRed() / MAX_COLOR;
+							g += kt * bgnd.getGreen() / MAX_COLOR;
+							b += kt * bgnd.getBlue() / MAX_COLOR;
+						}
 					}
-				}
-			}
-		}
-
-		/*
-		 * CALCULO DE LA REFLEXION
-		 */
-
-		// Calculo del Rayo reflejado
-		if (mirror) {
-			if (kr > 0 && Ref != null && nRayos < MAX_RAYOS) {
-				if (nRayos == 1) {
-				}
-
-				Vector3D aux = Vector3D.scale(2 * Vector3D.dotProd(V, N), N);
-				Vector3D reflect = Vector3D.sub(V, aux);
-
-				Rayo reflejado = new Rayo(new Point3D(p.x, p.y, p.z), reflect);
-				if (reflejado.trace(objects)) {
-					// Reflejado(origen en p pasando por la interseccion con
-					// el
-					// objeto)
-					// Calculamos el color del objeto intersectado y lo
-					// añadimos
-					Color c = reflejado.Shade(lightSources, objects, bgnd,
-							nRayos + 1, kref);
-					r += kr * sr * c.getRed() / MAX_COLOR;
-					g += kr * sg * c.getGreen() / MAX_COLOR;
-					b += kr * sb * c.getBlue() / MAX_COLOR;
-				} else {
-					// En caso contrario chocara con el fondo, añadimos su
-					// color
-					r += kr * bgnd.getRed();
-					g += kr * bgnd.getGreen();
-					b += kr * bgnd.getBlue();
-				}
-			}
-		}
-
-		/*
-		 * CALCULO DE LA REFRACCION
-		 */
-
-		if (transp) {
-			if (kt > 0 && nRayos < MAX_RAYOS && frac != null) {
-				Rayo refractado = new Rayo(new Point3D(p1.x, p1.y, p1.z), frac);
-				if (refractado.trace(objects)) {
-					// Calculamos el color del objeto intersectado y lo
-					// añadimos
-					Color c = refractado.Shade(lightSources, objects, bgnd,
-							nRayos + 1, kref);
-					r += kt * sr * c.getRed() / MAX_COLOR;
-					g += kt * sg * c.getGreen() / MAX_COLOR;
-					b += kt * sb * c.getBlue() / MAX_COLOR;
-				} else {
-					// En caso contrario chocara con el fondo, añadimos su
-					// color
-					r += kt * bgnd.getRed() / MAX_COLOR;
-					g += kt * bgnd.getGreen() / MAX_COLOR;
-					b += kt * bgnd.getBlue() / MAX_COLOR;
 				}
 			}
 		}
