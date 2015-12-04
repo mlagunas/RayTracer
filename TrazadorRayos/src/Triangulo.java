@@ -117,7 +117,7 @@ public class Triangulo implements Objeto {
 						-r.direction.z);
 
 				// 4. (v) Rayo al ojo
-				Vector3D v = new Vector3D(px - r.origin.x, py - r.origin.y, pz - r.origin.z);
+				Vector3D v = new Vector3D(r.origin.x-px, r.origin.y -py, r.origin.z-pz);
 
 				Vector3D ref =null;
 				if (isMirror){

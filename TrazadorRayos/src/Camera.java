@@ -96,12 +96,14 @@ public class Camera {
 	            up = new Vector3D(vVector);
 	    		right = new Vector3D(uVector);
 	            
-	            double u = i*(viewport.getWidth() / (double) viewport.getColPixels()-1) + k * du;
-	            double v = j*(viewport.getHeight() / (double) viewport.getFilPixels()-1) + l * dv;
+	    		final double u=i*(viewport.getWidth() / ((double) viewport.getColPixels()-1));
+	            final double v=j*(viewport.getHeight() / ((double) viewport.getFilPixels()-1));
+	            double fu = u + k * du;
+	            double fv = v + l * dv;
 	            
 	            towards.scale(-screenDistance);
-	            right.scale(u);
-	            up.scale(v);
+	            right.scale(fu);
+	            up.scale(fv);
 	            
 	            lookAt.add(towards);
 	    		lookAt.add(right);

@@ -47,7 +47,7 @@ public class Programa {
 			/*
 			 * LUCES
 			 */
-			Luz luzA = new Luz(Luz.AMBIENT, null, 1, 1, 1);
+			Luz luzA = new Luz(Luz.AMBIENT, null, 0.5f, 0.5f, 0.5f);
 
 			Luz luzP = new Luz(Luz.POINT, new Vector3D(5*4 , 3*4, 1*4),
 					(float) 0.5, (float) 0.5, (float) 0.5);
@@ -77,12 +77,12 @@ public class Programa {
 			ModeloLuz m1 = new ModeloLuz(0.5, 0, 0, 0, 0, 0, 0);
 			Esfera e = new Esfera(m1, new Vector3D(1, 2, 2), 1.5, Color.white, true,
 					true);
-			objects.add(e);
+			//objects.add(e);
 			m1 = new ModeloLuz(0.2, 0.5, 0, 0, 50, 0, 0);
 			e = new Esfera(m1, new Vector3D(5, 5, 2), 1.5, Color.white, true,
 					true);
-			objects.add(e);
-			m1 = new ModeloLuz(0.2, 0.5, 0.5, 0, 50, 0, 0);
+			//objects.add(e);
+			m1 = new ModeloLuz(0.2, 0.5, 0.5, 0.7, 50, 0, 0);
 			e = new Esfera(m1, new Vector3D(1, 5, 2), 1.5, Color.white, true,
 					true);
 			objects.add(e);
@@ -123,7 +123,7 @@ public class Programa {
 		rayTracer.setPantalla(viewport);
 		rayTracer.setEscena(escena);
 		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
-		// rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,0);
+		//rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,0);
 	}
 
 	private static double getNumber(Scanner st) throws IOException {

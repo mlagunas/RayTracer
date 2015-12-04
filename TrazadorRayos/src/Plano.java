@@ -77,13 +77,13 @@ public class Plano implements Objeto {
 		
 
 		Vector3D ref = null;
-		if (isMirror) {
-			// 5. (ref) Rayo reflejado
-			double twice = 2 * Vector3D.dotProd(v, N);
-			ref = Vector3D.sub(v, Vector3D.scale(twice, N));
-			
-
-		}
+//		if (isMirror) {
+//			// 5. (ref) Rayo reflejado
+//			double twice = 2 * Vector3D.dotProd(v, N);
+//			ref = Vector3D.sub(v, Vector3D.scale(twice, N));
+//			
+//
+//		}
 
 		Vector3D frac = null;
 		if (isTransparent) { // Snell: sin(i)/sin(r) = nr/ni
