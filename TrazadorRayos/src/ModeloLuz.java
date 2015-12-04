@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class ModeloLuz {
 	// Maximo de rayos reflejados lanzados
-	private final int MAX_RAYOS = 5;
+	private final int MAX_RAYOS = 2;
 	private final float MAX_COLOR = 255;
 
 	double ka;
@@ -110,14 +110,17 @@ public class ModeloLuz {
 
 		// Calculo del Rayo reflejado
 		if (mirror) {
-			if (kr > 0 && Ref != null && nRayos < MAX_RAYOS) {
+			if (kr > 0 && nRayos < MAX_RAYOS) {
 				if (nRayos == 1) {
 				}
 
-				Vector3D aux = Vector3D.scale(2 * Vector3D.dotProd(V, N), N);
-				Vector3D reflect = Vector3D.sub(V, aux);
-
-				Rayo reflejado = new Rayo(new Point3D(p.x, p.y, p.z), reflect);
+				//Vector3D aux = Vector3D.scale(2 * Vector3D.dotProd(V, N), N);
+				//Vector3D reflect = Vector3D.sub(V, aux);
+				
+				double twice = 2 * Vector3D.dotProd(L, N);
+				Vector3D LR = Vector3D.sub(Vector3D.scale(twice, N),L);
+				LR.normalize();
+				Rayo reflejado = new Rayo(new Point3D(p.x, p.y, p.z), LR);
 				if (reflejado.trace(objects)) {
 					// Reflejado(origen en p pasando por la interseccion con
 					// el
@@ -132,9 +135,9 @@ public class ModeloLuz {
 				} else {
 					// En caso contrario chocara con el fondo, añadimos su
 					// color
-					r += kr * bgnd.getRed();
-					g += kr * bgnd.getGreen();
-					b += kr * bgnd.getBlue();
+					r += kr * bgnd.getRed()/ MAX_COLOR;
+					g += kr * bgnd.getGreen()/ MAX_COLOR;
+					b += kr * bgnd.getBlue()/ MAX_COLOR;
 				}
 			}
 		}

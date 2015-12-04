@@ -115,19 +115,20 @@ public class Esfera implements Objeto {
 		v.normalize();
 		Vector3D ref = null;
 		
-		if (isMirror) {
-			// 5. (ref) Rayo reflejado
-			double twice = 2 * Vector3D.dotProd(v, n);
-			ref = Vector3D.sub(v, Vector3D.scale(twice, n));
-			ref.normalize();
-			double x = round(ref.x, 10);
-			double y = round(ref.y, 10);
-			double z = round(ref.z, 10);
-			if (x == 0 && y == 0 && z == 0) {
-				ref = null;
-			}
-
-		}
+//		if (isMirror) {
+//			// 5. (ref) Rayo reflejado
+//			double twice = 2 * Vector3D.dotProd(v, n);
+//			ref = Vector3D.sub(v, Vector3D.scale(twice, n));
+//			ref.normalize();
+//			double x = round(ref.x, 10);
+//			double y = round(ref.y, 10);
+//			double z = round(ref.z, 10);
+//			if (x == 0 && y == 0 && z == 0) {
+//				ref = null;
+//			}
+//			//ref = v.reflect(n);
+//
+//		}
 	
 
 		// 6. (frac) Rayo refractado
