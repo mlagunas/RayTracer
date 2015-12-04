@@ -39,51 +39,50 @@ public class Programa {
 		 */
 
 		if (eye == null) {
-			eye = new Point3D(10, 10, 10);
+			eye = new Point3D(1, 20, 0);
 			lookat = new Vector3D(0, 0, 0);
-			up = new Vector3D(0, 0, -1);
+			up = new Vector3D(0, 0, 1);
 			background = new Color((float) 0.2, (float) 0.8, (float) 0.9);
 
 			/*
 			 * LUCES
 			 */
-			Luz luzA = new Luz(Luz.AMBIENT, null, 0.5f, 0.5f, 0.5f);
+			Luz luzA = new Luz(Luz.AMBIENT, null, (float)0.3, (float)0.4, (float)0.5);
 
-			Luz luzP = new Luz(Luz.POINT, new Vector3D(5*4 , 3*4, 1*4),
-					(float) 0.5, (float) 0.5, (float) 0.5);
-			
-			Luz luzP2 = new Luz(Luz.POINT, new Vector3D(5,12,10),
+			Luz luzP = new Luz(Luz.POINT, new Vector3D(5 * 4, 5 * 4, 3 * 4),
+					(float) 0.8, (float) 0.8, (float) 0.8);
+
+			Luz luzP2 = new Luz(Luz.POINT, new Vector3D(10, 12, 20),
 					(float) 0.5, (float) 0.5, (float) 0.5);
 
 			luzList.add(luzA);
 			luzList.add(luzP);
-			//luzList.add(luzP2);
 
 			/*
 			 * OBJETOS
 			 */
-			ModeloLuz m = new ModeloLuz(0.5, 0.3, 0.3, 0.3, 50, 0, 0);
-			Plano p = new Plano(m, 1, 0, 0, 1, Color.green, false, false);
+			ModeloLuz m = new ModeloLuz(0.2, 0.4, 0, 0.3, 50, 0, 0);
+			Plano p = new Plano(m, 1, 0, 0, 1, Color.green, true, true);
 			objects.add(p);
-			p = new Plano(m, 0, 0, 1, 0, Color.red, false, false);
+			p = new Plano(m, 0, 0, 1, 0, Color.red, true, true);
 			objects.add(p);
-			p = new Plano(m, 0, 1, 0, 0, Color.blue, false, false);
+			p = new Plano(m, 0, 1, 0, 0, Color.blue, true, true);
 			objects.add(p);
-
-			/*ModeloLuz m1 = new ModeloLuz(0.5, 0.5, 0.4, 0.5, 2, 1, 1.5);
+			//ModeloLuz (Coeficiente ambiental, difusa, especular, reflejo, ns, refraccion, indice)
+			/*ModeloLuz m1 = new ModeloLuz(0.2, 0.4, 0.8, 1, 125, 0, 0);
 			Esfera e = new Esfera(m1, new Vector3D(5, 2, 2), 1.5, Color.white,
 					true, true);
-			objects.add(e);*/
-			ModeloLuz m1 = new ModeloLuz(0.5, 0, 0, 0, 0, 0, 0);
-			Esfera e = new Esfera(m1, new Vector3D(1, 2, 2), 1.5, Color.white, true,
+			objects.add(e);
+			m1 = new ModeloLuz(0.5, 0, 0, 0, 0, 0, 0);
+			e = new Esfera(m1, new Vector3D(1, 2, 2), 1.5, Color.white, true,
 					true);
-			//objects.add(e);
+			objects.add(e);
 			m1 = new ModeloLuz(0.2, 0.5, 0, 0, 50, 0, 0);
 			e = new Esfera(m1, new Vector3D(5, 5, 2), 1.5, Color.white, true,
 					true);
-			//objects.add(e);
-			m1 = new ModeloLuz(0.2, 0.5, 0.5, 0.7, 50, 0, 0);
-			e = new Esfera(m1, new Vector3D(1, 5, 2), 1.5, Color.white, true,
+			objects.add(e);*/
+			ModeloLuz m1 = new ModeloLuz(0.2, 0.5, 0.9, 0.7, 10, 0, 0);
+			Esfera e = new Esfera(m1, new Vector3D(1, 5, 2), 1.5, Color.white, true,
 					true);
 			objects.add(e);
 			/*
@@ -123,7 +122,7 @@ public class Programa {
 		rayTracer.setPantalla(viewport);
 		rayTracer.setEscena(escena);
 		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
-		//rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,0);
+		// rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,0);
 	}
 
 	private static double getNumber(Scanner st) throws IOException {
@@ -197,4 +196,5 @@ public class Programa {
 		System.out.println("FIN");
 	}
 }
+
 
