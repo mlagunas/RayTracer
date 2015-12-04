@@ -32,10 +32,10 @@ public class TrazadorDeRayos {
 		return pantalla;
 	}
 
-	public void setPantalla(Viewport pantalla) {
+	public void setPantalla(int width, int length) {
 		this.pantalla = pantalla;
-		canvas = new BufferedImage(pantalla.getColPixels(),
-				pantalla.getFilPixels(), BufferedImage.TYPE_INT_RGB);
+		canvas = new BufferedImage(width,
+				length, BufferedImage.TYPE_INT_RGB);
 
 	}
 

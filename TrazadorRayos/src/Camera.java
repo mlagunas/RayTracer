@@ -14,7 +14,11 @@ public class Camera {
 	private double realStepU;
 	private double realStepV;
 	
-	private Viewport viewport;
+	private double viewportWidth;
+	private double viewportHeight;
+	
+	private double cols;
+	private double fils;
 	
 
 	private boolean initialized;
@@ -37,8 +41,8 @@ public class Camera {
         System.out.println("wVector: "+wVector.toString());
         System.out.println("vVector: "+vVector.toString());*/
         
-        realStepU = viewport.getWidth() / (viewport.getColPixels()-1);
-        realStepV = viewport.getHeight() / (viewport.getFilPixels()-1);
+        realStepU = viewportWidth / (cols-1);
+        realStepV = viewportHeight / (fils-1);
 
         initialized=true;
     }
@@ -55,8 +59,8 @@ public class Camera {
 		Vector3D right = new Vector3D(uVector);
 
         towards.scale(-screenDistance);
-        final double du=i*(viewport.getWidth() / ((double) viewport.getColPixels()-1));
-        final double dv=j*(viewport.getHeight() / ((double) viewport.getFilPixels()-1));
+        final double du=i*(viewportWidth / ((double) cols-1));
+        final double dv=j*(viewportHeight / ((double) fils-1));
 		right.scale(du);
         up.scale(dv);
 
@@ -96,8 +100,8 @@ public class Camera {
 	            up = new Vector3D(vVector);
 	    		right = new Vector3D(uVector);
 	            
-	    		final double u=i*(viewport.getWidth() / ((double) viewport.getColPixels()-1));
-	            final double v=j*(viewport.getHeight() / ((double) viewport.getFilPixels()-1));
+	    		final double u=i*(viewportWidth / ((double) cols-1));
+	            final double v=j*(viewportHeight / ((double) fils-1));
 	            double fu = u + k * du;
 	            double fv = v + l * dv;
 	            
@@ -162,14 +166,6 @@ public class Camera {
 //		return vVector / (3 * r + 1);
 //	}
 
-	public Viewport getViewport() {
-		return viewport;
-	}
-
-	public void setViewport(Viewport viewport) {
-		this.viewport = viewport;
-	}
-
 	public Point3D getEye() {
 		return eye;
 	}
@@ -224,6 +220,38 @@ public class Camera {
 
 	public void setScreenDistance(double screenDistance) {
 		this.screenDistance = screenDistance;
+	}
+
+	public double getViewportWidth() {
+		return viewportWidth;
+	}
+
+	public void setViewportWidth(double viewportWidth) {
+		this.viewportWidth = viewportWidth;
+	}
+
+	public double getViewportHeight() {
+		return viewportHeight;
+	}
+
+	public void setViewportHeight(double viewportHeight) {
+		this.viewportHeight = viewportHeight;
+	}
+
+	public double getCols() {
+		return cols;
+	}
+
+	public void setCols(double cols) {
+		this.cols = cols;
+	}
+
+	public double getFils() {
+		return fils;
+	}
+
+	public void setFils(double fils) {
+		this.fils = fils;
 	}
 
 }

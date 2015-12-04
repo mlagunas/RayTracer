@@ -39,50 +39,51 @@ public class Programa {
 		 */
 
 		if (eye == null) {
-			eye = new Point3D(1, 20, 0);
+			eye = new Point3D(10, 10, 10);
 			lookat = new Vector3D(0, 0, 0);
-			up = new Vector3D(0, 0, 1);
+			up = new Vector3D(0, 0, -1);
 			background = new Color((float) 0.2, (float) 0.8, (float) 0.9);
 
 			/*
 			 * LUCES
 			 */
-			Luz luzA = new Luz(Luz.AMBIENT, null, (float)0.3, (float)0.4, (float)0.5);
+			Luz luzA = new Luz(Luz.AMBIENT, null, 1, 1, 1);
 
-			Luz luzP = new Luz(Luz.POINT, new Vector3D(5 * 4, 5 * 4, 3 * 4),
-					(float) 0.8, (float) 0.8, (float) 0.8);
-
-			Luz luzP2 = new Luz(Luz.POINT, new Vector3D(10, 12, 20),
+			Luz luzP = new Luz(Luz.POINT, new Vector3D(5*4 , 3*4, 1*4),
+					(float) 0.5, (float) 0.5, (float) 0.5);
+			
+			Luz luzP2 = new Luz(Luz.POINT, new Vector3D(5,12,10),
 					(float) 0.5, (float) 0.5, (float) 0.5);
 
 			luzList.add(luzA);
 			luzList.add(luzP);
+			//luzList.add(luzP2);
 
 			/*
 			 * OBJETOS
 			 */
-			ModeloLuz m = new ModeloLuz(0.2, 0.4, 0, 0.3, 50, 0, 0);
-			Plano p = new Plano(m, 1, 0, 0, 1, Color.green, true, true);
+			ModeloLuz m = new ModeloLuz(0.5, 0.3, 0.3, 0.3, 50, 0, 0);
+			Plano p = new Plano(m, 1, 0, 0, 1, Color.green, false, false);
 			objects.add(p);
-			p = new Plano(m, 0, 0, 1, 0, Color.red, true, true);
+			p = new Plano(m, 0, 0, 1, 0, Color.red, false, false);
 			objects.add(p);
-			p = new Plano(m, 0, 1, 0, 0, Color.blue, true, true);
+			p = new Plano(m, 0, 1, 0, 0, Color.blue, false, false);
 			objects.add(p);
-			//ModeloLuz (Coeficiente ambiental, difusa, especular, reflejo, ns, refraccion, indice)
-			/*ModeloLuz m1 = new ModeloLuz(0.2, 0.4, 0.8, 1, 125, 0, 0);
+
+			/*ModeloLuz m1 = new ModeloLuz(0.5, 0.5, 0.4, 0.5, 2, 1, 1.5);
 			Esfera e = new Esfera(m1, new Vector3D(5, 2, 2), 1.5, Color.white,
 					true, true);
-			objects.add(e);
-			m1 = new ModeloLuz(0.5, 0, 0, 0, 0, 0, 0);
-			e = new Esfera(m1, new Vector3D(1, 2, 2), 1.5, Color.white, true,
+			objects.add(e);*/
+			ModeloLuz m1 = new ModeloLuz(0.5, 0, 0, 0, 0, 0, 0);
+			Esfera e = new Esfera(m1, new Vector3D(1, 2, 2), 1.5, Color.white, true,
 					true);
 			objects.add(e);
 			m1 = new ModeloLuz(0.2, 0.5, 0, 0, 50, 0, 0);
 			e = new Esfera(m1, new Vector3D(5, 5, 2), 1.5, Color.white, true,
 					true);
-			objects.add(e);*/
-			ModeloLuz m1 = new ModeloLuz(0.2, 0.5, 0.9, 0.7, 10, 0, 0);
-			Esfera e = new Esfera(m1, new Vector3D(1, 5, 2), 1.5, Color.white, true,
+			objects.add(e);
+			m1 = new ModeloLuz(0.2, 0.5, 0.5, 0, 50, 0, 0);
+			e = new Esfera(m1, new Vector3D(1, 5, 2), 1.5, Color.white, true,
 					true);
 			objects.add(e);
 			/*
@@ -97,19 +98,21 @@ public class Programa {
 
 		}
 
-		Viewport viewport = new Viewport(50, 50, new Point3D(0, 1, 5), NUM_COL,
-				NUM_FILAS);
 		escena.setObjects(objects);
 		escena.setLights(luzList);
 		cam.setEye(eye);
-		Vector3D look = new Vector3D(lookat.x - eye.x, lookat.y - eye.y,
-				lookat.z - eye.z);
+		Vector3D look = new Vector3D(eye.x-lookat.x,eye.y-lookat.y,
+				eye.z-lookat.z);
 		look.normalize();
 		cam.setLookVector(look);
 		cam.setUpVector(up);
-		cam.setScreenDistance(35);
-		cam.setViewport(viewport);
+		cam.setScreenDistance(25);
 		cam.calculateVectors();
+		cam.setCols(NUM_COL);
+		cam.setFils(NUM_FILAS);
+		cam.setViewportHeight(50);
+		cam.setViewportWidth(50);
+
 		escena.setBackgroundColor(background);
 		/*
 		 * Plano p = new Plano(new ModeloLuz(0.5, 0, 0, 0, 100,0), -100, 0, 100,
@@ -119,10 +122,10 @@ public class Programa {
 
 		TrazadorDeRayos rayTracer = new TrazadorDeRayos();
 		rayTracer.setCamara(cam);
-		rayTracer.setPantalla(viewport);
 		rayTracer.setEscena(escena);
-		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
-		// rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,0);
+		rayTracer.setPantalla(NUM_COL,NUM_FILAS);
+		//rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
+		rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,0);
 	}
 
 	private static double getNumber(Scanner st) throws IOException {
@@ -196,5 +199,4 @@ public class Programa {
 		System.out.println("FIN");
 	}
 }
-
 
