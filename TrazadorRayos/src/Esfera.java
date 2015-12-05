@@ -10,18 +10,14 @@ public class Esfera implements Objeto {
 	double radSqr;
 	ModeloLuz m;
 	Color color;
-	boolean isMirror;
-	boolean isTransparent;
 
-	public Esfera(ModeloLuz m, Vector3D c, double r, Color color,
-			boolean mirror, boolean transp) {
+	public Esfera(ModeloLuz m, Vector3D c, double r, Color color) {
 		this.color = color;
 		this.m = m;
 		center = c;
 		radius = r;
 		radSqr = r * r;
-		this.isMirror = mirror;
-		this.isTransparent = transp;
+
 	}
 
 	public boolean intersectRefraction(Rayo ray) {
@@ -103,36 +99,15 @@ public class Esfera implements Objeto {
 		// 2. (n) Normal a la superficie
 		Vector3D n = new Vector3D(px - center.x, py - center.y, pz - center.z);
 		n.normalize();
-//
-//		// 3. (l) Rayo con dirección y sentido al foco de luz
-//		Vector3D l = new Vector3D(-r.direction.x, -r.direction.y,
-//				-r.direction.z);
-//		l.normalize();
 
-		// 4. (v) Rayo al ojo
+		// 3. (v) Vector al ojo
 		Vector3D v = new Vector3D(r.origin.x-px, r.origin.y-py, 
 				r.origin.z-pz);
 		v.normalize();
-		Vector3D ref = null;
-		
-		if (isMirror) {
-			// 5. (ref) Rayo reflejado
-			double twice = 2 * Vector3D.dotProd(v, n);
-			ref = Vector3D.sub(v, Vector3D.scale(twice, n));
-			ref.normalize();
-			double x = round(ref.x, 10);
-			double y = round(ref.y, 10);
-			double z = round(ref.z, 10);
-			if (x == 0 && y == 0 && z == 0) {
-				ref = null;
-			}
 
-		}
-	
-
-		// 6. (frac) Rayo refractado
+		// 4. (frac) Rayo refractado
 		Vector3D frac = null;
-		if (isTransparent) {
+		if (m.kt > 0) {
 			// Snell: sin(i)/sin(r) = nr/ni
 			double NiNr = currentRef / m.index;
 			double cosI = Vector3D.dotProd(n, r.direction);
@@ -179,7 +154,7 @@ public class Esfera implements Objeto {
 		}
 		// Hacemos el calculo del color en ese pixel
 		return m.calculo(color, bgnd, lights, objects, null, p, p1, n, v,
-				r.origin, isMirror, ref, isTransparent, frac, nRayos,
+				r.origin, frac, nRayos,
 				currentRef);
 	}
 

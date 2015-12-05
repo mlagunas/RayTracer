@@ -47,44 +47,43 @@ public class Programa {
 			/*
 			 * LUCES
 			 */
-			Luz luzA = new Luz(Luz.AMBIENT, null, 1, 1, 1);
+			Luz luzA = new Luz(Luz.AMBIENT, null, (float) 0.3, (float) 0.4,
+					(float) 0.5);
 
-			Luz luzP = new Luz(Luz.POINT, new Vector3D(5*4 , 3*4, 1*4),
-					(float) 0.5, (float) 0.5, (float) 0.5);
-			
-			Luz luzP2 = new Luz(Luz.POINT, new Vector3D(5,12,10),
+			Luz luzP = new Luz(Luz.POINT, new Vector3D(2 * 4, 5 * 4, 1 * 4),
+					(float) 0.8, (float) 0.8, (float) 0.8);
+
+			Luz luzP2 = new Luz(Luz.POINT, new Vector3D(10, 12, 20),
 					(float) 0.5, (float) 0.5, (float) 0.5);
 
 			luzList.add(luzA);
 			luzList.add(luzP);
-			//luzList.add(luzP2);
 
 			/*
 			 * OBJETOS
 			 */
-			ModeloLuz m = new ModeloLuz(0.5, 0.3, 0.3, 0.3, 50, 0, 0);
-			Plano p = new Plano(m, 1, 0, 0, 1, Color.green, false, false);
+			ModeloLuz m = new ModeloLuz(0.2, 0.4, 0, 0.3, 50, 0, 0);
+			Plano p = new Plano(m, 1, 0, 0, 1, Color.green);
 			objects.add(p);
-			p = new Plano(m, 0, 0, 1, 0, Color.red, false, false);
+			p = new Plano(m, 0, 0, 1, 0, Color.red);
 			objects.add(p);
-			p = new Plano(m, 0, 1, 0, 0, Color.blue, false, false);
+			p = new Plano(m, 0, 1, 0, 0, Color.blue);
 			objects.add(p);
-
-			/*ModeloLuz m1 = new ModeloLuz(0.5, 0.5, 0.4, 0.5, 2, 1, 1.5);
-			Esfera e = new Esfera(m1, new Vector3D(5, 2, 2), 1.5, Color.white,
-					true, true);
-			objects.add(e);*/
-			ModeloLuz m1 = new ModeloLuz(0.5, 0, 0, 0, 0, 0, 0);
-			Esfera e = new Esfera(m1, new Vector3D(1, 2, 2), 1.5, Color.white, true,
-					true);
-			objects.add(e);
-			m1 = new ModeloLuz(0.2, 0.5, 0, 0, 50, 0, 0);
-			e = new Esfera(m1, new Vector3D(5, 5, 2), 1.5, Color.white, true,
-					true);
-			objects.add(e);
-			m1 = new ModeloLuz(0.2, 0.5, 0.5, 0, 50, 0, 0);
-			e = new Esfera(m1, new Vector3D(1, 5, 2), 1.5, Color.white, true,
-					true);
+			// ModeloLuz (Coeficiente ambiental, difusa, especular, reflejo, ns,
+			// refraccion, indice)
+			/*
+			 * ModeloLuz m1 = new ModeloLuz(0.2, 0.4, 0.8, 1, 125, 0, 0); Esfera
+			 * e = new Esfera(m1, new Vector3D(5, 2, 2), 1.5, Color.white, true,
+			 * true); objects.add(e); m1 = new ModeloLuz(0.5, 0, 0, 0, 0, 0, 0);
+			 * e = new Esfera(m1, new Vector3D(1, 2, 2), 1.5, Color.white, true,
+			 * true); objects.add(e); m1 = new ModeloLuz(0.2, 0.5, 0, 0, 50, 0,
+			 * 0); e = new Esfera(m1, new Vector3D(5, 5, 2), 1.5, Color.white,
+			 * true, true); objects.add(e);
+			 */
+			ModeloLuz m1 = new ModeloLuz(0.2, 0.5, 0.9, 0.7, 10, 0, 0);
+			Triangulo triangulo = new Triangulo(new Point3D(10, 5, 2), new Point3D(6, 5, 2), new Point3D(8, 5, 5), m1, Color.white);
+			objects.add(triangulo);
+			Esfera e = new Esfera(m1, new Vector3D(1, 5, 2), 1.5, Color.white);
 			objects.add(e);
 			/*
 			 * e = new Esfera(m, new Vector3D(0, -3, -2), 1.5, new Color(
@@ -147,7 +146,7 @@ public class Programa {
 				float r = (float) getNumber(st);
 				Color c = new Color((float) getNumber(st),
 						(float) getNumber(st), (float) getNumber(st));
-				objects.add(new Esfera(currentSurface, v, r, c, true, true));
+				objects.add(new Esfera(currentSurface, v, r, c));
 			} else if (instr.equals("eye")) {
 				eye = new Point3D((float) getNumber(st), (float) getNumber(st),
 						(float) getNumber(st));
@@ -164,8 +163,7 @@ public class Programa {
 				Plano p = new Plano(currentSurface, getNumber(st),
 						(float) getNumber(st), (float) getNumber(st),
 						(float) getNumber(st), new Color((float) getNumber(st),
-								(float) getNumber(st), (float) getNumber(st)),
-						true, true);
+								(float) getNumber(st), (float) getNumber(st)));
 				objects.add(p);
 			} else if (instr.equals("light")) {
 				float r = (float) getNumber(st);

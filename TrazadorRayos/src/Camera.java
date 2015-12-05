@@ -54,7 +54,7 @@ public class Camera {
 		}
 		
 		Point3D lookAt = new Point3D(eye);
-		Vector3D towards = new Vector3D(wVector);
+		Vector3D towards = new Vector3D(lookVector);
 		Vector3D up = new Vector3D(vVector);
 		Vector3D right = new Vector3D(uVector);
 

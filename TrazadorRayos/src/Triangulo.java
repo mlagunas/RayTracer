@@ -14,7 +14,7 @@ public class Triangulo implements Objeto {
 	boolean isTransparent;
 	
 	
-	public Triangulo(Point3D vert1, Point3D vert2, Point3D vert3, ModeloLuz modeloLuz, Color color,boolean m,boolean t) {
+	public Triangulo(Point3D vert1, Point3D vert2, Point3D vert3, ModeloLuz modeloLuz, Color color) {
 		super();
 		vert = new Point3D[3];
 	    vert[0] = vert1;
@@ -28,8 +28,6 @@ public class Triangulo implements Objeto {
 	    normal.normalize();
 		this.model = modeloLuz;
 		this.color=color;
-		this.isMirror=m;
-		this.isTransparent=t;
 	}
 
 	@Override
@@ -115,15 +113,16 @@ public class Triangulo implements Objeto {
 				// 3. (l) Rayo con dirección y sentido al foco de luz
 				Vector3D l = new Vector3D(-r.direction.x, -r.direction.y,
 						-r.direction.z);
+				
 
 				// 4. (v) Rayo al ojo
 				Vector3D v = new Vector3D(r.origin.x-px, r.origin.y -py, r.origin.z-pz);
-
+				v.normalize();
 				Vector3D ref =null;
-				if (isMirror){
-					// 5. (ref) Rayo reflejado
-					ref = r.origin.reflect(normal);
-				}
+//				if (isMirror){
+//					// 5. (ref) Rayo reflejado
+//					ref = r.origin.reflect(normal);
+//				}
 				
 				Vector3D frac = null;
 				if (isTransparent) {
@@ -168,7 +167,7 @@ public class Triangulo implements Objeto {
 				// The illumination model is applied
 				// by the surface's Shade() method
 				return model.calculo(color,bgnd, lights, objects, l, p,p1, normal, v, 
-						r.origin, isMirror,ref, isTransparent,frac, nRayos,kref);
+						r.origin,ref,nRayos,kref);
 	}
 
 }
