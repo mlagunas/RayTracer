@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class ModeloLuz {
 	// Maximo de rayos reflejados lanzados
-	private final int MAX_RAYOS = 5;
+	private final int MAX_RAYOS = 2;
 	private final float MAX_COLOR = 255;
 
 	double ka;
@@ -26,15 +26,16 @@ public class ModeloLuz {
 	}
 
 	public Color calculo(Color color, Color bgnd, ArrayList<Luz> lightSources,
-			ArrayList<Objeto> objects, Vector3D L, Point3D p, Point3D p1,
-			Vector3D N, Vector3D V, Vector3D R, Vector3D frac, int nRayos,
-			double kref) {
+			ArrayList<Objeto> objects, Point3D p, Point3D p1, Vector3D N,
+			Vector3D V, Vector3D R, Rayo frac, int nRayos, double kref) {
 		float r = 0;
 		float g = 0;
 		float b = 0;
+
 		float sr = color.getRed() / (float) MAX_COLOR;
 		float sg = color.getGreen() / (float) MAX_COLOR;
 		float sb = color.getBlue() / (float) MAX_COLOR;
+
 		for (Luz light : lightSources) {
 			/*
 			 * CALCULO DE LA LUZ AMBIENTAL
@@ -45,14 +46,11 @@ public class ModeloLuz {
 				b += ka * light.b * sb;
 
 			} else {
-
+				Vector3D L = null;
 				if (light.lightType == Luz.POINT) {
 					L = new Vector3D(light.lvec.x + p.x, light.lvec.y + p.y,
 							light.lvec.z + p.z);
 					L.normalize();
-				} else {
-					L = new Vector3D(-light.lvec.x, -light.lvec.y,
-							-light.lvec.z);
 				}
 
 				/*
@@ -67,7 +65,6 @@ public class ModeloLuz {
 				float lambert = 0;
 				if (kd > 0) {
 					// cos(N·L)
-
 					lambert = (float) Vector3D.dotProd(N, L);
 					if (lambert > 0) {
 						// Kd*cos(N·L)*I
@@ -131,23 +128,15 @@ public class ModeloLuz {
 		 * CALCULO DE LA REFRACCION
 		 */
 
-		if (kt > 0 && nRayos < MAX_RAYOS && frac != null) {
-			Rayo refractado = new Rayo(new Point3D(p1.x, p1.y, p1.z), frac);
-			if (refractado.trace(objects)) {
-				// Calculamos el color del objeto intersectado y lo
-				// añadimos
-				Color c = refractado.Shade(lightSources, objects, bgnd,
-						nRayos + 1, kref);
-				r += kt * sr * c.getRed() / MAX_COLOR;
-				g += kt * sg * c.getGreen() / MAX_COLOR;
-				b += kt * sb * c.getBlue() / MAX_COLOR;
-			} else {
-				// En caso contrario chocara con el fondo, añadimos su
-				// color
-				r += kt * bgnd.getRed() / MAX_COLOR;
-				g += kt * bgnd.getGreen() / MAX_COLOR;
-				b += kt * bgnd.getBlue() / MAX_COLOR;
-			}
+		if (kt > 0 && frac.object != null && nRayos < MAX_RAYOS) {
+
+			Color c = frac.Shade(lightSources, objects, bgnd, nRayos + 1, 1);
+			// Calculamos el color del objeto intersectado y lo
+			// añadimos
+			r += kt * sr * c.getRed() / MAX_COLOR;
+			g += kt * sg * c.getGreen() / MAX_COLOR;
+			b += kt * sb * c.getBlue() / MAX_COLOR;
+
 		}
 
 		// Si el color es mayor de 1 se devuelve 1

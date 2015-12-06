@@ -59,17 +59,18 @@ public class Programa {
 			 * OBJETOS
 			 */
 			ModeloLuz m = new ModeloLuz(0.2, 0.6, 0, 0, 50, 0, 0);
-			Plano p = new Plano(m, 1, 0, 0, 1, Color.green);
+		/*	Plano p = new Plano(m, 1, 0, 0, 1, Color.green);
 			objects.add(p);
 			p = new Plano(m, 0, 0, 1, 0, Color.red);
 			objects.add(p);
 			p = new Plano(m, 0, 1, 0, 0, Color.blue);
-			objects.add(p);
+			objects.add(p);*/
 			// ModeloLuz (Coeficiente ambiental, difusa, especular, reflejo, ns,
 			// refraccion, indice)
-
-			ModeloLuz m1 = new ModeloLuz(0.2, 0.4, 0.8, 1, 125, 0, 0);
-			Esfera e = new Esfera(m1, new Vector3D(5, 2, 2), 1.5, Color.white);
+			ModeloLuz m1;
+			Esfera e;
+			/*m1 = new ModeloLuz(0.2, 0.4, 0.8, 1, 125, 0, 0);
+			e = new Esfera(m1, new Vector3D(5, 2, 2), 1.5, Color.white);
 			objects.add(e);
 			m1 = new ModeloLuz(0.5, 0, 0, 0, 0, 0, 0);
 			e = new Esfera(m1, new Vector3D(1, 2, 2), 1.5, Color.white);
@@ -77,20 +78,12 @@ public class Programa {
 			m1 = new ModeloLuz(0.2, 0.5, 0, 0, 50, 0, 0);
 			e = new Esfera(m1, new Vector3D(5, 5, 2), 1.5, Color.white);
 			objects.add(e);
-
 			m1 = new ModeloLuz(0.2, 0.5, 0.9, 0, 50, 0, 0);
 			e = new Esfera(m1, new Vector3D(1, 5, 2), 1.5, Color.white);
+			objects.add(e);*/
+			m1 = new ModeloLuz(0.2, 0.4, 0.8, 0, 50, 1, 1);
+			e = new Esfera(m1, new Vector3D(5, 5, 10), 1.5, Color.red);
 			objects.add(e);
-			/*
-			 * e = new Esfera(m, new Vector3D(0, -3, -2), 1.5, new Color(
-			 * (float) 0.7, (float) 0.2, (float) 0.8),true,true);
-			 * objects.add(e); e = new Esfera(m, new Vector3D(2, -3, -2), 1.5,
-			 * new Color( (float) 0.7, (float) 0.2, (float) 0.8),true,true);
-			 * objects.add(e); e = new Esfera(m, new Vector3D(0, 0, 0), 1.5, new
-			 * Color( (float) 0.7, (float) 0.2, (float) 0.8),true,true);
-			 * objects.add(e);
-			 */
-
 		}
 
 		Viewport viewport = new Viewport(50, 50, new Point3D(0, 1, 5), NUM_COL,
@@ -103,15 +96,10 @@ public class Programa {
 		look.normalize();
 		cam.setLookVector(look);
 		cam.setUpVector(up);
-		cam.setScreenDistance(35);
+		cam.setScreenDistance(25);
 		cam.setViewport(viewport);
 		cam.calculateVectors();
 		escena.setBackgroundColor(background);
-		/*
-		 * Plano p = new Plano(new ModeloLuz(0.5, 0, 0, 0, 100,0), -100, 0, 100,
-		 * 0, Color.white); // Plano p = new Plano(new ModeloLuz(0.3, 0.2, 0.2,
-		 * 0, 50), new // Vector3D(1,0,0),0); objects.add(p);
-		 */
 
 		TrazadorDeRayos rayTracer = new TrazadorDeRayos();
 		rayTracer.setCamara(cam);
