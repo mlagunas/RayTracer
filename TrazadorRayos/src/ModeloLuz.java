@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class ModeloLuz {
 	// Maximo de rayos reflejados lanzados
-	private final int MAX_RAYOS = 2;
+	private final int MAX_RAYOS = 5;
 	private final float MAX_COLOR = 255;
 
 	double ka;
@@ -47,8 +47,8 @@ public class ModeloLuz {
 			} else {
 
 				if (light.lightType == Luz.POINT) {
-					L = new Vector3D(light.lvec.x - p.x, light.lvec.y - p.y,
-							light.lvec.z - p.z);
+					L = new Vector3D(light.lvec.x + p.x, light.lvec.y + p.y,
+							light.lvec.z + p.z);
 					L.normalize();
 				} else {
 					L = new Vector3D(-light.lvec.x, -light.lvec.y,
@@ -58,12 +58,7 @@ public class ModeloLuz {
 				/*
 				 * CALCULO SI ES UN PUNTO EN SOMBRA
 				 */
-				// Point3D poffset = new Point3D(p.x + L.x, p.y + L.y, p.z +
-				// L.z);
-				System.out.println(p);
-				System.out.println(L);
-				Rayo shadowRay = new Rayo(p, L);
-				if (shadowRay.trace(objects))
+				if (new Rayo(p, L).trace(objects))
 					break;
 
 				/*
@@ -91,7 +86,7 @@ public class ModeloLuz {
 					// float spec = (float) V.dotProd(new Vector3D(lambert * N.x
 					// - L.x, lambert * N.y - L.y, lambert * N.z - L.z));
 
-					double twice = 2 * Vector3D.dotProd(L, N);
+					double twice = 2 * lambert;
 					Vector3D LR = Vector3D.sub(Vector3D.scale(twice, N), L);
 
 					double dot = Vector3D.dotProd(V, LR);
@@ -113,19 +108,11 @@ public class ModeloLuz {
 		// Calculo del Rayo reflejado
 
 		if (kr > 0 && nRayos < MAX_RAYOS) {
-			// Vector3D aux = Vector3D.scale(2 * Vector3D.dotProd(V, N), N);
-			// Vector3D reflect = Vector3D.sub(V, aux);
-
 			double twice = 2 * Vector3D.dotProd(V, N);
 			Vector3D LR = Vector3D.sub(Vector3D.scale(twice, N), V);
 			LR.normalize();
 			Rayo reflejado = new Rayo(new Point3D(p.x, p.y, p.z), LR);
 			if (reflejado.trace(objects)) {
-				// Reflejado(origen en p pasando por la interseccion con
-				// el
-				// objeto)
-				// Calculamos el color del objeto intersectado y lo
-				// añadimos
 				Color c = reflejado.Shade(lightSources, objects, bgnd,
 						nRayos + 1, kref);
 				r += kr * sr * c.getRed() / MAX_COLOR;
