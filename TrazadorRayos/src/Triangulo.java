@@ -1,6 +1,4 @@
 import java.awt.Color;
-import java.awt.Point;
-import java.beans.VetoableChangeListener;
 import java.util.ArrayList;
 
 public class Triangulo implements Objeto {
@@ -8,7 +6,7 @@ public class Triangulo implements Objeto {
 	protected Point3D vert[];
 	protected Vector3D normal;
 	protected ModeloLuz model;
-	private Vector3D p1p0, p2p1, p0p2; // vectores de los lados
+	private Vector3D p3p1, p2p1, p3p2; // vectores de los lados
 	private Color color;
 	boolean isMirror;
 	boolean isTransparent;
@@ -20,11 +18,11 @@ public class Triangulo implements Objeto {
 	    vert[0] = vert1;
 	    vert[1] = vert2;
 	    vert[2] = vert3;
-	    p1p0 = vert[0].to(vert[1]);
-	    p2p1 = vert[1].to(vert[2]);
-	    p0p2  = vert[2].to(vert[0]);
+	    p2p1 = vert[1].to(vert[0]);
+	    p3p2 = vert[2].to(vert[1]);
+	    p3p1  = vert[2].to(vert[0]);
 	    // Plane equation: normal . x = offset
-	    normal = Vector3D.crossProd(p1p0, p2p1);
+	    normal = Vector3D.crossProd(p2p1, p3p1);
 	    normal.normalize();
 		this.model = modeloLuz;
 		this.color=color;
@@ -32,24 +30,24 @@ public class Triangulo implements Objeto {
 
 	@Override
 	public boolean intersect(Rayo r) {
-		Vector3D normal = new Vector3D(this.normal);
-		
-		// Si no pertenece al plano del triángulo, no hay intersección
-		double auxDot = Vector3D.dotProd(normal,r.direction);
-		if (auxDot < 0) {
-			normal.scale(-1);
-		}
-		
-		if (Vector3D.dotProd(normal,r.direction) < 0.000000001) {
+		double d1, dn, t;
+
+		/* Calculo de D·N */
+		dn = Vector3D.dotProd(r.direction, normal);
+
+		/* Rayo paralelo al plano o no intersecta detrás de la pantalla */
+		if (dn == 0) {
 			return false;
 		}
-		Vector3D a = new Vector3D(vert[0]);
-		a.sub(r.origin);
-		double t = Vector3D.dotProd(a,normal) / Vector3D.dotProd(r.direction,normal);
-		if (!(t >= 0)) {
-//			&& t < withinDistance)
+
+		Vector3D p1=vert[0].toVec();
+		Vector3D p1a = Vector3D.sub(p1,new Vector3D(r.origin.x, r.origin.y,r.origin.z));
+		
+		d1 = Vector3D.dotProd(p1a, normal);
+		t = d1 / dn;
+		if (t > r.t || t <= 0.0006)
 			return false;
-		}
+		
 		Vector3D pointOfIntersection = new Vector3D(r.direction);
 		pointOfIntersection.scale(t);
 		pointOfIntersection.add(r.origin);
@@ -57,42 +55,39 @@ public class Triangulo implements Objeto {
 		// Determinar si el punto de intersección pertenece al triángulo
 		if (pointBelongs(pointOfIntersection.toPoint())) {
 			r.object=this;
-			
+			r.t = t;			
 			return true;
 		}		
 		return false;
 	}
 	
 	public boolean pointBelongs(Point3D point) {
-		Vector3D aux = new Vector3D(point);
-		aux.sub(vert[0].toVec());
+		Vector3D p = new Vector3D(point);
 		
-		// Si no pertenece al plano, return false
-		if (Math.abs(Vector3D.dotProd(aux,normal)) > 0.00000001) {
-			return false;
+		Vector3D aux= Vector3D.sub(p,vert[0].toVec());
+		Vector3D aux2=Vector3D.crossProd(p2p1, aux);
+		double s1=Vector3D.dotProd(aux2,normal);
+		
+		
+		aux= Vector3D.sub(p,vert[1].toVec());
+		aux2=Vector3D.crossProd(p3p2, aux);
+		double s2=Vector3D.dotProd(aux2,normal);
+		
+		aux= Vector3D.sub(p,vert[2].toVec());
+		Vector3D p1p3=vert[0].to(vert[2]);
+		aux2=Vector3D.crossProd(p1p3, aux);
+		double s3=Vector3D.dotProd(aux2,normal);
+		
+		/*
+		 * Si s1,s2,s3 tienen el mismo signo---> pertecene al triangulo
+		 */
+		if(s1>=0 && s2 >=0 && s3>=0){
+			return true;
+		}else if (s1<0 && s2<0 && s3<0){
+			return true;
 		}
 		
-		Vector3D aux2 = new Vector3D(point);
-		aux2.sub(vert[0].toVec());
-		aux2=Vector3D.crossProd(p1p0, aux2);
-		if (Vector3D.dotProd(aux2,normal) < 0) {
-			return false;
-		}
-		
-		aux2 = new Vector3D(point);
-		aux2.sub(vert[1].toVec());
-		aux2= Vector3D.crossProd(p2p1, aux2);
-		if (Vector3D.dotProd(aux2,normal) < 0) {
-			return false;
-		}
-		
-		aux2 = new Vector3D(point);
-		aux2.sub(vert[2].toVec());
-		aux=Vector3D.crossProd(p0p2, aux2);
-		if (Vector3D.dotProd(aux2,normal) < 0) {
-			return false;
-		}
-		return true;
+		return false;
 	}
 		
 	@Override
@@ -114,7 +109,6 @@ public class Triangulo implements Objeto {
 				Vector3D l = new Vector3D(-r.direction.x, -r.direction.y,
 						-r.direction.z);
 				
-
 				// 4. (v) Rayo al ojo
 				Vector3D v = new Vector3D(r.origin.x-px, r.origin.y -py, r.origin.z-pz);
 				v.normalize();
@@ -125,49 +119,49 @@ public class Triangulo implements Objeto {
 //				}
 				
 				Vector3D frac = null;
-				if (isTransparent) {
-					// Snell: sin(i)/sin(r) = nr/ni
-					double NiNr = kref / model.index;
-					double cosI = Vector3D.dotProd(normal, r.direction);
-					double cosR = Math
-							.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
-
-					if (cosR > 0.0) {
-						// frac =
-						// Vector3D.add(Vector3D.scale(NiNr,r.direction),Vector3D.scale((NiNr*cosI)-cosR,
-						// n));
-						// frac=Vector3D.sub(Vector3D.scale((NiNr*cosI-Math.sqrt(1-NiNr*NiNr*(1-(cosI*cosI)))),n),Vector3D.scale(NiNr,r.direction));
-						Vector3D frac1 = Vector3D.sub(
-								Vector3D.scale((NiNr * cosI) - cosR, normal),
-								Vector3D.scale(NiNr, r.direction));
-						frac1.normalize();
-
-						Rayo rayo = new Rayo(p, frac1);
-						if (this.intersect(rayo)) {
-							px = (rayo.origin.x + rayo.t * rayo.direction.x);
-							py = (rayo.origin.y + rayo.t * rayo.direction.y);
-							pz = (rayo.origin.z + rayo.t * rayo.direction.z);
-
-							p1 = new Point3D(px, py, pz);
-
-							NiNr = model.index / kref;
-							cosI = Vector3D.dotProd(normal, rayo.direction);
-							cosR = Math
-									.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
-							if (cosR > 0.0) {
-								frac = Vector3D.sub(
-										Vector3D.scale((NiNr * cosI) - cosR, normal),
-										Vector3D.scale(NiNr, rayo.direction));
-								frac.normalize();
-							}
-						}
-					}
-				}
+//				if (isTransparent) {
+//					// Snell: sin(i)/sin(r) = nr/ni
+//					double NiNr = kref / model.index;
+//					double cosI = Vector3D.dotProd(normal, r.direction);
+//					double cosR = Math
+//							.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
+//
+//					if (cosR > 0.0) {
+//						// frac =
+//						// Vector3D.add(Vector3D.scale(NiNr,r.direction),Vector3D.scale((NiNr*cosI)-cosR,
+//						// n));
+//						// frac=Vector3D.sub(Vector3D.scale((NiNr*cosI-Math.sqrt(1-NiNr*NiNr*(1-(cosI*cosI)))),n),Vector3D.scale(NiNr,r.direction));
+//						Vector3D frac1 = Vector3D.sub(
+//								Vector3D.scale((NiNr * cosI) - cosR, normal),
+//								Vector3D.scale(NiNr, r.direction));
+//						frac1.normalize();
+//
+//						Rayo rayo = new Rayo(p, frac1);
+//						if (this.intersect(rayo)) {
+//							px = (rayo.origin.x + rayo.t * rayo.direction.x);
+//							py = (rayo.origin.y + rayo.t * rayo.direction.y);
+//							pz = (rayo.origin.z + rayo.t * rayo.direction.z);
+//
+//							p1 = new Point3D(px, py, pz);
+//
+//							NiNr = model.index / kref;
+//							cosI = Vector3D.dotProd(normal, rayo.direction);
+//							cosR = Math
+//									.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
+//							if (cosR > 0.0) {
+//								frac = Vector3D.sub(
+//										Vector3D.scale((NiNr * cosI) - cosR, normal),
+//										Vector3D.scale(NiNr, rayo.direction));
+//								frac.normalize();
+//							}
+//						}
+//					}
+//				}
 				
 				// The illumination model is applied
 				// by the surface's Shade() method
-				return model.calculo(color,bgnd, lights, objects, l, p,p1, normal, v, 
-						r.origin,ref,nRayos,kref);
+				return model.calculo(color,bgnd, lights, objects, p,p1, normal, v, 
+						r.origin,null,nRayos,kref);
 	}
 
 }

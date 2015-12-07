@@ -63,10 +63,6 @@ public class Plano implements Objeto {
 
 		// 2. (n) Normal a la superficie igual a n
 
-		// 3. (l) Rayo con dirección y sentido al foco de luz
-		Vector3D l = new Vector3D(-r.direction.x, -r.direction.y,
-				-r.direction.z);
-
 		// 4. (v) Rayo al ojo
 		Vector3D v = new Vector3D(r.origin.x - px, r.origin.y - py, r.origin.z
 				- pz);
@@ -125,8 +121,8 @@ public class Plano implements Objeto {
 			}
 
 		}
-		return m.calculo(color, bgnd, lights, objects, l, p, p1, N, v,
-				r.origin, frac, nRayos,
+		return m.calculo(color, bgnd, lights, objects, p, p1, N, v,
+				r.origin, null, nRayos,
 				currentRefr);
 	}
 

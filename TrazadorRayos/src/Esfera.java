@@ -1,8 +1,5 @@
 import java.awt.Color;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Vector;
 
 public class Esfera implements Objeto {
 	Vector3D center;
@@ -71,11 +68,9 @@ public class Esfera implements Objeto {
 		// Test if the intersection is in the positive
 		// ray direction and it is the closest so far
 		double t = v - (Math.sqrt(res));
-		double t1 = v - (-Math.sqrt(res));
-		if ((t > ray.t) || (t < 0))
+
+		if ((t > ray.t) || (t < 0.0000006))
 			return false;
-		if (round(t, 7) == 0)
-			ray.t = t1;
 		else
 			ray.t = t;
 
@@ -101,61 +96,28 @@ public class Esfera implements Objeto {
 		n.normalize();
 
 		// 3. (v) Vector al ojo
-		Vector3D v = new Vector3D(r.origin.x-px, r.origin.y-py, 
-				r.origin.z-pz);
+		Vector3D v = new Vector3D(r.origin.x - px, r.origin.y - py, r.origin.z
+				- pz);
 		v.normalize();
 
 		// 4. (frac) Rayo refractado
-		Vector3D frac = null;
+		Rayo rfrac = null;
+
 		if (m.kt > 0) {
-			// Snell: sin(i)/sin(r) = nr/ni
-			double NiNr = currentRef / m.index;
-			double cosI = Vector3D.dotProd(n, r.direction);
-			double cosR = Math
-					.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
-
-			if (cosR > 0.0) {
-				// frac =
-				// Vector3D.add(Vector3D.scale(NiNr,r.direction),Vector3D.scale((NiNr*cosI)-cosR,
-				// n));
-				// frac=Vector3D.sub(Vector3D.scale((NiNr*cosI-Math.sqrt(1-NiNr*NiNr*(1-(cosI*cosI)))),n),Vector3D.scale(NiNr,r.direction));
-				Vector3D frac1 = Vector3D.sub(
-						Vector3D.scale((NiNr * cosI) - cosR, n),
-						Vector3D.scale(NiNr, r.direction));
-				frac1.normalize();
-
-				Rayo rayo = new Rayo(p, frac1);
-				if (this.intersect(rayo)) {
-					if (rayo.t != 0) {
-						px = (rayo.origin.x + rayo.t * rayo.direction.x);
-						py = (rayo.origin.y + rayo.t * rayo.direction.y);
-						pz = (rayo.origin.z + rayo.t * rayo.direction.z);
-
-						p1 = new Point3D(px, py, pz);
-
-						// Normal a la superficie
-						Vector3D n1 = new Vector3D(px - center.x,
-								py - center.y, pz - center.z);
-						n1.normalize();
-						NiNr = m.index / currentRef;
-						cosI = Vector3D.dotProd(n1, rayo.direction);
-						cosR = Math
-								.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
-						if (cosR > 0.0) {
-							frac = Vector3D.sub(
-									Vector3D.scale((NiNr * cosI) - cosR, n1),
-									Vector3D.scale(NiNr, rayo.direction));
-							frac.normalize();
-						}
-					} else
-						frac = null;
-				}
-			}
+			// Calculo de la interseccion del rayo con el objeto mas cercano el
+			// cual no es la
+			// esfera ya intersectada anteriormente.
+			
+			// R ira del punto P al ojo -> Refractado sentido opuesto
+			rfrac = new Rayo(p, r.direction);
+			rfrac.trace(objects);
+			System.out.println(rfrac.object);
+			
 		}
-		// Hacemos el calculo del color en ese pixel
-		return m.calculo(color, bgnd, lights, objects, null, p, p1, n, v,
-				r.origin, frac, nRayos,
-				currentRef);
+
+		// Hacemos el calculo del color en ese punto
+		return m.calculo(color, bgnd, lights, objects, p, p1, n, v, r.origin,
+				rfrac, nRayos, currentRef);
 	}
 
 	public String toString() {

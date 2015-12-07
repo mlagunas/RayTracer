@@ -78,13 +78,13 @@ public class Programa {
 			e = new Esfera(m1, new Vector3D(5, 5, 2), 1.5, Color.white);
 			objects.add(e);
 
-			m1 = new ModeloLuz(0.2, 0.5, 0.9, 0, 50, 0, 0);
+			m1 = new ModeloLuz(0.2, 0.5, 0.9, 0, 50, 0.7, 1.68);
 			e = new Esfera(m1, new Vector3D(1, 5, 2), 1.5, Color.white);
 			objects.add(e);
-	
-//			Triangulo triangulo = new Triangulo(new Point3D(10, 5, 2), new Point3D(6, 5, 2), new Point3D(8, 5, 5), m1, Color.white);
-//			objects.add(triangulo);
-	
+			
+			Triangulo triangulo = new Triangulo(new Point3D(5,5,9), new Point3D(1,5,12), new Point3D(1,5,6), m1, Color.white);
+			objects.add(triangulo);
+
 			/*
 			 * e = new Esfera(m, new Vector3D(0, -3, -2), 1.5, new Color(
 			 * (float) 0.7, (float) 0.2, (float) 0.8),true,true);
@@ -123,9 +123,9 @@ public class Programa {
 		rayTracer.setCamara(cam);
 		rayTracer.setEscena(escena);
 		rayTracer.setPantalla(NUM_COL,NUM_FILAS);
-		//rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
-		rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,0);
 		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
+		//rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,20);
+		//rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
 	}
 
 	private static double getNumber(Scanner st) throws IOException {

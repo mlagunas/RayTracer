@@ -65,7 +65,7 @@ public class Point3D {
 	    }
 	    
 	    public Vector3D to(Point3D point) {
-	        return new Vector3D(point.x-this.x,point.y-this.y,point.z-this.z);
+	        return new Vector3D(this.x-point.x,this.y-point.y,this.z-point.z);
 	    }
 	    
 	    
