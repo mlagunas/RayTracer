@@ -1,6 +1,4 @@
 import java.awt.Color;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -72,13 +70,13 @@ public class Programa {
 			Esfera e = new Esfera(m1, new Vector3D(5, 2, 2), 1.5, Color.white);
 			objects.add(e);
 			m1 = new ModeloLuz(0.5, 0, 0, 0, 0, 0, 0);
-			e = new Esfera(m1, new Vector3D(1, 2, 2), 1.5, Color.white);
-			objects.add(e);
-			m1 = new ModeloLuz(0.2, 0.5, 0, 0, 50, 0, 0);
-			e = new Esfera(m1, new Vector3D(5, 5, 2), 1.5, Color.white);
-			objects.add(e);
+//			e = new Esfera(m1, new Vector3D(1, 2, 2), 1.5, Color.white);
+//			objects.add(e);
+//			m1 = new ModeloLuz(0.2, 0.5, 0, 0, 50, 0, 0);
+//			e = new Esfera(m1, new Vector3D(5, 5, 2), 1.5, Color.white);
+//			objects.add(e);
 
-			m1 = new ModeloLuz(0.2, 0.5, 0.9, 0, 50, 0.7, 1.68);
+			m1 = new ModeloLuz(0.2, 0.5, 0, 0, 50, 0.7, 1.7);
 			e = new Esfera(m1, new Vector3D(1, 5, 2), 1.5, Color.white);
 			objects.add(e);
 			
@@ -124,7 +122,7 @@ public class Programa {
 		rayTracer.setEscena(escena);
 		rayTracer.setPantalla(NUM_COL,NUM_FILAS);
 		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
-		//rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,20);
+		rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,30);
 		//rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
 	}
 

@@ -69,7 +69,7 @@ public class Esfera implements Objeto {
 		// ray direction and it is the closest so far
 		double t = v - (Math.sqrt(res));
 
-		if ((t > ray.t) || (t < 0.0000006))
+		if ((t > ray.t) || (t < 0.000006))
 			return false;
 		else
 			ray.t = t;
@@ -103,16 +103,65 @@ public class Esfera implements Objeto {
 		// 4. (frac) Rayo refractado
 		Rayo rfrac = null;
 
+//		if (m.kt > 0) {
+//			// Calculo de la interseccion del rayo con el objeto mas cercano el
+//			// cual no es la
+//			// esfera ya intersectada anteriormente.
+//			
+//			// R ira del punto P al ojo -> Refractado sentido opuesto
+//			rfrac = new Rayo(p, r.direction);
+//			rfrac.trace(objects);
+//			System.out.println(rfrac.object);
+//			
+//		}
+		Vector3D frac = null;
 		if (m.kt > 0) {
-			// Calculo de la interseccion del rayo con el objeto mas cercano el
-			// cual no es la
-			// esfera ya intersectada anteriormente.
-			
-			// R ira del punto P al ojo -> Refractado sentido opuesto
-			rfrac = new Rayo(p, r.direction);
-			rfrac.trace(objects);
-			System.out.println(rfrac.object);
-			
+			// Snell: sin(i)/sin(r) = nr/ni
+			double NiNr = currentRef / m.index;
+			double cosI = Vector3D.dotProd(n, r.direction);
+			double cosR = Math
+					.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
+
+			if (cosR > 0.0) {
+				// frac =
+				// Vector3D.add(Vector3D.scale(NiNr,r.direction),Vector3D.scale((NiNr*cosI)-cosR,
+				// n));
+				// frac=Vector3D.sub(Vector3D.scale((NiNr*cosI-Math.sqrt(1-NiNr*NiNr*(1-(cosI*cosI)))),n),Vector3D.scale(NiNr,r.direction));
+				Vector3D frac1 = Vector3D.sub(
+						Vector3D.scale((NiNr * cosI) - cosR, n),
+						Vector3D.scale(NiNr, v));
+				frac1.normalize();
+
+				Rayo rayo = new Rayo(p, frac1);
+				if (rayo.trace(objects)) {
+					System.out.println(rayo.object);
+						px = (rayo.origin.x + rayo.t * rayo.direction.x);
+						py = (rayo.origin.y + rayo.t * rayo.direction.y);
+						pz = (rayo.origin.z + rayo.t * rayo.direction.z);
+
+						p1 = new Point3D(px, py, pz);
+
+						// Normal a la superficie
+						Vector3D n1 = new Vector3D(px - center.x,
+								py - center.y, pz - center.z);
+						n1.negate();
+						n1.normalize();
+						NiNr = m.index / currentRef;
+						cosI = Vector3D.dotProd(n1, rayo.direction);
+						cosR = Math
+								.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
+						if (cosR > 0.0) {
+							frac = Vector3D.sub(
+									Vector3D.scale((NiNr * cosI) - cosR, n1),
+									Vector3D.scale(NiNr, rayo.direction));
+							frac.normalize();
+							rfrac= new Rayo(p1, frac);
+							rfrac.trace(objects);
+						}
+					} else
+						frac = null;
+				
+			}
 		}
 
 		// Hacemos el calculo del color en ese punto

@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class ModeloLuz {
 	// Maximo de rayos reflejados lanzados
-	private final int MAX_RAYOS = 2;
+	private final int MAX_RAYOS = 10;
 	private final float MAX_COLOR = 255;
 
 	double ka;
