@@ -28,7 +28,7 @@ public class Programa {
 		Camera cam = new Camera();
 
 		if (eye == null) {
-			eye = new Point3D(20, 20, 20);
+			eye = new Point3D(10, 10, 10);
 			lookat = new Vector3D(0, 0, 0);
 			up = new Vector3D(-1, 0, 1);
 			background = new Color((float) 0.2, (float) 0.8, (float) 0.9);
@@ -103,12 +103,13 @@ public class Programa {
 		look.normalize();
 		cam.setLookVector(look);
 		cam.setUpVector(up);
-		cam.setScreenDistance(25);
-		cam.calculateVectors();
+		cam.setScreenDistance(30);
 		cam.setCols(NUM_COL);
 		cam.setFils(NUM_FILAS);
 		cam.setViewportHeight(50);
 		cam.setViewportWidth(50);
+		cam.calculateVectors();
+
 
 		escena.setBackgroundColor(background);
 		/*
@@ -122,8 +123,11 @@ public class Programa {
 		rayTracer.setEscena(escena);
 		rayTracer.setPantalla(NUM_COL, NUM_FILAS);
 		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
-		// rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,20);
-		// rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
+		/*
+		 * Type of antialiasing: regular --- random
+		 */
+		rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,5,"regular");
+		rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,5,"random");
 	}
 
 	private static double getNumber(Scanner st) throws IOException {

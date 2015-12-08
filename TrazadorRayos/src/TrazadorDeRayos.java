@@ -1,7 +1,6 @@
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Currency;
 
 public class TrazadorDeRayos {
 
@@ -78,7 +77,7 @@ public class TrazadorDeRayos {
 	}
 
 	public void trazadorDeRayosSuperSampled(int imageHeight, int imageWidth,
-			int radio) {
+			int radio, String type) {
 		int count = Camera.getSuperSampledCount(radio);
 		ArrayList<Rayo> currentPrimaryRayList = new ArrayList<>(count);
 		Rayo currentPrimaryRaySuperSample = null;
@@ -87,16 +86,22 @@ public class TrazadorDeRayos {
 		float rSum = 0;
 		float gSum = 0;
 		float bSum = 0;
-		int hitpixels = 0;
-		int nohit = 0;
 		int background = 0;
 		int innerCount = 0;
 		for (int j = 0; j < imageWidth; ++j) {
 			for (int i = 0; i < imageHeight; ++i) {
-				currentPrimaryRayList = camara
-						.getPixelPositionSuperSampledList(
-								i - (imageHeight / 2), j - (imageWidth / 2),
-								radio);
+				if(type.equalsIgnoreCase("regular")){
+					currentPrimaryRayList = camara
+							.getPixelPositionSuperSampledList(
+									i - (imageHeight / 2), j - (imageWidth / 2),
+									radio);	
+				}else{
+					currentPrimaryRayList = camara
+							.getPixelPositionSuperSampledListJittered(
+									i - (imageHeight / 2), j - (imageWidth / 2),
+									radio);	
+				}
+			
 				rSum = 0;
 				gSum = 0;
 				bSum = 0;
@@ -112,7 +117,6 @@ public class TrazadorDeRayos {
 								gSum += currentColor.getGreen();
 								bSum += currentColor.getBlue();
 								innerCount++;
-							
 						}
 						else{
 							currentColor= new Color(background);
@@ -123,7 +127,6 @@ public class TrazadorDeRayos {
 						}
 					}		
 				}
-			
 				finalColor = new Color( (int) rSum / innerCount, (int) gSum
 							/ innerCount, (int) bSum / innerCount);
 				
