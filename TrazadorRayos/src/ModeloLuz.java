@@ -56,7 +56,10 @@ public class ModeloLuz {
 				/*
 				 * CALCULO SI ES UN PUNTO EN SOMBRA
 				 */
-				if (new Rayo(p, L).trace(objects))
+				Vector3D poffset = 
+				          new Vector3D(p.x + L.x, p.y + L.y, p.z +L.z);
+				Rayo ra = new Rayo(p, L);
+				if (ra.trace(objects))
 					break;
 
 				/*

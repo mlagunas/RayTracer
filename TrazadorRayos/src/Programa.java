@@ -30,7 +30,7 @@ public class Programa {
 		if (eye == null) {
 			eye = new Point3D(20, 20, 20);
 			lookat = new Vector3D(0, 0, 0);
-			up = new Vector3D(1, -1, 0);
+			up = new Vector3D(-1, 0, 1);
 			background = new Color((float) 0.2, (float) 0.8, (float) 0.9);
 
 			/*
@@ -51,49 +51,47 @@ public class Programa {
 			/*
 			 * OBJETOS
 			 */
-			ModeloLuz m = new ModeloLuz(0.2, 0.6, 0, 0, 50, 0, 0);
-			Plano p = new Plano(m, 1, 0, 0, 1, Color.green);
+			ModeloLuz m = new ModeloLuz(0.4, 0.6, 0, 0, 0, 0, 0);
+			Plano p = new Plano(m, -5, 0, 0, 1, Color.green);
 			objects.add(p);
-			p = new Plano(m, 0, 0, 1, 0, Color.red);
+			p = new Plano(m, -3.65, 0, 1, 0, Color.yellow);
 			objects.add(p);
-			p = new Plano(m, 0, 1, 0, 0, Color.blue);
+			p = new Plano(m, -10, 1, 0, 0, Color.blue);
 			objects.add(p);
-			// ModeloLuz (Coeficiente ambiental, difusa, especular, reflejo, ns,
+			// ModeloLuz (Coeficiente* ambiental, difusa, especular, reflejo,
+			// ns,
 			// refraccion, indice)
 
 			ModeloLuz m1;
 			Esfera e;
+			//Ambiental
 			m1 = new ModeloLuz(0.5, 0, 0, 0, 0, 0, 0);
-			e = new Esfera(m1, new Vector3D(15, 5, 5), 3, Color.white);
+			e = new Esfera(m1, new Vector3D(17, 10, 7), 1.5, Color.white);
 			objects.add(e);
+			//Ambiental + Difusa
 			m1 = new ModeloLuz(0.2, 0.5, 0, 0, 0, 0, 0);
-			e = new Esfera(m1, new Vector3D(10, 5, 10), 3, Color.white);
+			e = new Esfera(m1, new Vector3D(13.5, 15, 8.5), 1.5, Color.white);
 			objects.add(e);
+			//Ambiental + Difusa + Especular
 			m1 = new ModeloLuz(0.2, 0.5, 0.8, 0, 50, 0, 0);
-			e = new Esfera(m1, new Vector3D(5, 5, 15), 3, Color.white);
+			e = new Esfera(m1, new Vector3D(10, 19, 10), 1.5, Color.white);
 			objects.add(e);
+			//Ambiental + Difusa + Especular + Reflexion
 			m1 = new ModeloLuz(0.2, 0.5, 0.8, 0.7, 50, 0, 0);
-			e = new Esfera(m1, new Vector3D(5, 10, 10), 3, Color.white);
+			e = new Esfera(m1, new Vector3D(8.5, 15, 13.5), 1.5, Color.white);
 			objects.add(e);
-			m1 = new ModeloLuz(0.2, 0.4, 0.6, 0.1, 50, 1, 1.2);
-			e = new Esfera(m1, new Vector3D(5, 15, 5), 3, Color.white);
+			//Ambiental + Difusa + Especular + Reflexion + Refraccion
+			m1 = new ModeloLuz(0.2, 0.4, 0.6, 0.1, 50, 1, 1.4);
+			e = new Esfera(m1, new Vector3D(7, 10, 17), 1.5, Color.white);
 			objects.add(e);
 
-			/*
-			 * Triangulo triangulo = new Triangulo(new Point3D(5,5,9), new
-			 * Point3D(1,5,12), new Point3D(1,5,6), m1, Color.white);
-			 * objects.add(triangulo);
-			 */
-
-			/*
-			 * e = new Esfera(m, new Vector3D(0, -3, -2), 1.5, new Color(
-			 * (float) 0.7, (float) 0.2, (float) 0.8),true,true);
-			 * objects.add(e); e = new Esfera(m, new Vector3D(2, -3, -2), 1.5,
-			 * new Color( (float) 0.7, (float) 0.2, (float) 0.8),true,true);
-			 * objects.add(e); e = new Esfera(m, new Vector3D(0, 0, 0), 1.5, new
-			 * Color( (float) 0.7, (float) 0.2, (float) 0.8),true,true);
-			 * objects.add(e);
-			 */
+			try {
+				MallaTriangulos mt = new MallaTriangulos(new Scanner(new File(
+						"cow.txt")));
+				objects.add(mt);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 
 		}
 

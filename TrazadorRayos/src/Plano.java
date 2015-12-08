@@ -26,7 +26,7 @@ public class Plano implements Objeto {
 	// Verificará nx * (ox + dx * t) + ny * (oy + dy * t) + nz * (oz + dz * t) +
 	// d = 0
 	// nx * dx + ny * dy + nz * dz = N · D
-	// t = - (nx * ox + ny * oy + nz * oz + d) / (nx * dx + ny * dy + nz * dz)
+	// t = - ((nx * ox + ny * oy + nz * oz) + d) / (nx * dx + ny * dy + nz * dz)
 	public boolean intersect(Rayo ray) {
 		double d1, dn, t;
 
@@ -41,7 +41,7 @@ public class Plano implements Objeto {
 		d1 = Vector3D.dotProd(new Vector3D(ray.origin.x, ray.origin.y,
 				ray.origin.z), N);
 		t = (d - d1) / dn;
-		if (t > ray.t || t <= 0.0006)
+		if (t > ray.t || t <= 0.00006)
 			return false;
 		ray.t = t;
 		ray.object = this;

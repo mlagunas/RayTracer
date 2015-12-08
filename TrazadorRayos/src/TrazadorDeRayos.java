@@ -60,7 +60,6 @@ public class TrazadorDeRayos {
 						- (imageHeight / 2), j - (imageWidth / 2));
 				if (primRay != null) {
 					/* Mira si intersecta y devuelve el punto a pintar */
-
 					if (primRay.trace(escena.getObjects())) {
 						hitpixels++;
 						finalColor = primRay.Shade(escena.getLights(),

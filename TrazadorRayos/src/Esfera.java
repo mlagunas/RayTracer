@@ -44,7 +44,7 @@ public class Esfera implements Objeto {
 	}
 
 	public boolean intersect(Rayo ray) {
-		double dx = (center.x - ray.origin.x);
+		double dx = center.x - ray.origin.x;
 		double dy = center.y - ray.origin.y;
 		double dz = center.z - ray.origin.z;
 		double v = ray.direction.dotProd(new Vector3D(dx, dy, dz));
@@ -62,12 +62,11 @@ public class Esfera implements Objeto {
 		// Test if the intersection is in the positive
 		// ray direction and it is the closest so far
 		double t = v - (Math.sqrt(res));
-
+		double t1 = v + (Math.sqrt(res));
 		if ((t > ray.t) || (t < 0.00006))
 			return false;
-		else
-			ray.t = t;
 
+		ray.t = t;
 		ray.object = this;
 		return true;
 	}
