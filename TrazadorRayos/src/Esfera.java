@@ -23,29 +23,21 @@ public class Esfera implements Objeto {
 		double dz = center.z - ray.origin.z;
 		double v = ray.direction.dotProd(new Vector3D(dx, dy, dz));
 
-		// Do the following quick check to see if there is even a chance
-		// that an intersection here might be closer than a previous one
-		if (v - radius > ray.t)
-			return false;
-
 		// Test if the ray actually intersects the sphere
 		double res = radSqr + v * v - dx * dx - dy * dy - dz * dz;
 		if (res < 0)
 			return false;
 
-		// Test if the intersection is in the positive
-		// ray direction and it is the closest so far
 		double t = v - (Math.sqrt(res));
 		double t1 = v - (-Math.sqrt(res));
-		if (round(t, 7) == 0 && round(t1, 7) == 0)
+		if (round(t, 7) <= 0 && round(t1, 7) <= 0)
 			return false;
-		if (round(t, 7) == 0)
+		if (round(t, 7) <= 0)
 			ray.t = t1;
 		else
 			ray.t = t;
 
 		ray.object = this;
-
 		return true;
 	}
 
