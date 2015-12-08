@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
+import javax.xml.bind.util.ValidationEventCollector;
+
 public class Esfera implements Objeto {
 	Vector3D center;
 	double radius;
@@ -149,14 +151,13 @@ public class Esfera implements Objeto {
 						Vector3D n1 = new Vector3D(px - center.x,
 								py - center.y, pz - center.z);
 						n1.normalize();
-						n1.negate();
 
 						NiNr = m.index / currentRef;
-						cosI = Vector3D.dotProd(n1, v2);
+						cosI = Vector3D.dotProd(n1,v2);
 						cosR = Math
 								.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
 							frac = Vector3D.sub(
-									Vector3D.scale((NiNr * cosI) - cosR, n1),
+									Vector3D.scale((NiNr * cosI) - cosR,n1),
 									Vector3D.scale(NiNr, v2));
 							frac.normalize();
 							rfrac= new Rayo(p1, frac);

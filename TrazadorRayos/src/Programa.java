@@ -122,7 +122,7 @@ public class Programa {
 		rayTracer.setEscena(escena);
 		rayTracer.setPantalla(NUM_COL,NUM_FILAS);
 		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
-		//rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,30);
+		//rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,20);
 		//rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
 	}
 
