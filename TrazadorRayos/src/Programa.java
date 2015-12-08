@@ -104,11 +104,12 @@ public class Programa {
 		cam.setLookVector(look);
 		cam.setUpVector(up);
 		cam.setScreenDistance(25);
-		cam.calculateVectors();
 		cam.setCols(NUM_COL);
 		cam.setFils(NUM_FILAS);
 		cam.setViewportHeight(50);
 		cam.setViewportWidth(50);
+		cam.calculateVectors();
+
 
 		escena.setBackgroundColor(background);
 		/*
@@ -122,7 +123,11 @@ public class Programa {
 		rayTracer.setEscena(escena);
 		rayTracer.setPantalla(NUM_COL,NUM_FILAS);
 		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
-		//rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,20);
+		/*
+		 * Type of antialiasing: regular --- random
+		 */
+		rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,5,"regular");
+		rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,5,"random");
 		//rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
 	}
 

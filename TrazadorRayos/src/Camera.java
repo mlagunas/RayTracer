@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Camera {
 
@@ -42,6 +43,8 @@ public class Camera {
         System.out.println("vVector: "+vVector.toString());*/
         
         realStepU = viewportWidth / (cols-1);
+        System.out.println("real "+realStepU);
+        System.out.println(viewportWidth);
         realStepV = viewportHeight / (fils-1);
 
         initialized=true;
@@ -89,7 +92,6 @@ public class Camera {
 		Vector3D right = null;
 
 	    final double du = realStepU / (3 * samplingRadius + 1);
-	    /*System.out.println(du);*/
 	    final double dv = realStepV / (3 * samplingRadius + 1);
 	    /*System.out.println(dv);*/
 	    
@@ -112,10 +114,64 @@ public class Camera {
 	            lookAt.add(towards);
 	    		lookAt.add(right);
 	    		lookAt.add(up);
+	            pixelRayList.add(new Rayo(eye, new Vector3D(lookAt, eye)));
+
+
+	        }
+	    }
+		return pixelRayList;	
+	}
+	
+	public ArrayList<Rayo> getPixelPositionSuperSampledListJittered(double i, double j, int samplingRadius){
+		if (!initialized) { 
+			calculateVectors();
+		}
+		
+		final int count = getSuperSampledCount(samplingRadius);
+	    final ArrayList<Rayo> pixelRayList = new ArrayList<>(count);
+	    
+	    Point3D lookAt = null;
+		Vector3D towards = null;
+		Vector3D up = null;
+		Vector3D right = null;
+
+	    final double du = realStepU / (2+1);
+	    /*System.out.println(du);*/
+	    final double dv = realStepV / (2+1);
+	    /*System.out.println(dv);*/
+        double rangeMinU=-du;
+        double rangeMinV=-dv;
+        
+        double rangeMaxU=du;
+        double rangeMaxV=dv;
+
+	    
+	    for (int k = 0; k <= count; k++) {
+	            lookAt = new Point3D(eye);
+	            towards= new Vector3D(lookVector);
+	            up = new Vector3D(vVector);
+	    		right = new Vector3D(uVector);
+	            
+	    		final double u=i*(viewportWidth / ((double) cols-1));
+	            final double v=j*(viewportHeight / ((double) fils-1));
+	            
+	            Random r = new Random();
+	            double randomValueU = rangeMinU + (rangeMaxU - rangeMinU) * r.nextDouble();
+	            double randomValueV = rangeMinV + (rangeMaxV - rangeMinV) * r.nextDouble();
+	            
+	            double fu = u + randomValueU;
+	            double fv = v + randomValueV;
+	            
+	            towards.scale(-screenDistance);
+	            right.scale(fu);
+	            up.scale(fv);
+	            
+	            lookAt.add(towards);
+	    		lookAt.add(right);
+	    		lookAt.add(up);
 	    		/*System.out.println(j+","+i);
 	            System.out.println(lookAt.toString());*/
 	            pixelRayList.add(new Rayo(eye, new Vector3D(lookAt, eye)));
-	        }
 	    }
 		return pixelRayList;	
 	}

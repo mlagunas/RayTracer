@@ -127,7 +127,7 @@ public class Esfera implements Objeto {
 
 				Rayo rayo = new Rayo(p, frac1);
 				if (intersectRefraction(rayo)) {
-					System.out.println("1 "+rayo.object+"  "+rayo.t);
+//					System.out.println("1 "+rayo.object+"  "+rayo.t);
 						px = (rayo.origin.x + rayo.t * rayo.direction.x);
 						py = (rayo.origin.y + rayo.t * rayo.direction.y);
 						pz = (rayo.origin.z + rayo.t * rayo.direction.z);
@@ -154,7 +154,7 @@ public class Esfera implements Objeto {
 							frac.normalize();
 							rfrac= new Rayo(p1, frac);
 							rfrac.trace(objects);	
-							System.out.println("2 "+rfrac.object+"  "+rfrac.t);
+//							System.out.println("2 "+rfrac.object+"  "+rfrac.t);
 
 							
 				}
