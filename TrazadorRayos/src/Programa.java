@@ -1,4 +1,6 @@
 import java.awt.Color;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -25,15 +27,8 @@ public class Programa {
 		Scene escena = new Scene();
 		Camera cam = new Camera();
 
-		/*
-		 * try { File f = new File(PATH); Scanner s = new Scanner(f);
-		 * ReadInput(s); } catch (FileNotFoundException e1) {
-		 * e1.printStackTrace(); } catch (IOException e1) {
-		 * e1.printStackTrace(); }
-		 */
-
 		if (eye == null) {
-			eye = new Point3D(10, 10, 10);
+			eye = new Point3D(20, 20, 20);
 			lookat = new Vector3D(0, 0, 0);
 			up = new Vector3D(1, -1, 0);
 			background = new Color((float) 0.2, (float) 0.8, (float) 0.9);
@@ -52,7 +47,7 @@ public class Programa {
 
 			luzList.add(luzA);
 			luzList.add(luzP);
-			
+
 			/*
 			 * OBJETOS
 			 */
@@ -66,22 +61,29 @@ public class Programa {
 			// ModeloLuz (Coeficiente ambiental, difusa, especular, reflejo, ns,
 			// refraccion, indice)
 
-			ModeloLuz m1 = new ModeloLuz(0.2, 0.4, 0.8, 1, 125, 0, 0);
-			Esfera e = new Esfera(m1, new Vector3D(5, 2, 2), 1.5, Color.white);
-			objects.add(e);
+			ModeloLuz m1;
+			Esfera e;
 			m1 = new ModeloLuz(0.5, 0, 0, 0, 0, 0, 0);
-//			e = new Esfera(m1, new Vector3D(1, 2, 2), 1.5, Color.white);
-//			objects.add(e);
-//			m1 = new ModeloLuz(0.2, 0.5, 0, 0, 50, 0, 0);
-//			e = new Esfera(m1, new Vector3D(5, 5, 2), 1.5, Color.white);
-//			objects.add(e);
-
-			m1 = new ModeloLuz(0.2, 0.5, 0, 0, 50, 0.7, 1.6);
-			e = new Esfera(m1, new Vector3D(1, 5, 2), 1.5, Color.white);
+			e = new Esfera(m1, new Vector3D(15, 5, 5), 3, Color.white);
 			objects.add(e);
-			
-			Triangulo triangulo = new Triangulo(new Point3D(5,5,9), new Point3D(1,5,12), new Point3D(1,5,6), m1, Color.white);
-			objects.add(triangulo);
+			m1 = new ModeloLuz(0.2, 0.5, 0, 0, 0, 0, 0);
+			e = new Esfera(m1, new Vector3D(10, 5, 10), 3, Color.white);
+			objects.add(e);
+			m1 = new ModeloLuz(0.2, 0.5, 0.8, 0, 50, 0, 0);
+			e = new Esfera(m1, new Vector3D(5, 5, 15), 3, Color.white);
+			objects.add(e);
+			m1 = new ModeloLuz(0.2, 0.5, 0.8, 0.7, 50, 0, 0);
+			e = new Esfera(m1, new Vector3D(5, 10, 10), 3, Color.white);
+			objects.add(e);
+			m1 = new ModeloLuz(0.2, 0.4, 0.6, 0.1, 50, 1, 1.2);
+			e = new Esfera(m1, new Vector3D(5, 15, 5), 3, Color.white);
+			objects.add(e);
+
+			/*
+			 * Triangulo triangulo = new Triangulo(new Point3D(5,5,9), new
+			 * Point3D(1,5,12), new Point3D(1,5,6), m1, Color.white);
+			 * objects.add(triangulo);
+			 */
 
 			/*
 			 * e = new Esfera(m, new Vector3D(0, -3, -2), 1.5, new Color(
@@ -98,8 +100,8 @@ public class Programa {
 		escena.setObjects(objects);
 		escena.setLights(luzList);
 		cam.setEye(eye);
-		Vector3D look = new Vector3D(eye.x-lookat.x,eye.y-lookat.y,
-				eye.z-lookat.z);
+		Vector3D look = new Vector3D(eye.x - lookat.x, eye.y - lookat.y, eye.z
+				- lookat.z);
 		look.normalize();
 		cam.setLookVector(look);
 		cam.setUpVector(up);
@@ -120,10 +122,10 @@ public class Programa {
 		TrazadorDeRayos rayTracer = new TrazadorDeRayos();
 		rayTracer.setCamara(cam);
 		rayTracer.setEscena(escena);
-		rayTracer.setPantalla(NUM_COL,NUM_FILAS);
+		rayTracer.setPantalla(NUM_COL, NUM_FILAS);
 		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
-		//rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,20);
-		//rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
+		// rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,20);
+		// rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
 	}
 
 	private static double getNumber(Scanner st) throws IOException {
@@ -196,4 +198,3 @@ public class Programa {
 		System.out.println("FIN");
 	}
 }
-

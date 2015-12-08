@@ -31,7 +31,7 @@ public class Esfera implements Objeto {
 			return false;
 
 		double t = v - (Math.sqrt(res));
-		double t1 = v - (-Math.sqrt(res));
+		double t1 = v + (Math.sqrt(res));
 		if (round(t, 7) <= 0 && round(t1, 7) <= 0)
 			return false;
 		if (round(t, 7) <= 0)
@@ -97,72 +97,65 @@ public class Esfera implements Objeto {
 		// 4. (frac) Rayo refractado
 		Rayo rfrac = null;
 
-//		if (m.kt > 0) {
-//			// Calculo de la interseccion del rayo con el objeto mas cercano el
-//			// cual no es la
-//			// esfera ya intersectada anteriormente.
-//			
-//			// R ira del punto P al ojo -> Refractado sentido opuesto
-//			rfrac = new Rayo(p, r.direction);
-//			rfrac.trace(objects);
-//			System.out.println(rfrac.object);
-//			
-//		}
+		// if (m.kt > 0) {
+		// // Calculo de la interseccion del rayo con el objeto mas cercano el
+		// // cual no es la
+		// // esfera ya intersectada anteriormente.
+		//
+		// // R ira del punto P al ojo -> Refractado sentido opuesto
+		// rfrac = new Rayo(p, r.direction);
+		// rfrac.trace(objects);
+		// System.out.println(rfrac.object);
+		//
+		// }
 		Vector3D frac = null;
 		if (m.kt > 0) {
 			// Snell: sin(i)/sin(r) = nr/ni
 			double NiNr = currentRef / m.index;
 			double cosI = Vector3D.dotProd(n, v);
-			double cosR = Math
-					.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
-			
-				// frac =
-				// Vector3D.add(Vector3D.scale(NiNr,r.direction),Vector3D.scale((NiNr*cosI)-cosR,
-				// n));
-				// frac=Vector3D.sub(Vector3D.scale((NiNr*cosI-Math.sqrt(1-NiNr*NiNr*(1-(cosI*cosI)))),n),Vector3D.scale(NiNr,r.direction));
+			double cosR = (1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
+			double root = Math.sqrt(cosR);
+			if (root >= 0) {
 				Vector3D frac1 = Vector3D.sub(
-						Vector3D.scale((NiNr * cosI) - cosR, n),
+						Vector3D.scale((NiNr * cosI) - root, n),
 						Vector3D.scale(NiNr, v));
 				frac1.normalize();
 
 				Rayo rayo = new Rayo(p, frac1);
 				if (intersectRefraction(rayo)) {
-					System.out.println("1 "+rayo.object+"  "+rayo.t);
-						px = (rayo.origin.x + rayo.t * rayo.direction.x);
-						py = (rayo.origin.y + rayo.t * rayo.direction.y);
-						pz = (rayo.origin.z + rayo.t * rayo.direction.z);
+					System.out.println("1 " + rayo.object + "  " + rayo.t);
+					px = (rayo.origin.x + rayo.t * rayo.direction.x);
+					py = (rayo.origin.y + rayo.t * rayo.direction.y);
+					pz = (rayo.origin.z + rayo.t * rayo.direction.z);
 
-						p1 = new Point3D(px, py, pz);
+					p1 = new Point3D(px, py, pz);
 
-						//Vector al ojo
-						Vector3D v2 = new Vector3D(rayo.origin.x - px, rayo.origin.y - py, rayo.origin.z
-								- pz);
-						v2.normalize();
-						
-						// Normal a la superficie
-						Vector3D n1 = new Vector3D(px - center.x,
-								py - center.y, pz - center.z);
-						n1.normalize();
+					// Vector al ojo
+					Vector3D v2 = new Vector3D(rayo.origin.x - px,
+							rayo.origin.y - py, rayo.origin.z - pz);
+					v2.normalize();
+					// Normal a la superficie
+					Vector3D n1 = new Vector3D(px - center.x, py - center.y, pz
+							- center.z);
+					n1.normalize();
 
-						NiNr = m.index / currentRef;
-						cosI = Vector3D.dotProd(n1,v2);
-						cosR = Math
-								.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
-							frac = Vector3D.sub(
-									Vector3D.scale((NiNr * cosI) - cosR,n1),
-									Vector3D.scale(NiNr, v2));
-							frac.normalize();
-							rfrac= new Rayo(p1, frac);
-							rfrac.trace(objects);	
-							System.out.println("2 "+rfrac.object+"  "+rfrac.t);
+					NiNr = m.index / currentRef;
+					cosI = Vector3D.dotProd(n1, v2);
+					cosR = (1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
+					root = Math.sqrt(cosR);
+					frac = Vector3D.sub(
+							Vector3D.scale((NiNr * cosI) - root, n1),
+							Vector3D.scale(NiNr, v2));
+					frac.normalize();
+					rfrac = new Rayo(p1, frac);
+					rfrac.trace(objects);
+					System.out.println("2 " + rfrac.object + "  " + rfrac.t);
 
-							
 				}
-				else{
-					rfrac=null;
-				}
+			} else {
+				rfrac = null;
 			}
-		
+		}
 
 		// Hacemos el calculo del color en ese punto
 		return m.calculo(color, bgnd, lights, objects, p, p1, n, v, r.origin,
