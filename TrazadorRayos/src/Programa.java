@@ -35,7 +35,7 @@ public class Programa {
 		if (eye == null) {
 			eye = new Point3D(10, 10, 10);
 			lookat = new Vector3D(0, 0, 0);
-			up = new Vector3D(0, 0, -1);
+			up = new Vector3D(1, -1, 0);
 			background = new Color((float) 0.2, (float) 0.8, (float) 0.9);
 
 			/*
@@ -76,7 +76,7 @@ public class Programa {
 //			e = new Esfera(m1, new Vector3D(5, 5, 2), 1.5, Color.white);
 //			objects.add(e);
 
-			m1 = new ModeloLuz(0.2, 0.5, 0, 0, 50, 0.7, 1.7);
+			m1 = new ModeloLuz(0.2, 0.5, 0, 0, 50, 0.7, 1.6);
 			e = new Esfera(m1, new Vector3D(1, 5, 2), 1.5, Color.white);
 			objects.add(e);
 			
@@ -122,7 +122,7 @@ public class Programa {
 		rayTracer.setEscena(escena);
 		rayTracer.setPantalla(NUM_COL,NUM_FILAS);
 		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
-		rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,30);
+		//rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,30);
 		//rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
 	}
 

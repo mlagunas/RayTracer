@@ -69,7 +69,7 @@ public class Esfera implements Objeto {
 		// ray direction and it is the closest so far
 		double t = v - (Math.sqrt(res));
 
-		if ((t > ray.t) || (t < 0.000006))
+		if ((t > ray.t) || (t < 0.00006))
 			return false;
 		else
 			ray.t = t;
@@ -118,11 +118,10 @@ public class Esfera implements Objeto {
 		if (m.kt > 0) {
 			// Snell: sin(i)/sin(r) = nr/ni
 			double NiNr = currentRef / m.index;
-			double cosI = Vector3D.dotProd(n, r.direction);
+			double cosI = Vector3D.dotProd(n, v);
 			double cosR = Math
 					.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
-
-			if (cosR > 0.0) {
+			
 				// frac =
 				// Vector3D.add(Vector3D.scale(NiNr,r.direction),Vector3D.scale((NiNr*cosI)-cosR,
 				// n));
@@ -133,36 +132,44 @@ public class Esfera implements Objeto {
 				frac1.normalize();
 
 				Rayo rayo = new Rayo(p, frac1);
-				if (rayo.trace(objects)) {
-					System.out.println(rayo.object);
+				if (intersectRefraction(rayo)) {
+					System.out.println("1 "+rayo.object+"  "+rayo.t);
 						px = (rayo.origin.x + rayo.t * rayo.direction.x);
 						py = (rayo.origin.y + rayo.t * rayo.direction.y);
 						pz = (rayo.origin.z + rayo.t * rayo.direction.z);
 
 						p1 = new Point3D(px, py, pz);
 
+						//Vector al ojo
+						Vector3D v2 = new Vector3D(rayo.origin.x - px, rayo.origin.y - py, rayo.origin.z
+								- pz);
+						v2.normalize();
+						
 						// Normal a la superficie
 						Vector3D n1 = new Vector3D(px - center.x,
 								py - center.y, pz - center.z);
-						n1.negate();
 						n1.normalize();
+						n1.negate();
+
 						NiNr = m.index / currentRef;
-						cosI = Vector3D.dotProd(n1, rayo.direction);
+						cosI = Vector3D.dotProd(n1, v2);
 						cosR = Math
 								.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
-						if (cosR > 0.0) {
 							frac = Vector3D.sub(
 									Vector3D.scale((NiNr * cosI) - cosR, n1),
-									Vector3D.scale(NiNr, rayo.direction));
+									Vector3D.scale(NiNr, v2));
 							frac.normalize();
 							rfrac= new Rayo(p1, frac);
-							rfrac.trace(objects);
-						}
-					} else
-						frac = null;
-				
+							rfrac.trace(objects);	
+							System.out.println("2 "+rfrac.object+"  "+rfrac.t);
+
+							
+				}
+				else{
+					rfrac=null;
+				}
 			}
-		}
+		
 
 		// Hacemos el calculo del color en ese punto
 		return m.calculo(color, bgnd, lights, objects, p, p1, n, v, r.origin,
