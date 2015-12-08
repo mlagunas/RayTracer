@@ -128,19 +128,19 @@ public class ModeloLuz {
 		 * CALCULO DE LA REFRACCION
 		 */
 
-		if (kt > 0 && frac!=null && nRayos < MAX_RAYOS) {
-			if(frac.object==null){
+		if (kt > 0 && frac != null && nRayos < MAX_RAYOS) {
+			if (frac.object == null) {
 				r += kt * sr * bgnd.getBlue() / MAX_COLOR;
 				g += kt * sg * bgnd.getGreen() / MAX_COLOR;
 				b += kt * sb * bgnd.getBlue() / MAX_COLOR;
-			}
-			else{
-				Color c = frac.Shade(lightSources, objects, bgnd, nRayos + 1, kref);
+			} else {
+				Color c = frac.Shade(lightSources, objects, bgnd, nRayos + 1,
+						kref);
 				// Calculamos el color del objeto intersectado y lo
 				// añadimos
 				r += kt * sr * c.getRed() / MAX_COLOR;
 				g += kt * sg * c.getGreen() / MAX_COLOR;
-				b += kt * sb * c.getBlue() / MAX_COLOR;			
+				b += kt * sb * c.getBlue() / MAX_COLOR;
 			}
 		}
 
@@ -150,7 +150,6 @@ public class ModeloLuz {
 		b = (b > 1f) ? 1f : b;
 		return new Color(r, g, b);
 	}
-
 	/*
 	 * METODOS PRIVADOS
 	 */
