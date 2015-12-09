@@ -142,7 +142,7 @@ public class Esfera implements Objeto {
 					Vector3D n1 = new Vector3D(px - center.x, py - center.y, pz
 							- center.z);
 					n1.normalize();
-
+					n1.negate();
 					NiNr = m.index / currentRef;
 					cosI = Vector3D.dotProd(n1, v2);
 					cosR = (1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));

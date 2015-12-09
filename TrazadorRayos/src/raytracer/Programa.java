@@ -90,7 +90,7 @@ public class Programa {
 		e = new Esfera(m1, new Vector3D(8.5, 15, 13.5), 1.5, Color.white);
 		objects.add(e);
 		// Ambiental + Difusa + Especular + Reflexion + Refraccion
-		m1 = new ModeloLuz(0.2, 0, 0, 0, 50, 0.7, 1.4);
+		m1 = new ModeloLuz(0.2, 0.4, 0.6, 0, 50, 0.7, 2.3);
 		e = new Esfera(m1, new Vector3D(7, 10, 17), 1.5, Color.white);
 		objects.add(e);
 
@@ -126,12 +126,12 @@ public class Programa {
 		rayTracer.setCamara(cam);
 		rayTracer.setEscena(escena);
 		rayTracer.setPantalla(NUM_COL, NUM_FILAS);
-		rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
+		// rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
 		/*
-		 * Type of antialiasing: regular --- random
+		 * < Type of antialiasing: regular --- random
 		 */
 		// rayTracer.trazadorDeRayosSuperSampled(NUM_COL,
-		// NUM_FILAS,5,"regular");
-		// rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,5,"random");
+		// NUM_FILAS,1,"regular");
+		rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS, 1, "random");
 	}
 }
