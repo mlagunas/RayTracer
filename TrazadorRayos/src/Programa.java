@@ -126,8 +126,8 @@ public class Programa {
 		/*
 		 * Type of antialiasing: regular --- random
 		 */
-		rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,5,"regular");
-		rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,5,"random");
+		//rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,5,"regular");
+		rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS,1,"random");
 	}
 
 	private static double getNumber(Scanner st) throws IOException {
