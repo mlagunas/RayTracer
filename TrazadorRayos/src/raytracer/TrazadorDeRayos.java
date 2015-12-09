@@ -1,18 +1,21 @@
+package raytracer;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import Model.Rayo;
+import View.Camera;
+import View.Render;
+import View.Scene;
+import View.Viewport;
+
 public class TrazadorDeRayos {
 
-	private final double kref=1.00029;
+	private final double kref = 1.00029;
 	private Scene escena;
-
 	private BufferedImage canvas;
-
 	private Viewport pantalla;
-
-	private int recursionProf;
-
 	private Camera camara;
 
 	public TrazadorDeRayos() {
@@ -32,9 +35,7 @@ public class TrazadorDeRayos {
 	}
 
 	public void setPantalla(int width, int length) {
-		this.pantalla = pantalla;
-		canvas = new BufferedImage(width,
-				length, BufferedImage.TYPE_INT_RGB);
+		canvas = new BufferedImage(width, length, BufferedImage.TYPE_INT_RGB);
 
 	}
 
@@ -62,7 +63,8 @@ public class TrazadorDeRayos {
 					if (primRay.trace(escena.getObjects())) {
 						hitpixels++;
 						finalColor = primRay.Shade(escena.getLights(),
-								escena.getObjects(), new Color(background),kref);
+								escena.getObjects(), new Color(background),
+								kref);
 					} else {
 						nohit++;
 						finalColor = new Color(background);
@@ -90,46 +92,47 @@ public class TrazadorDeRayos {
 		int innerCount = 0;
 		for (int j = 0; j < imageWidth; ++j) {
 			for (int i = 0; i < imageHeight; ++i) {
-				if(type.equalsIgnoreCase("regular")){
+				if (type.equalsIgnoreCase("regular")) {
 					currentPrimaryRayList = camara
-							.getPixelPositionSuperSampledList(
-									i - (imageHeight / 2), j - (imageWidth / 2),
-									radio);	
-				}else{
+							.getPixelPositionSuperSampledList(i
+									- (imageHeight / 2), j - (imageWidth / 2),
+									radio);
+				} else {
 					currentPrimaryRayList = camara
-							.getPixelPositionSuperSampledListJittered(
-									i - (imageHeight / 2), j - (imageWidth / 2),
-									radio);	
+							.getPixelPositionSuperSampledListJittered(i
+									- (imageHeight / 2), j - (imageWidth / 2),
+									radio);
 				}
-			
+
 				rSum = 0;
 				gSum = 0;
 				bSum = 0;
 				innerCount = 0;
 				for (int k = 0; k < count; k++) {
 					currentPrimaryRaySuperSample = currentPrimaryRayList.get(k);
-					if(currentPrimaryRaySuperSample!=null){
-						if (currentPrimaryRaySuperSample.trace(escena.getObjects())) {
-							currentColor = currentPrimaryRaySuperSample.Shade(escena.getLights(),
-									escena.getObjects(), new Color(background),kref);
-							
-								rSum += currentColor.getRed();
-								gSum += currentColor.getGreen();
-								bSum += currentColor.getBlue();
-								innerCount++;
-						}
-						else{
-							currentColor= new Color(background);
+					if (currentPrimaryRaySuperSample != null) {
+						if (currentPrimaryRaySuperSample.trace(escena
+								.getObjects())) {
+							currentColor = currentPrimaryRaySuperSample.Shade(
+									escena.getLights(), escena.getObjects(),
+									new Color(background), kref);
+
+							rSum += currentColor.getRed();
+							gSum += currentColor.getGreen();
+							bSum += currentColor.getBlue();
+							innerCount++;
+						} else {
+							currentColor = new Color(background);
 							rSum += currentColor.getRed();
 							gSum += currentColor.getGreen();
 							bSum += currentColor.getBlue();
 							innerCount++;
 						}
-					}		
+					}
 				}
-				finalColor = new Color( (int) rSum / innerCount, (int) gSum
-							/ innerCount, (int) bSum / innerCount);
-				
+				finalColor = new Color((int) rSum / innerCount, (int) gSum
+						/ innerCount, (int) bSum / innerCount);
+
 				canvas.setRGB(j, i, finalColor.getRGB());
 			}
 		}

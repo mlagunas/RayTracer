@@ -1,16 +1,21 @@
+package Objects;
+
 import java.io.*;
 import java.awt.*;
 import java.util.*;
 
+import Model.Luz;
+import Model.ModeloLuz;
+import Model.Point3D;
+import Model.Rayo;
+import Model.Vector3D;
+
 // A "Renderable" Triangulo Mesh
 // This just holds a bunch of Triangulos, which are the actual objects rendered.
 // The Ray.Object will never be a mesh but rather one of the Triangulos.
-class MallaTriangulos implements Objeto {
-	final static int CHUNKSIZE = 100;
-
+public class MallaTriangulos implements Objeto {
 	ArrayList<Vector3D> vertList;
 	ArrayList<Triangulo> triList;
-	ArrayList<ModeloLuz> modelList;
 	int vertices, Triangulos, ModeloLuzs = 0;
 	ModeloLuz currentModeloLuz;
 	Color currentColor;
@@ -19,12 +24,9 @@ class MallaTriangulos implements Objeto {
 	public MallaTriangulos(Scanner st) throws IOException {
 
 		vertList = new ArrayList<Vector3D>();
-		vertices = 0;
 		triList = new ArrayList<Triangulo>();
-		Triangulos = 0;
-		modelList = new ArrayList<ModeloLuz>();
-		ModeloLuzs = 0;
 		int v0 = 0, v1 = 0, v2 = 0;
+
 		try {
 			while (st.hasNext()) {
 				String instr = st.next();
@@ -85,11 +87,8 @@ class MallaTriangulos implements Objeto {
 			throws IOException {
 
 		vertList = new ArrayList<Vector3D>();
-		vertices = 0;
 		triList = new ArrayList<Triangulo>();
-		Triangulos = 0;
-		modelList = new ArrayList<ModeloLuz>();
-		ModeloLuzs = 0;
+
 		int v0 = 0, v1 = 0, v2 = 0;
 		try {
 			while (st.hasNext()) {

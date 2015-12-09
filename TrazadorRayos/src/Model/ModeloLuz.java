@@ -1,18 +1,21 @@
+package Model;
 import java.awt.Color;
 import java.util.ArrayList;
+
+import Objects.Objeto;
 
 public class ModeloLuz {
 	// Maximo de rayos reflejados lanzados
 	private final int MAX_RAYOS = 1;
 	private final float MAX_COLOR = 255;
 
-	double ka;
-	double kd;
-	double ks;
-	double kr;
-	double kt;
-	double n;
-	double index;
+	public double ka;
+	public double kd;
+	public double ks;
+	public double kr;
+	public double kt;
+	public double n;
+	public double index;
 
 	public ModeloLuz(double ka, double kd, double ks, double kr, double n,
 			double kt, double index) {
@@ -56,8 +59,6 @@ public class ModeloLuz {
 				/*
 				 * CALCULO SI ES UN PUNTO EN SOMBRA
 				 */
-				Vector3D poffset = 
-				          new Vector3D(p.x + L.x, p.y + L.y, p.z +L.z);
 				Rayo ra = new Rayo(p, L);
 				if (ra.trace(objects))
 					break;

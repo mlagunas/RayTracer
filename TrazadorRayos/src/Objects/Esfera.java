@@ -1,7 +1,12 @@
+package Objects;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import javax.xml.bind.util.ValidationEventCollector;
+import Model.Luz;
+import Model.ModeloLuz;
+import Model.Point3D;
+import Model.Rayo;
+import Model.Vector3D;
 
 public class Esfera implements Objeto {
 	Vector3D center;

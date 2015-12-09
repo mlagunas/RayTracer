@@ -1,6 +1,12 @@
+package Objects;
+
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Vector;
+import Model.Luz;
+import Model.ModeloLuz;
+import Model.Point3D;
+import Model.Rayo;
+import Model.Vector3D;
 
 // Ecuacion plano
 // vector normalizado perpendicular a la superficie del mismo N = (nx, ny, nz),
@@ -63,20 +69,10 @@ public class Plano implements Objeto {
 
 		// 2. (n) Normal a la superficie igual a n
 
-		// 4. (v) Rayo al ojo
+		// 3. (v) Rayo al ojo
 		Vector3D v = new Vector3D(r.origin.x - px, r.origin.y - py, r.origin.z
 				- pz);
 		v.normalize();
-		
-
-		Vector3D ref = null;
-//		if (isMirror) {
-//			// 5. (ref) Rayo reflejado
-//			double twice = 2 * Vector3D.dotProd(v, N);
-//			ref = Vector3D.sub(v, Vector3D.scale(twice, N));
-//			
-//
-//		}
 
 		Vector3D frac = null;
 		if (m.kt > 0) {
@@ -88,10 +84,6 @@ public class Plano implements Objeto {
 					.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
 
 			if (cosR > 0.0) {
-				// frac =
-				// Vector3D.add(Vector3D.scale(NiNr,r.direction),Vector3D.scale((NiNr*cosI)-cosR,
-				// n));
-				// frac=Vector3D.sub(Vector3D.scale((NiNr*cosI-Math.sqrt(1-NiNr*NiNr*(1-(cosI*cosI)))),n),Vector3D.scale(NiNr,r.direction));
 				Vector3D frac1 = Vector3D.sub(
 						Vector3D.scale((NiNr * cosI) - cosR, N),
 						Vector3D.scale(NiNr, r.direction));
@@ -121,19 +113,8 @@ public class Plano implements Objeto {
 			}
 
 		}
-		return m.calculo(color, bgnd, lights, objects, p, p1, N, v,
-				r.origin, null, nRayos,
-				currentRefr);
-	}
-
-	private static double round(double value, int places) {
-		if (places < 0)
-			throw new IllegalArgumentException();
-
-		long factor = (long) Math.pow(10, places);
-		value = value * factor;
-		long tmp = Math.round(value);
-		return (double) tmp / factor;
+		return m.calculo(color, bgnd, lights, objects, p, p1, N, v, r.origin,
+				null, nRayos, currentRefr);
 	}
 
 }

@@ -1,5 +1,9 @@
+package View;
 import java.awt.Color;
 import java.util.ArrayList;
+
+import Model.Luz;
+import Objects.Objeto;
 
 public class Scene {
    private ArrayList<Objeto> objects;
