@@ -40,7 +40,7 @@ public class Plano implements Objeto {
 
 		d1 = Vector3D.dotProd(new Vector3D(ray.origin.x, ray.origin.y,
 				ray.origin.z), N);
-		t = (d - d1) / dn;
+		t = -(d + d1) / dn;
 		if (t > ray.t || t <= 0.00006)
 			return false;
 		ray.t = t;
