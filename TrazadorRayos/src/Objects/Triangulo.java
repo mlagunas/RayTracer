@@ -119,48 +119,27 @@ public class Triangulo implements Objeto {
 				- pz);
 		v.normalize();
 
-		Vector3D frac = null;
+		Rayo rfrac=null;
 		if (m.kt > 0) {
 			// Snell: sin(i)/sin(r) = nr/ni
-
 			double NiNr = currentRefr / m.index;
-			double cosI = Vector3D.dotProd(N, r.direction);
-			double cosR = Math
-					.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
-
-			if (cosR > 0.0) {
+			double cosI = Vector3D.dotProd(N, v);
+			double cosR = (1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
+			double root = Math.sqrt(cosR);
+			if (root >= 0) {
 				Vector3D frac1 = Vector3D.sub(
-						Vector3D.scale((NiNr * cosI) - cosR, N),
-						Vector3D.scale(NiNr, r.direction));
+						Vector3D.scale((NiNr * cosI) - root, N),
+						Vector3D.scale(NiNr, v));
 				frac1.normalize();
 
-				Rayo rayo = new Rayo(p, frac1);
-				if (this.intersect(rayo)) {
-					px = (rayo.origin.x + rayo.t * rayo.direction.x);
-					py = (rayo.origin.y + rayo.t * rayo.direction.y);
-					pz = (rayo.origin.z + rayo.t * rayo.direction.z);
-
-					p1 = new Point3D(px, py, pz);
-
-					// Normal a la superficie
-					N.normalize();
-					NiNr = m.index / currentRefr;
-					cosI = Vector3D.dotProd(N, rayo.direction);
-					cosR = Math
-							.sqrt(1.0 - ((1.0 - (cosI * cosI)) * (NiNr * NiNr)));
-					if (cosR > 0.0) {
-						frac = Vector3D.sub(
-								Vector3D.scale((NiNr * cosI) - cosR, N),
-								Vector3D.scale(NiNr, rayo.direction));
-						frac.normalize();
-					}
-				}
+				rfrac = new Rayo(p, frac1);
+				rfrac.trace(objects);
 			}
 
 		}
 
 		return m.calculo(color, bgnd, lights, objects, p, p1, N, v, r.origin,
-				null, nRayos, currentRefr);
+				rfrac, nRayos, currentRefr);
 	}
 
 }
