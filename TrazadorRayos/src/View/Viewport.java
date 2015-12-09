@@ -1,3 +1,6 @@
+package View;
+import Model.Point3D;
+
 
 public class Viewport {
 

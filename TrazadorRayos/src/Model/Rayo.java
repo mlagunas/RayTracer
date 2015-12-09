@@ -1,13 +1,16 @@
+package Model;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import Objects.Objeto;
+
 public class Rayo {
 	public static final double MAX_T = Double.MAX_VALUE;
-	Vector3D origin;
-	Vector3D direction;
-	double t;
+	public Vector3D origin;
+	public Vector3D direction;
+	public double t;
 	double t1;
-	Objeto object;
+	public Objeto object;
 
 	public Rayo(Point3D point3d, Vector3D dir) {
 		origin = new Vector3D(point3d);

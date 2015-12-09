@@ -1,5 +1,11 @@
+package View;
+
 import java.util.ArrayList;
 import java.util.Random;
+
+import Model.Point3D;
+import Model.Rayo;
+import Model.Vector3D;
 
 public class Camera {
 
