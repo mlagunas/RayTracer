@@ -1,4 +1,5 @@
 package Model;
+
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -72,9 +73,9 @@ public class ModeloLuz {
 					lambert = (float) Vector3D.dotProd(N, L);
 					if (lambert > 0) {
 						// Kd*cos(N·L)*I
-						r += kd * lambert * light.r * sr;
-						g += kd * lambert * light.g * sg;
-						b += kd * lambert * light.b * sb;
+						r += kd * lambert * sr * light.r;
+						g += kd * lambert * sg * light.g;
+						b += kd * lambert * sb * light.b;
 					}
 				}
 
@@ -116,9 +117,9 @@ public class ModeloLuz {
 			if (reflejado.trace(objects)) {
 				Color c = reflejado.Shade(lightSources, objects, bgnd,
 						nRayos + 1, kref);
-				r += kr * sr * c.getRed() / MAX_COLOR;
-				g += kr * sg * c.getGreen() / MAX_COLOR;
-				b += kr * sb * c.getBlue() / MAX_COLOR;
+				r += kr * c.getRed() / MAX_COLOR;
+				g += kr * c.getGreen() / MAX_COLOR;
+				b += kr * c.getBlue() / MAX_COLOR;
 			} else {
 				// En caso contrario chocara con el fondo, añadimos su
 				// color
@@ -134,17 +135,17 @@ public class ModeloLuz {
 
 		if (kt > 0 && frac != null && nRayos < MAX_RAYOS) {
 			if (frac.object == null) {
-				r += kt * sr * bgnd.getBlue() / MAX_COLOR;
-				g += kt * sg * bgnd.getGreen() / MAX_COLOR;
-				b += kt * sb * bgnd.getBlue() / MAX_COLOR;
+				r += kt * bgnd.getBlue() / MAX_COLOR;
+				g += kt * bgnd.getGreen() / MAX_COLOR;
+				b += kt * bgnd.getBlue() / MAX_COLOR;
 			} else {
 				Color c = frac.Shade(lightSources, objects, bgnd, nRayos + 1,
 						kref);
 				// Calculamos el color del objeto intersectado y lo
 				// añadimos
-				r += kt * sr * c.getRed() / MAX_COLOR;
-				g += kt * sg * c.getGreen() / MAX_COLOR;
-				b += kt * sb * c.getBlue() / MAX_COLOR;
+				r += kt * c.getRed() / MAX_COLOR;
+				g += kt * c.getGreen() / MAX_COLOR;
+				b += kt * c.getBlue() / MAX_COLOR;
 			}
 		}
 

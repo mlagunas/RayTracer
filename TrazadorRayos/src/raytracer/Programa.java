@@ -36,22 +36,22 @@ public class Programa {
 		Scene escena = new Scene();
 		Camera cam = new Camera();
 
-		eye = new Point3D(20, 20, 20);
-		lookat = new Vector3D(0, 0, 0);
+		eye = new Point3D(20, 10, 20);
+		lookat = new Vector3D(0, 15, 0);
 		up = new Vector3D(-1, 0, 1);
 		background = new Color((float) 0.2, (float) 0.8, (float) 0.9);
 
 		/*
 		 * LUCES
 		 */
-		Luz luzA = new Luz(Luz.AMBIENT, null, (float) 0.3, (float) 0.4,
+		Luz luzA = new Luz(Luz.AMBIENT, null, (float) 0.5, (float) 0.4,
 				(float) 0.5);
 
 		Luz luzPy = new Luz(Luz.POINT, new Vector3D(1 * 4, 5 * 4, 1 * 4),
-				(float) 0.8, (float) 0.8, (float) 0.8);
+				(float) 0.7, (float) 0.7, (float) 0.5);
 
 		Luz luzPz = new Luz(Luz.POINT, new Vector3D(5, 2, 20), (float) 0.5,
-				(float) 0.5, (float) 0.5);
+				(float) 0.7, (float) 0.5);
 
 		luzList.add(luzA);
 		luzList.add(luzPy);
@@ -66,7 +66,7 @@ public class Programa {
 		ModeloLuz m = new ModeloLuz(0.4, 0.6, 0, 0, 0, 0, 0);
 		Plano p = new Plano(m, -3.65, 0, 0, 1, Color.green);
 		objects.add(p);
-		p = new Plano(m, -3.65, 0, 1, 0, Color.yellow);
+		p = new Plano(m, -4.1, 0, 1, 0, Color.yellow);
 		objects.add(p);
 		p = new Plano(m, -3.65, 1, 0, 0, Color.blue);
 		objects.add(p);
@@ -87,11 +87,11 @@ public class Programa {
 		objects.add(e);
 		// Ambiental + Difusa + Especular + Reflexion
 		m1 = new ModeloLuz(0.2, 0.5, 0.8, 0.7, 50, 0, 0);
-		e = new Esfera(m1, new Vector3D(8.5, 15, 13.5), 1.5, Color.white);
+		e = new Esfera(m1, new Vector3D(8.5, 15, 13.5), 1.5, new Color(0.001f,0.001f,0.001f));
 		objects.add(e);
 		// Ambiental + Difusa + Especular + Reflexion + Refraccion
-		m1 = new ModeloLuz(0.2, 0.4, 0.6, 0, 50, 0.7, 2.3);
-		e = new Esfera(m1, new Vector3D(7, 10, 17), 1.5, Color.white);
+		m1 = new ModeloLuz(0.2, 0.4, 0.6, 0, 100, 0.7, 2.0);
+		e = new Esfera(m1, new Vector3D(7, 10, 17), 1.5, new Color(0.001f,0.001f,0.001f));
 		objects.add(e);
 
 		// Añadimos el objeto creado con una malla de triangulos a traves de
@@ -126,12 +126,12 @@ public class Programa {
 		rayTracer.setCamara(cam);
 		rayTracer.setEscena(escena);
 		rayTracer.setPantalla(NUM_COL, NUM_FILAS);
-		// rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
+		//rayTracer.trazadorDeRayos(NUM_COL, NUM_FILAS);
 		/*
 		 * < Type of antialiasing: regular --- random
 		 */
-		// rayTracer.trazadorDeRayosSuperSampled(NUM_COL,
-		// NUM_FILAS,1,"regular");
-		rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS, 1, "random");
+		 rayTracer.trazadorDeRayosSuperSampled(NUM_COL,
+		 NUM_FILAS,1,"regular");
+		//rayTracer.trazadorDeRayosSuperSampled(NUM_COL, NUM_FILAS, 1, "random");
 	}
 }
